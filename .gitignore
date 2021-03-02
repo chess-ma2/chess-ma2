@@ -1,0 +1,4 @@
+#Exclude compile code
+**/target/**
+*.out
+*.o
