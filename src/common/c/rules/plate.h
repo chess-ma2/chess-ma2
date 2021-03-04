@@ -10,4 +10,11 @@ Start the 2021-03-04
 */
 
 
+
+//turn of the player
+enum turn{
+	    BLACKTURN = 0,
+	    WHITETURN = 1,
+};
+
 #endif
