@@ -8,6 +8,9 @@
 #ifndef COMMON_MAINC
 #define COMMON_MAINC
 
+//Rules part
+#include "rules/rules.c"
+
 /**
  * @author Marine
  * @date 01/03/2021
@@ -15,7 +18,8 @@
  */
 int main(int argc, char ** argv)
 {
-    return 0;
+
+    return rules();
 }
 
 //End safety loop
