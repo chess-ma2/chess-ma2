@@ -14,7 +14,7 @@ Start the 2021-03-04
 
 
 //Possibility of the type of a Piece
-enum Type
+enum Type  
 {
     NONE = 0,
     PAWN,
@@ -47,5 +47,28 @@ struct Piece
   enum Type type;
   enum Color color;
 };
+
+
+
+struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board);
+
+struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *board);
+
+int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board);
+
+int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+
+int isValidMove_Rook(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+
+int isValidMove_Bishop(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+
+int isValidMove_Knight(int x, int y, int des_x, int des_y, int color_piece);
+
+int isValidMove_Queen(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+
+int isValidMove_King(int x, int y, int des_x, int des_y, int color_piece);
+
+int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+
 
 #endif

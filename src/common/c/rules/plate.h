@@ -20,6 +20,21 @@ enum turn{
 };
 
 
+//status of the king during the game
+//can be in check or checkmate or nothing 
+enum king_status{
+		 NOTHING= 0,
+		 CHECKMATE,
+		 CHECK,
+};
+
+
+//if you can rock because you can do that 1 time
+enum rock{
+	    CANT_ROCK = 0,
+	    CAN_ROCK = 1,
+};
+
 /**
  * @author Antoine
  * @date Start 05/03/2021
