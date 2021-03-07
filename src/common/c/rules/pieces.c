@@ -1,3 +1,19 @@
+#include "pieces.h"
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+
+
+/*
+
+File .c containing all the functions relating to the chess pieces and their movements.
+By Marie Maturana
+Start the 2021-03-04
+
+*/
+
+
+
 /*
 
 Name of the function : pieceMove
@@ -99,6 +115,11 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
       return  isValidMove_Pawn( x, y, des_x, des_y, color_piece, board); //can move the pawn
     }
 
+  if ( piece.type == KING)
+    { 
+      return  isValidMove_King( x, y, des_x, des_y, color_piece) ; //can move the king
+    }
+
   return  0; //movement is not possible
    
 }
@@ -149,6 +170,27 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 	{
 	  return 1; 
 	}
+    }
+
+  return 0; 
+}
+
+
+
+/*
+
+Name of the function : isValidMove_King
+Valid if the movement of the king is possible
+By Marie Maturana
+Start the 2021-03-07
+
+*/
+
+int isValidMove_King(int x, int y, int des_x, int des_y, int color_piece)
+{
+  if(((des_x == x)||(des_x == x - 1) || (des_x == x + 1))&&((des_y == y)||(des_y == y - 1) ||(des_y == y + 1)))
+    {
+      return 1; 
     }
 
   return 0; 
