@@ -115,6 +115,10 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
       return  isValidMove_Pawn( x, y, des_x, des_y, color_piece, board); //can move the pawn
     }
 
+  if ( piece.type == KNIGHT)
+    {
+      return  isValidMove_Knight( x, y, des_x, des_y, color_piece); //can move the knight 
+    }
   if ( piece.type == KING)
     { 
       return  isValidMove_King( x, y, des_x, des_y, color_piece) ; //can move the king
@@ -172,6 +176,34 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 	}
     }
 
+  return 0; 
+}
+
+
+
+
+
+/*
+
+Name of the function : isValidMove_Knight
+Valid if the movement of the knight is possible
+By Marie Maturana
+Start the 2021-03-08
+
+*/
+
+int isValidMove_Knight(int x, int y, int des_x, int des_y, int color_piece)
+{
+  if(((des_x == x - 2)|| (des_x == x + 2 )) && ((des_y == y - 1) || (des_y == y + 1)))
+    {
+      return 1; 
+    }
+
+  if(((des_y == y - 2)|| (des_y == y + 2 )) && ((des_x == x - 1) || (des_x == x + 1)))
+    {
+      return 1; 
+    }
+  
   return 0; 
 }
 
