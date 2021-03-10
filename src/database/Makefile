@@ -11,3 +11,4 @@ clean:
 	${RM} test_create test_create.o
 	${RM} *.o
 	${RM} *.d
+	${RM} chess.db

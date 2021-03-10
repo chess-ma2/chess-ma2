@@ -31,13 +31,13 @@ sqlite3 * createDB()
     // Create database if it doesn't already exist
     rc = sqlite3_open("chess.db", &db);
 
-    // Making sure there are no errors
+    /* Making sure there are no errors
     if(rc){
         fprintf(stderr,"Can't open database \n");
         return 0;
     } else {
         fprintf(stderr, "Database created successfully \n");
-    }
+    }*/
 
     return db;
     // Close database after using it
@@ -57,7 +57,7 @@ void creatingTables()
 
     /* Create SQL statement to create player table */
    sql = "CREATE TABLE PLAYER("  \
-      "ID INT PRIMARY KEY     NOT NULL  AUTO_INCREMENT," \
+      "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "NAME           TEXT    NOT NULL," \
       "PASSWORD1      REAL    NOT NULL," \
       "PASSWORD2      REAL    NOT NULL," \
@@ -113,7 +113,7 @@ void newPLAYER(char *name, unsigned char password[64], char *email, size_t nb_wo
     char *sql = malloc(300 * sizeof(char));
     unsigned long *res = SHA_1(password);
 
-    printf("password is %lx, %lx, %lx, %lx, %lx \n", res[0], res[1], res[2], res[3], res[4]);
+    //printf("password is %lx, %lx, %lx, %lx, %lx \n", res[0], res[1], res[2], res[3], res[4]);
 
 
 

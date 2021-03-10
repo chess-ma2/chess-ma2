@@ -27,11 +27,11 @@ int email_in_DB(char *email)
     //Connection to the database
     sqlite3 *db = createDB();
 
-    char *sql;
+    char *sql = malloc(200 * sizeof(char));
     int inMail = 0;
 
     //Create SQL query
-    sql = ("Select * from PLAYER where email = %s",email);
+     sprintf(sql, "Select * from PLAYER where email = %s",email);
     
     struct sqlite3_stmt *selectstmt;
     
@@ -41,7 +41,8 @@ int email_in_DB(char *email)
     if(result == SQLITE_OK)
     {
         //value = if such record is found
-        inMail = sqlite3_step(selectstmt) == SQLITE_ROW ; 
+        if(sqlite3_step(selectstmt) == SQLITE_ROW)
+            inMail = 1;
     }
     
     //Close statement
@@ -49,6 +50,9 @@ int email_in_DB(char *email)
     
     //Close connection to database
     sqlite3_close(db);
+
+    //Free query
+    free(sql);
     
     return inMail;
 }
@@ -58,11 +62,10 @@ int rightPassword(char *email, unsigned char password[64])
     //Connection to the database
     sqlite3 *db = createDB();
 
-    char *sql;
-    int RightPassword = 0;
+    char *sql = malloc(300 * sizeof(char));
   
     //Create SQL query
-    sql = ("Select PASSWORD1,PASSWORD2,PASSWORD3,PASSWORD4,PASSWORD5 from PLAYER where email = %s",email);
+     sprintf(sql, "Select PASSWORD1,PASSWORD2,PASSWORD3,PASSWORD4,PASSWORD5 from PLAYER where email = %s",email);
 
     struct sqlite3_stmt *selectstmt;
 
@@ -97,6 +100,7 @@ int rightPassword(char *email, unsigned char password[64])
 
     sqlite3_finalize(selectstmt);
     sqlite3_close(db);
+    free(sql);
     return right;
 
 }
@@ -106,7 +110,8 @@ size_t getID(char *email)
 {
     sqlite3 *db = createDB();
 
-    char *sql = ("Select * from PLAYER where email = %s",email);
+    char *sql = malloc(200 * sizeof(char));
+     sprintf(sql, "Select * from PLAYER where email = %s",email);
     
     struct sqlite3_stmt *selectstmt;
 
@@ -119,12 +124,14 @@ size_t getID(char *email)
             size_t res = (size_t) sqlite3_column_int(selectstmt, 0);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
+            free(sql);
             return res;
        }
     }
     sqlite3_finalize(selectstmt);
     sqlite3_close(db);
-    return NULL;
+    free(sql);
+    err(1, "No id \n");
 }
 
 
