@@ -14,10 +14,8 @@ sqlite3 * createDB();
 
 void creatingTables();
 
-void newPLAYER(char *name, char *password, char *email, size_t nb_won, size_t nb_lost);
+void newPLAYER(char *name, unsigned char password[64], char *email, size_t nb_won, size_t nb_lost);
 
 void newAI(char *type, size_t nb_won, size_t nb_lost, size_t time);
-
-int main();
 
 #endif

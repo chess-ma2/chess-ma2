@@ -159,7 +159,7 @@ unsigned long* SHA_1(unsigned char msg[64] )
 
 }
 
-// For tests
+/* For tests
 
 int main()
 {
@@ -170,4 +170,4 @@ int main()
   free(res);
   //printf("%hhx,%hhx,%hhx,%hhx,%hhx \n", res[0], res[1], res[2], res[3], res[4]);
   return 0;
-}
+}*/

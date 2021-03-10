@@ -11,6 +11,6 @@ void chunks(unsigned char message[64],unsigned long word[80]);
 
 unsigned long* SHA_1(unsigned char msg[64]);
 
-int main();
+//int main();
 
 #endif

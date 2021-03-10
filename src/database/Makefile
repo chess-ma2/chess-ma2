@@ -1,13 +1,13 @@
 CC = gcc -lsqlite3 -std=c99
 CFLAGS = -Wall -Wextra -lssl
 
-all: create_db MD5 MD5_2 SHA1
+all: test_create
 
-create_db: create_db.o
-SHA: SHA.o
+test_create : SHA.o create_db.o functions_db.o test_create.o
 
 .PHONY: clean
 
 clean:
-	${RM} create_db create_db.o
-	${RM} SHA SHA.o
+	${RM} test_create test_create.o
+	${RM} *.o
+	${RM} *.d
