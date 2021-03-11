@@ -115,10 +115,26 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
       return  isValidMove_Pawn( x, y, des_x, des_y, color_piece, board); //can move the pawn
     }
 
+  if ( piece.type == ROOK)
+    {
+      return  isValidMove_Rook( x, y, des_x, des_y, color_piece, board); //can move the rook
+    }
+
+  if ( piece.type == BISHOP)
+    {
+      return isValidMove_Bishop( x, y, des_x, des_y, color_piece, board); //can move the bishop
+    }
+
   if ( piece.type == KNIGHT)
     {
       return  isValidMove_Knight( x, y, des_x, des_y, color_piece); //can move the knight 
     }
+   
+  if ( piece.type == QUEEN )
+    {
+      return  isValidMove_Queen( x, y, des_x, des_y, color_piece, board); //can move the queen
+    }
+
   if ( piece.type == KING)
     { 
       return  isValidMove_King( x, y, des_x, des_y, color_piece) ; //can move the king
@@ -182,6 +198,234 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 
 
 
+/*
+
+Name of the function : isValidMove_Rook
+Valid if the movement of the rook is possible
+By Marie Maturana
+Start the 2021-03-11
+
+*/
+
+int isValidMove_Rook(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board)
+{
+  
+  
+  int continue_par = 1;                   
+  int par_y = y + 1;
+  int par_x = x; 
+         
+  while( continue_par && par_y <= 7)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_y += 1; 
+	}
+
+    }
+
+  continue_par = 1;                  
+  par_y = y - 1;
+  par_x = x; 
+         
+  while( continue_par && par_y >= 0)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_y -= 1; 
+	}
+    }
+      
+
+  continue_par = 1;
+  par_x = x - 1;
+  par_y = y; 
+         
+  while( continue_par && par_x >= 0)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_x -= 1; 
+	}
+    }
+
+
+  continue_par = 1;
+  par_x = x + 1;                   
+  par_y = y; 
+  while( continue_par && par_x <= 7)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_x += 1;
+	}
+    }
+  return 0; 
+}
+
+
+
+
+/*
+
+Name of the function : isValidMove_Bishop
+Valid if the movement of the bishop is possible
+By Marie Maturana
+Start the 2021-03-11
+
+*/
+
+int isValidMove_Bishop(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board)
+{
+
+  
+  int continue_par = 1;
+  int par_x = x + 1;                   
+  int par_y = y + 1;
+         
+  while( continue_par && par_y <= 7 && par_x <= 7)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE ) //someone on the way
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_x += 1;
+	  par_y += 1; 
+	}
+
+    }
+
+  continue_par = 1;
+  par_x = x + 1;                   
+  par_y = y - 1;
+         
+  while( continue_par && par_y >= 0 && par_x <= 7)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_x += 1;
+	  par_y -= 1; 
+	}
+    }
+      
+
+  continue_par = 1;
+  par_x = x - 1;                   
+  par_y = y + 1;
+         
+  while( continue_par && par_x >= 0 && par_y <= 7)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_x -= 1;
+	  par_y += 1; 
+	}
+    }
+
+
+  continue_par = 1;
+  par_x = x - 1;                   
+  par_y = y - 1;
+         
+  while( continue_par && par_y >= 0 && par_x >= 0)
+    {
+
+      if(continue_par && par_y == des_y && par_x == des_x)
+	{
+	  return 1; 
+	}
+      
+      if( board[par_y*8+par_x].type != NONE )
+	{
+	  continue_par = 0;
+	}
+      
+      else
+	{
+	  par_x -= 1;
+	  par_y -= 1; 
+	}
+    }
+  return 0; 
+}
+
+
+
 
 /*
 
@@ -206,6 +450,23 @@ int isValidMove_Knight(int x, int y, int des_x, int des_y, int color_piece)
   
   return 0; 
 }
+
+
+
+/*
+
+Name of the function : isValidMove_Queen
+Valid if the movement of the Queen is possible
+By Marie Maturana
+Start the 2021-03-11
+
+*/
+
+int isValidMove_Queen(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board) 
+{
+  return isValidMove_Bishop(x,y,des_x,des_y, color_piece, board) || isValidMove_Rook(x,y,des_x,des_y, color_piece, board); //call movement of bishop and rook
+}
+
 
 
 
