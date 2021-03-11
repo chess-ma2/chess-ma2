@@ -11,17 +11,8 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <stdlib.h>
-//Call back
-static int callback(void *data, int argc, char **argv, char **azColName){
-   int i;
-   fprintf(stderr, "%s: ", (const char*)data);
-   for(i = 0; i<argc; i++) {
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-   printf("\n");
-   return 0;
-}
 
+// Checking if an email is already in database
 int email_in_DB(char *email)
 {
     //Connection to the database
@@ -31,7 +22,7 @@ int email_in_DB(char *email)
     int inMail = 0;
 
     //Create SQL query
-     sprintf(sql, "Select * from PLAYER where email = %s",email);
+     sprintf(sql, "Select * from PLAYER where email = '%s'",email);
     
     struct sqlite3_stmt *selectstmt;
     
@@ -40,7 +31,7 @@ int email_in_DB(char *email)
     //If such query is possible
     if(result == SQLITE_OK)
     {
-        //value = if such record is found
+        //if such record is found
         if(sqlite3_step(selectstmt) == SQLITE_ROW)
             inMail = 1;
     }
@@ -57,6 +48,7 @@ int email_in_DB(char *email)
     return inMail;
 }
 
+//Checking if the password is right
 int rightPassword(char *email, unsigned char password[64])
 {
     //Connection to the database
@@ -70,12 +62,15 @@ int rightPassword(char *email, unsigned char password[64])
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
+    
+    //Hash password 
     unsigned long* res = SHA_1(password);
     int right = 1;
 
     //If such query is possible
     if(result == SQLITE_OK)
     {
+            //Checking if a hash isn't correct
             unsigned long pass1 = (unsigned long) sqlite3_column_text(selectstmt, 0);
             if(pass1 != res[0])
                 right = 0;                
@@ -98,9 +93,15 @@ int rightPassword(char *email, unsigned char password[64])
 
     }
 
+    //Close statement
     sqlite3_finalize(selectstmt);
+
+    //Close connection to database
     sqlite3_close(db);
+
+    //Free query
     free(sql);
+
     return right;
 
 }
@@ -108,19 +109,24 @@ int rightPassword(char *email, unsigned char password[64])
 //Get Id from mail
 size_t getID(char *email)
 {
+    //Connection to the database
     sqlite3 *db = createDB();
 
+    //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-     sprintf(sql, "Select * from PLAYER where email = %s",email);
+    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
     
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
     
+    //If such query is possible
     if(result == SQLITE_OK)
     {
+        //If such row exists
        if (sqlite3_step(selectstmt) == SQLITE_ROW)
        {
+           //Get id and return
             size_t res = (size_t) sqlite3_column_int(selectstmt, 0);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
@@ -128,9 +134,16 @@ size_t getID(char *email)
             return res;
        }
     }
+
+    //Close statement
     sqlite3_finalize(selectstmt);
+
+    //Close connection to database
     sqlite3_close(db);
+
+    //Free query
     free(sql);
+
     err(1, "No id \n");
 }
 

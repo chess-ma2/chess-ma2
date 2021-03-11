@@ -3,6 +3,7 @@
  * @date 10/03/2021
  * @details Tests: Creating the database and its tables + verifying password
  */
+
 #include "create_db.h"
 #include <string.h>
 #include <err.h>
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
     unsigned char password2[64];
     printf("\033[0;35m");
     printf("Re-enter your password: \n");
-    scanf("%c", password2);
+    scanf("%s", password2);
     printf("\033[0m");
 
     if(rightPassword(email, password2) == 1)

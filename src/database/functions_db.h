@@ -9,12 +9,13 @@
 #include "create_db.h"
 #include "SHA.h"
 
-static int callback(void *data, int argc, char **argv, char **azColName);
-
+// Checking if an email is already in database
 int email_in_DB(char *email);
 
+//Checking if the password is right
 int rightPassword(char *email, unsigned char password[64]);
 
+//Get Id from mail
 size_t getID(char *email);
 
 #endif
