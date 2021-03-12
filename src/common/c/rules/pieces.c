@@ -77,6 +77,77 @@ struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
 }
 
 
+/*
+
+Name of the function : pieceMove_Rock
+Make the movement of the piece when it is the Rock movement 
+By Marie Maturana
+Start the 2021-03-12
+
+*/
+
+struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *board)
+{
+  int color_piece =  board[y*8+x].color; 
+    
+  if(color_piece) //king is white
+    {
+      if( x == 4 && y == 7) //does the king is at the good place ?
+	{
+	  if(des_x == 6 && des_y == 7) //little rock
+	    {
+	      if( board[7*8+5].type == NONE && board[7*8+6].type == NONE && board[7*8+7].type == ROOK)
+		{
+		  board[y*8+x].type = NONE;
+		  board[des_y*8+des_x].type = KING;
+		  board[7*8+7].type = NONE; 
+		  board[7*8+5].type = ROOK;
+		}
+	    }
+	  else if (des_x == 2 && des_y == 7) //big rock
+	    {
+	      if( board[7*8+3].type == NONE && board[7*8+2].type == NONE && board[7*8+1].type == NONE && board[7*8+0].type == ROOK)
+		{
+		  board[y*8+x].type = NONE;
+		  board[des_y*8+des_x].type = KING;
+		  board[7*8+0].type = NONE; 
+		  board[7*8+3].type = ROOK;
+		}
+	    }
+	} 
+	
+    }
+  if(!color_piece) //king is black
+    {
+      if( x == 4 && y == 0) // does the king is at the good place ? 
+	{
+	  if(des_x == 6 && des_y == 0) //litte rock 
+	    {
+	      if( board[0*8+5].type == NONE && board[0*8+6].type == NONE && board[0*8+7].type == ROOK)
+		{
+		  board[y*8+x].type = NONE;
+		  board[des_y*8+des_x].type = KING;
+		  board[0*8+7].type = NONE; 
+		  board[0*8+5].type = ROOK;
+		}
+	    }
+	  else if (des_x == 2 && des_y == 7) //big rock
+	    {
+	      if( board[0*8+3].type == NONE && board[0*8+2].type == NONE && board[0*8+1].type == NONE && board[0*8+0].type == ROOK)
+		{
+		  board[y*8+x].type = NONE;
+		  board[des_y*8+des_x].type = KING;
+		  board[0*8+0].type = NONE; 
+		  board[0*8+3].type = ROOK;
+		}
+	    }
+	} 
+    }
+
+  return board; //return the plate after the rock
+  
+}
+
 
 /*
 
@@ -491,3 +562,60 @@ int isValidMove_King(int x, int y, int des_x, int des_y, int color_piece)
 
 
 
+/*
+
+Name of the function : isValidMove_Rock
+Valid if the movement of the rock is possible
+By Marie Maturana
+Start the 2021-03-12
+
+*/
+
+int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece,  struct Piece *board)
+{
+
+  if(color_piece)
+    {
+      if( x == 4 && y == 7)
+	{
+	  if(des_x == 6 && des_y == 7)
+	    {
+	      if( board[7*8+5].type == NONE && board[7*8+6].type == NONE && board[7*8+7].type == ROOK)
+		{
+		  return 1; 
+		}
+	    }
+	  else if (des_x == 2 && des_y == 7) 
+	    {
+	      if( board[7*8+3].type == NONE && board[7*8+2].type == NONE && board[7*8+1].type == NONE && board[7*8+0].type == ROOK)
+		{
+		  return 1; 
+		}
+	    }
+	} 
+	
+    }
+  if(!color_piece)
+    {
+      if( x == 4 && y == 0)
+	{
+	  if(des_x == 6 && des_y == 0)
+	    {
+	      if( board[0*8+5].type == NONE && board[0*8+6].type == NONE && board[0*8+7].type == ROOK)
+		{
+		  return 1; 
+		}
+	    }
+	  else if (des_x == 2 && des_y == 7) 
+	    {
+	      if( board[0*8+3].type == NONE && board[0*8+2].type == NONE && board[0*8+1].type == NONE && board[0*8+0].type == ROOK)
+		{
+		  return 1; 
+		}
+	    }
+	} 
+    }
+   
+  
+  return 0; 
+}
