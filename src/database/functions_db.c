@@ -149,20 +149,164 @@ size_t getID(char *email)
 
 
 //_________________________________________________________________________
-/* Updating
+// Updating
+
 // 1) Updating nb games won + 1
-void updatePL_gamesW(char *email)
+void update_victory(char * email)
 {
+    //Getting the DB
     sqlite3 *db = createDB();
+    //Getting the right id
+    size_t id= getID(email);
+    
+    char *zErrMsg = 0;
+    int rc;
+    char *sql = malloc(100 * sizeof(char));
+    
+    //creating the query
+    sprintf(sql, "UPDATE PLAYER\n"\
+            "SET GAMES_WON = GAMES_WON + 1\n"\
+            "WHERE ID = '%zu';",id);
+    
+    //execute query
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+    
+    //If error in query
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "victory update error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    
+    //closing
+    free(sql);
+    sqlite3_close(db);
+ }
 
-
-
+// 2) Updating nb games lost + 1
+void update_loss( char * email)
+{
+    //Getting the DB
+    sqlite3 *db = createDB();
+    //Getting the right id
+    size_t id= getID(email);
+    
+    char *zErrMsg = 0;
+    int rc;
+    char *sql = malloc(100 * sizeof(char));
+    
+    //creating the query
+    sprintf(sql, "UPDATE PLAYER\n"\
+            "SET GAMES_LOST = GAMES_LOST + 1\n"\
+            "WHERE ID = '%zu';",id);
+    
+    //execute query
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+    
+    //If error in query
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "loss update error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    
+    //closing
+    free(sql);
+    sqlite3_close(db);
 }
 
-// 2) Updating nb games lost
+// 3) Updating new name of user x
+void update_name( char * email, char * new)
+{
+    //Getting the DB
+    sqlite3 *db = createDB();
+    //Getting the right id
+    size_t id= getID(email);
+    
+    char *zErrMsg = 0;
+    int rc;
+    char *sql = malloc(100 * sizeof(char));
+    
+    //creating the query
+    sprintf(sql, "UPDATE PLAYER\n"\
+            "SET NAME = '%s'\n"\
+            "WHERE ID = '%zu';",new,id);
+    
+    //execute query
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+    
+    //If error in query
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "update name error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    
+    //closing
+    free(sql);
+    sqlite3_close(db);
+}
 
+//4) Updating new email of user x
+void update_email( char * email, char * new)
+{
+    //Getting the DB
+    sqlite3 *db = createDB();
+    //Getting the right id
+    size_t id= getID(email);
+    
+    char *zErrMsg = 0;
+    int rc;
+    char *sql = malloc(100 * sizeof(char));
+    
+    //creating the query
+    sprintf(sql, "UPDATE PLAYER\n"\
+            "SET EMAIL = '%s'\n"\
+            "WHERE ID = '%zu';",new,id);
+    
+    //execute query
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+    
+    //If error in query
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "update email error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    
+    //closing
+    free(sql);
+    sqlite3_close(db);
+}
 
-// 1) Updating nb games won
-// 2) Updating nb games lost
-// 3) Sum of execution times
+//5) Deleting a line in DB
+void delete_user(char * email)
+{
+    //Getting the DB
+    sqlite3 *db = createDB();
+    //Getting the right id
+    size_t id= getID(email);
+    
+    char *zErrMsg = 0;
+    int rc;
+    char *sql = malloc(100 * sizeof(char));
+    
+    //creating the query
+    sprintf(sql, "DELETE\n"\
+            "FROM\n"\
+            "   PLAYER\n"\
+            "WHERE\n"\
+            "   ID = '%zu';",id);
+    
+    //execute query
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+    
+    //If error in query
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "delete user error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    
+    //closing
+    free(sql);
+    sqlite3_close(db);
+}
+/*
+// ?) Sum of execution times
  */

@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     char *name = malloc(100 * sizeof(char));
     unsigned char password[64];
     char *email = malloc(100 * sizeof(char));
-    size_t nb_won = 0; 
+    size_t nb_won = 0;
     size_t nb_lost = 0;
 
     printf("_________________ Test Mode _________________\n");
@@ -83,9 +83,38 @@ int main(int argc, char *argv[])
         printf("Wrong password \n");
         printf("\033[0m");
     }
-
+    
+    //works
+    /*printf("updating victory\n");
+    update_victory(email);
+    update_victory(email);
+    printf("ok\n");
+    
+    printf("updating loss\n");
+    update_loss(email);
+    printf("okay\n");*/
+    
+    //OKAY
+    /*printf("updating name\n");
+    update_name(email,"tryallll");
+    printf("DONE!!\n");*/
+    
+    //OKAY
+    /*printf("trying to update user email\n");
+    char *mail = malloc(100 * sizeof(char));
+    mail="marine.thunet@hotmail.fr";
+    update_email( email, mail);
+    //free(mail);
+    printf("!!!!SUCCESS!!!!!\n");*/
+    
+    //OKAY
+    /*printf("trying to delete user\n");
+    delete_user(email);
+    printf("delete is a success\n");*/
+    
     free(email);
     free(name);
     return 0;
+
 
 }
