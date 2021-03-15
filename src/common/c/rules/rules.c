@@ -1,5 +1,5 @@
-#include "pieces.h"
-#include "plate.h"
+#include "pieces.c"
+#include "plate.c"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
