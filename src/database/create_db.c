@@ -57,8 +57,6 @@ void creatingTables()
    if( rc != SQLITE_OK ){
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "Player table created successfully\n");
    }
 
    //________________________________________________________
@@ -76,8 +74,6 @@ void creatingTables()
    if( rc2 != SQLITE_OK ){
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "AI table created successfully\n");
    }
 
    //________________________________________________________

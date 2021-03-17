@@ -2,7 +2,7 @@
 #Date: Start 01/03/2021
 #About: Makefile of the common system
 
-all: clean build
+all: clean build game1
 	@echo "[Chess(ma)² - Common] All sources common tasks DONE!"
 
 clean:

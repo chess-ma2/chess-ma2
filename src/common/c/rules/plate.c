@@ -40,7 +40,6 @@ struct Piece *init_board()
     (board + 7)->type = ROOK;
     (board + 63-7)->type = ROOK;
     (board + 63)->type = ROOK;
-
     (board + 1)->type = KNIGHT;
     (board + 6)->type = KNIGHT;
     (board + 63-6)->type = KNIGHT;
