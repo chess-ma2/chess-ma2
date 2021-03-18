@@ -147,6 +147,129 @@ size_t getID(char *email)
     err(1, "No id \n");
 }
 
+//Get name from email
+const unsigned char* getNAME (char * email)
+{
+    //Connection to the database
+    sqlite3 *db = createDB();
+
+    //Create SQL query
+    char *sql = malloc(200 * sizeof(char));
+    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
+    
+    struct sqlite3_stmt *selectstmt;
+
+    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
+    
+    //If such query is possible
+    if(result == SQLITE_OK)
+    {
+        //If such row exists
+       if (sqlite3_step(selectstmt) == SQLITE_ROW)
+       {
+           //Get id and return
+            const unsigned char* res= malloc(200 * sizeof(char));
+            res = sqlite3_column_text(selectstmt,1);
+            sqlite3_finalize(selectstmt);
+            sqlite3_close(db);
+            free(sql);
+            return res;
+       }
+    }
+
+    //Close statement
+    sqlite3_finalize(selectstmt);
+
+    //Close connection to database
+    sqlite3_close(db);
+
+    //Free query
+    free(sql);
+
+    err(1, "mail not found in db \n");
+}
+
+//get wins from mail
+size_t getWINS(char *email)
+{
+    //Connection to the database
+    sqlite3 *db = createDB();
+
+    //Create SQL query
+    char *sql = malloc(200 * sizeof(char));
+    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
+    
+    struct sqlite3_stmt *selectstmt;
+
+    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
+    
+    //If such query is possible
+    if(result == SQLITE_OK)
+    {
+        //If such row exists
+       if (sqlite3_step(selectstmt) == SQLITE_ROW)
+       {
+           //Get id and return
+            size_t res = (size_t) sqlite3_column_int(selectstmt, 8);
+            sqlite3_finalize(selectstmt);
+            sqlite3_close(db);
+            free(sql);
+            return res;
+       }
+    }
+
+    //Close statement
+    sqlite3_finalize(selectstmt);
+
+    //Close connection to database
+    sqlite3_close(db);
+
+    //Free query
+    free(sql);
+
+    err(1, "no wins attached to this mail \n");
+}
+
+//get wins from mail
+size_t getLOST(char *email)
+{
+    //Connection to the database
+    sqlite3 *db = createDB();
+
+    //Create SQL query
+    char *sql = malloc(200 * sizeof(char));
+    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
+    
+    struct sqlite3_stmt *selectstmt;
+
+    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
+    
+    //If such query is possible
+    if(result == SQLITE_OK)
+    {
+        //If such row exists
+       if (sqlite3_step(selectstmt) == SQLITE_ROW)
+       {
+           //Get id and return
+            size_t res = (size_t) sqlite3_column_int(selectstmt, 9);
+            sqlite3_finalize(selectstmt);
+            sqlite3_close(db);
+            free(sql);
+            return res;
+       }
+    }
+
+    //Close statement
+    sqlite3_finalize(selectstmt);
+
+    //Close connection to database
+    sqlite3_close(db);
+
+    //Free query
+    free(sql);
+
+    err(1, "no losts attached to this mail \n");
+}
 
 //_________________________________________________________________________
 // Updating
@@ -307,6 +430,85 @@ void delete_user(char * email)
     free(sql);
     sqlite3_close(db);
 }
+
+//6) Ordering db depeding on the scores
 /*
-// ?) Sum of execution times
- */
+void order_champ()
+{
+    //Getting the DB
+    sqlite3 *db = createDB();
+    
+    char *zErrMsg = 0;
+    char *sql = malloc(100 * sizeof(char));
+    int rc;
+    
+    //creating the query
+    sprintf(sql,
+            "SELECT\n"\
+            "   NAME\n"
+            "FROM\n"\
+            "   PLAYER\n"\
+       "ORDER BY\n"\
+            "   GAMES_WON DESC,\n"\
+                "   GAMES_LOST ASC;");
+    
+    //execute query
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+    
+    //If error in query
+    if( rc != SQLITE_OK ){
+        fprintf(stderr, "order champ error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
+    
+    //closing
+    free(sql);
+    sqlite3_close(db);
+}
+
+//7) getting the rank of one user from email
+//TO FINISH
+
+size_t get_rank(char * email)
+{
+    //Getting the DB
+    sqlite3 *db = createDB();
+    //ordering the db depending on the scores
+    order_champ();
+    
+    //Create SQL query
+    char *sql = malloc(200 * sizeof(char));
+    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
+    
+    struct sqlite3_stmt *selectstmt;
+
+    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
+    
+    //If such query is possible
+    if(result == SQLITE_OK)
+    {
+        printf("%i\n",sqlite3_step(selectstmt));
+        //If such row exists
+       if (sqlite3_step(selectstmt) == SQLITE_ROW)
+       {
+           //Get id and return
+            size_t res = (size_t) sqlite3_column_int(selectstmt, 0);
+            sqlite3_finalize(selectstmt);
+            sqlite3_close(db);
+            free(sql);
+            return res;
+       }
+    }
+
+    //Close statement
+    sqlite3_finalize(selectstmt);
+
+    //Close connection to database
+    sqlite3_close(db);
+
+    //Free query
+    free(sql);
+
+    err(1, "couldn't get the rank \n");
+    
+}*/

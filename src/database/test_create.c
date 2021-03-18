@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
         printf("\033[0m");
     }
     
+    
     //works
     /*printf("updating victory\n");
     update_victory(email);
@@ -111,6 +112,19 @@ int main(int argc, char *argv[])
     /*printf("trying to delete user\n");
     delete_user(email);
     printf("delete is a success\n");*/
+    
+    //testing the get victory, lost and name
+    //partly works name doesn't bc of the static
+    /*printf("%s\n",getNAME(email));
+    printf("%zu\n", getWINS(email));
+    printf("%zu\n", getLOST(email));
+    
+    printf("updating victory\n");
+    update_victory(email);
+    update_victory(email);
+    printf("%zu\n", getWINS(email));
+    printf("ok\n");*/
+    
     
     free(email);
     free(name);
