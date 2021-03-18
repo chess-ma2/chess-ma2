@@ -18,6 +18,15 @@ int rightPassword(char *email, unsigned char password[64]);
 //Get Id from mail
 size_t getID(char *email);
 
+//Get name from email
+const unsigned char* getNAME (char * email);
+
+//Get number of party won from email
+size_t getWINS(char *email);
+
+//Get number of party lost from email
+size_t getLOST(char *email);
+
 //Adding one point of victory to user
 void update_victory(char * email);
 
@@ -32,5 +41,11 @@ void update_email( char * email, char * new);
 
 //Deleting user form database
 void delete_user(char * email);
+
+//Ordering players depending on their scores
+void order_champ();
+
+//Geting the rank of user from mail
+size_t get_rank(char * email);
 
 #endif
