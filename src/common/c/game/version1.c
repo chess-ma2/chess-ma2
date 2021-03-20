@@ -20,29 +20,14 @@
  * @details all the functions needed for the first version of the game
 */
 
-/*
- * {"♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜"},
-    {"♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟"},
-    {"… … … … … … … …"},
-    {"… … … … … … … …"},
-    {"… … … … … … … …"},
-    {"… … … … … … … …"},
-    {"♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙"},
-    {"♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖"}
- *
- */
-
+//________________ Printing the chess board and chess pieces __________________
+//Prints chess pieces
 void print_special_CHAR(struct Piece current, int color)
 {
     if(color == 0)
-    {
-        //printf("\e[48;5;$124m%03d");
-        printf("\e[48;5;$124m");
-    }
+    { printf("\e[48;5;$124m"); }
     else
-    {
-        printf("\e[48;5;$173m");
-    }
+    { printf("\e[48;5;$173m"); }
 
     if(current.color == BLACK)
     {
@@ -97,6 +82,7 @@ void print_special_CHAR(struct Piece current, int color)
     printf(reset);
 }
 
+//Print board
 void display_board_special(struct Piece *board)
 {
     printf("    ");
@@ -128,17 +114,19 @@ void display_board_special(struct Piece *board)
         printf("\n");
     }
 }
-
+//____________________________________________________________________________
+//________________________ For login _________________________________________
 struct Player {
     char *name;
     unsigned char password[64];
     char *email;
     size_t nb_won;
     size_t nb_lost;
+    int team_color;
 
 };
-
-void verify_password(struct Player *pl, unsigned char password[64],  int *finished, char *firstTime1)
+// Verying password, 3 incorrect answers max
+void verify_password(struct Player *pl,  int *finished, char *firstTime1)
 {
     char * err = malloc(sizeof(char));
     printf("Please enter your password \n");
@@ -153,10 +141,12 @@ void verify_password(struct Player *pl, unsigned char password[64],  int *finish
         }
         printf(BYEL "Logged in with success \n" reset);
         // Wait for other functions to be created
-        pl->name = "Player 1";
+        const unsigned char* name_pl = getNAME (pl->email);
+        pl->name = (char *) name_pl;
+        free((void *)name_pl);
         //pl->password = password;
-        pl->nb_won = 0;
-        pl->nb_lost = 0;
+        pl->nb_won = getWINS(pl->email);
+        pl->nb_lost = getLOST(pl->email);
         *finished = 1;
     }
     else
@@ -198,6 +188,7 @@ void verify_password(struct Player *pl, unsigned char password[64],  int *finish
     free(err);
 }
 
+//Checks if email exists, 3 incorrect answers max
 void incorrect_email(struct Player *pl, int *finished, char *firstTime1)
 {
     int k = 0;
@@ -208,8 +199,7 @@ void incorrect_email(struct Player *pl, int *finished, char *firstTime1)
         scanf(" %s", pl->email);
         if(email_in_DB( pl->email) != 0)
         {
-            unsigned char password[64];
-            verify_password(pl, password, finished, firstTime1);
+            verify_password(pl, finished, firstTime1);
         }
         k++;
     }
@@ -219,6 +209,7 @@ void incorrect_email(struct Player *pl, int *finished, char *firstTime1)
 
 }
 
+//Create or get information from login for player1
 struct Player *Player1()
 {
     struct Player *player1 = malloc(sizeof(struct Player));
@@ -271,7 +262,7 @@ struct Player *Player1()
         scanf("%s", player1->email);
         if(email_in_DB( player1->email) != 0)
         {
-            verify_password(player1, password, finished, firstTime1);
+            verify_password(player1, finished, firstTime1);
         }
         else
         {
@@ -296,6 +287,7 @@ struct Player *Player1()
     return player1;
 }
 
+//Create or get information from login for player2
 struct Player *Player2()
 {
     struct Player *player2 = malloc(sizeof(struct Player));
@@ -348,7 +340,7 @@ struct Player *Player2()
         scanf(" %s", player2->email);
         if(email_in_DB( player2->email) != 0)
         {
-            verify_password(player2, player2->password, finished, firstTime1);
+            verify_password(player2, finished, firstTime1);
         }
         else
         {
@@ -373,245 +365,319 @@ struct Player *Player2()
     return player2;
 }
 
-void play(struct Piece *board)
+//_________________________________________  Game _________________________________________
+
+// Checking if coordinates are correct
+int incorrect_char(char x)
 {
-  int res; //ask positions
+    return x < 'A' || x > 'H'; // 1 if incorrect
+}
 
-  int null; //if ask nulle
+// Checking if coordinates are correct
+int incorrect_int(int x)
+{
+    return x < 1 || x > 8; // 1 if incorrect
+}
 
-  int answer = 0; // answer oth the nulle proposition
+// Play game -> reused rules function in rules.c but changed quite a lot
+// This is the core function
+int play(struct Piece *board, struct Player *player1, struct Player *player2)
+{
 
+  //_______________ Variables
   int x = 0;
-  char x_char = A;
+  char x_char = 'A';
   int y = 0;
   int des_x = 0;
-  char des_x_char = A;
+  char des_x_char = 'A';
   int des_y = 0;
 
   int winner; //1 = white win else black
 
   enum turn player_turn = WHITETURN; // team's turn
-
   enum rock white_rock = CAN_ROCK;
   enum rock black_rock = CAN_ROCK;
-
   enum king_status white_kingstatus = NOTHING;
   enum king_status black_kingstatus = NOTHING;
+
+  //___________________ Random to get which player starts
+  int starts = rand() % 2;
+  if (starts == 0)
+  {
+      player1->team_color = 0; // Player 1 is white
+      player2->team_color = 1; // Player 2 is black
+  }
+  else
+  {
+      player1->team_color = 1; // Player 1 is black
+      player2->team_color = 0; // Player 2 is white
+  }
+  //_______________________________________________________________________________________________________________________________
+
 
   while( white_kingstatus != CHECKMATE || black_kingstatus != CHECKMATE ) //continue while not chessmate
     {
       printf("\n\n");
+      if( player_turn == WHITETURN)
+      {
+        if(player1->team_color == 0)
+          { printf("\n %s it's your turn! \n\n", player1->name); }
+        else {printf("\n %s it's your turn!\n\n", player2->name);}
+      }
+      else{
+        if(player1->team_color == 1)
+          { printf("\n %s it's your turn!\n\n", player1->name); }
+        else {printf("\n %s it's your turn!\n\n", player2->name);}
+      }
+      printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
+      scanf(" %c%d", &x_char, &y);
+      /*while(incorrect_char(x_char) || incorrect_int(y))
+      {
+        printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
+        printf("Please enter the original coordinates of the chess piece you want to move (ex: A 3 for A3) : \n");
+        scanf(" %c %d\n", &x_char, &y);
+      }*/
+      x = ((int)x_char) - 65;
+      printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
+      scanf(" %c%d", &des_x_char, &des_y);
+      /*while(incorrect_char(des_x_char) || incorrect_int(des_y))
+      {
+        printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
+        printf("Please enter the new coordinates of the chess piece you want to move (ex: B 1 for B1) : \n");
+        scanf(" %c %d\n", &des_x_char, &des_y);
+      }*/
+      des_x = ((int)des_x_char) - 65;
 
-      printf("Please enter the original coordonates of the chess piece you want to move () : \n");
-      char x_char;
-      scanf("%d%d%d%d", &x, &y, &des_x, &des_y); //ask positions to the player
-
-
-      //--------------------------abandonment--------------------------------
+      //__________________ Withdraw ______________________________________________________________________________________________
 
       if( x == -1 && y == -1 && des_x == -1 && des_y == -1)
 	{
 	  if( player_turn == WHITETURN)
 	    {
 	      winner = 0;
-	      printf("\nL'adversaire (blanc) déclare l'abandon.\n");
-	      printf("\nLes noirs ont gagnés.\n");
+        if(player1->team_color == 0)
+        {
+          //Player 2 wins (black)
+          printf(WHTHB HMAG "\n %s lost by resignation, %s wins! Congrats to the black team!\n" reset, player1->name, player2->name);
+          update_victory(player2->email);
+          update_loss(player1->email);
+        }
+        else
+        {
+          //Player 1 wins (black)
+          printf(WHTHB HMAG "\n %s lost by resignation, %s wins! Congrats to the black team!\n" reset, player2->name, player1->name);
+          update_victory(player1->email);
+          update_loss(player2->email);
+        }
+
 	      return 0;
 	    }
 	  else
 	    {
 	      winner = 1;
-	      printf("\nL'adversaire (noir) déclare l'abandon.\n");
-	      printf("\nLes blancs ont gagné.\n");
+        if(player1->team_color == 0)
+        {
+          //Player 1 wins (white)
+          printf(BLKHB HMAG "\n %s lost by resignation, %s wins! Congrats to the white team!\n" reset, player2->name, player1->name);
+          update_victory(player1->email);
+          update_loss(player2->email);
+        }
+        else
+        {
+          //Player 2 wins (white)
+          printf(BLKHB HMAG "\n %s lost by resignation, %s wins! Congrats to the white team!\n" reset, player1->name, player2->name);
+          update_victory(player2->email);
+          update_loss(player1->email);
+
+        }
 	      return 0;
 	    }
 
 	}
 
-      //-----------------------------nulle-------------------------------------
+      //__________________ If null ______________________________________________________________________________________________
 
       if( x == 0 && y == 0 && des_x == 0 && des_y == 0)
 	{
+    int answer;
 	  if( player_turn == WHITETURN)
 	    {
+        if(player1->team_color == 0)
+          {printf("%s,", player1->name);}
+        else
+        {printf("%s,", player2->name);}
+        printf("White is asking for a stalemate. Type " GRN "1" reset" if you accept or else type " RED "0" reset);
+	      scanf("%d", &answer);
 
-	      printf("\nL'adversaire (blanc) demande la nulle. Tapez 1 si vous accepter sinon tapez 0 \n");
+        // In case answer isn't 1 or 0
+        while(!(answer == 1 || answer == 0))
+        {
+          printf(URED "Please try again...\n" reset);
+          printf("Type " GRN "1" reset" if you accept or else type " RED "0" reset);
+  	      scanf("%d", &answer);
+        }
 
-	      nulle = scanf("%d", &answer);
-
-	      if( answer == 1)
-		{
-		  winner = 2;
-		  printf("\nL'adversaire (noir) accepte la nulle.\n");
-		  printf("EGALITÉ\n");
-		  return 0;
-		}
-	      else
-		{
-		  printf("\nL'adversaire (noir) refuse la nulle.\n");
-		  printf("La partie continue.\n");
-		}
+        //______________________ Stalemate _____________________________________________________________________________________
+	      if( answer == 1) // Accepted = draw
+		      {
+		          winner = 2;
+              printf(BGRN);
+              if(player1->team_color == 1)
+                {
+                  printf("\n%s",player1->name);
+                 }
+              else
+              {printf("\n%s,", player2->name);}
+              printf( "(Black) accepted the stalemate\n" reset);
+		          printf(BHGRN "\n It's a draw!! \n" reset);
+              update_victory(player1->email);
+              update_victory(player1->email);
+		          return 0;
+		       }
+	      else // Not accepted
+		      {
+            printf(BRED);
+            if(player1->team_color == 1)
+              {
+                printf("\n%s",player1->name);
+               }
+            else
+            {printf("\n%s,", player2->name);}
+		        printf("\n(Black) refuses so the game continues.\n" reset);
+		       }
 
 	      player_turn = BLACKTURN;
 
 	    }
 	  else
 	    {
-	      printf("\nL'adversaire (noir) demande la nulle. Tapez 1 si vous accepter sinon tapez 0\n");
+        if(player1->team_color == 1) // If black
+          {printf("%s,", player1->name);}
+        else
+        {printf("%s,", player2->name);}
+        printf("Black is asking for a stalemate. Type " GRN "1" reset" if you accept or else type " RED "0" reset);
+	      scanf("%d", &answer);
 
-	      nulle = scanf("%d", &answer);
+        // In case answer isn't 1 or 0
+        while(!(answer == 1 || answer == 0))
+        {
+          printf(URED "Please try again...\n" reset);
+          printf("Type " GRN "1" reset" if you accept or else type " RED "0" reset);
+  	      scanf("%d", &answer);
+        }
 
-	      if( answer == 1)
-		{
-		  winner = 2;
-		  printf("\nL'adversaire (blanc) accepte la nulle.\n");
-		  printf("EGALITÉ\n");
-		  return 0;
+	      if( answer == 1) // If white accepts
+		    {
+		        winner = 2;
+            printf(BGRN);
+            if(player1->team_color == 0)
+              {
+                printf("\n%s",player1->name);
+               }
+            else
+            {printf("\n%s,", player2->name);}
+            printf( "(White) accepted the stalemate\n" reset);
+            printf(BHGRN "\n It's a draw!! \n" reset);
+            update_victory(player1->email);
+            update_victory(player1->email);
+		        return 0;
 		}
-	      else
-		{
-		  printf("\nL'adversaire (blanc) refuse la nulle.\n");
-		  printf("La partie continue.\n");
-		}
-
+	      else// Not accepted
+		      {
+            printf(BRED);
+            if(player1->team_color == 0)
+              {
+                printf("\n%s",player1->name);
+               }
+            else
+            {printf("\n%s,", player2->name);}
+		        printf("\n(White) refuses so the game continues.\n" reset);
+		        }
 	      player_turn = WHITETURN;
 	    }
 	}
 
       //--------------------------------------------------------------------------------------
+      // Make sure the coordonates are correct
+      while(incorrect_char(x_char) || incorrect_int(y))
+      {
+        printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
+        printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
+        scanf(" %c%d\n", &x_char, &y);
+      }
+      x = ((int)x_char) - 65;
 
-
-      if(player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE)
-	{
-	  printf("\nVous avez sélectionner une pièce de l'adversaire\n");
-	}
-      else if(player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE)
-	{
-	  printf(" \nVous avez sélectionner une pièce de l'adversaire\n");
-	}
-      else if( white_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type == KING)
-	{
-	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x+1)].color, board);
-	  white_rock = CANT_ROCK;
-
-	  if (possible_rock == 1)
+      // It's not your piece to move
+      while((player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
+            (player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE))
 	    {
-	      board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+	       printf(URED "\n That isn't your chess piece to move \n" reset);
+         /*while(incorrect_char(x_char) || incorrect_int(y))
+         {
+           printf("Please enter the original coordinates of" URED "your" reset "chess piece you want to move (ex: A 3 for A3) : \n");
+           scanf(" %c %d\n", &x_char, &y);
+         }*/
+	     }
 
-	      if(player_turn == WHITETURN)
-		{
-		  player_turn = BLACKTURN;
-		}
-	      else
-		{
-		  player_turn = WHITETURN;
-		}
+      //____________________________________ Game settings _____________________________________________________________
+      //Rock
+      if( white_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type == KING)
+	    {
+	        int possible_rock = isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x+1)].color, board);
+	        white_rock = CANT_ROCK;
 
-	    }
-	}
+	         if (possible_rock == 1)
+	         {
+	            board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+	            if(player_turn == WHITETURN)
+		            { player_turn = BLACKTURN;}
+	            else
+		            { player_turn = WHITETURN;}
+           }
+	      }
       else if( black_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type == KING)
-	{
-	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x -1, des_y -1, board[(y-1)*8+(x+1)].color, board);
-	  black_rock = CANT_ROCK;
-
-	  if (possible_rock == 1)
 	    {
-	      board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+	       int possible_rock = isValidMove_Rock( x - 1, y-1, des_x -1, des_y -1, board[(y-1)*8+(x+1)].color, board);
+	       black_rock = CANT_ROCK;
 
-	      if(player_turn == WHITETURN)//change the player turn
-		{
-		  player_turn = BLACKTURN;
-		}
-	      else
-		{
-		  player_turn = WHITETURN;
-		}
-
-	    }
-	}
-
-
+	       if (possible_rock == 1)
+	       {
+	          board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+            if(player_turn == WHITETURN)//change the players turn
+		        { player_turn = BLACKTURN; }
+	           else
+		        { player_turn = WHITETURN; }
+          }
+	     }
+      //Other chess piece movements
       int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
 
-      printf("%d", possible);
+      //printf("%d", possible);
+      printf(RED);
+      switch(possible)
+      {
+          case 0:
+              printf("This move isn't possible for that chess piece, please check the rules.\n\n");
+              break;
+          case 2:
+              printf("This move isn't possible because one or some coordinates are out of bounds\n\n");
+              break;
+          case 3:
+              printf("This move isn't possible because the chess piece on the destination coordinates is already yours!\n\n");
+              break;
+          case 4:
+              printf("This move isn't possible because there aren't any chess pieces to move!\n\n");
+              break;
+          case 1:
+              board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
+              if(player_turn == WHITETURN) //change the player turn
+          	  { player_turn = BLACKTURN; }
+          	  else
+          	  { player_turn = WHITETURN; }
 
-      if (possible == 0)
-	{
-	  printf("Le mouvement n'est pas possible.\n");
-	}
-
-      if (possible == 2)
-	{
-	  printf("Le mouvement n'est pas possible car une ou plusieurs des coordonnées données se trouve hors du plateau.\n");
-	}
-
-      if (possible == 3)
-	{
-	  printf("Le mouvement n'est pas possible car il y a une piece de la même couleur sur la case de la destination que sur celle de départ.\n");
-	}
-
-      if (possible == 4)
-	{
-	  printf("Le mouvement n'est pas possible car vous n'avez sélectionné aucune piece à bouger.\n");
-	}
-
-      if (possible == 1)
-	{
-	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
-
-	  if(player_turn == WHITETURN) //change the player turn
-	    {
-	      player_turn = BLACKTURN;
-	    }
-	  else
-	    {
-	      player_turn = WHITETURN;
-	    }
-
-	}
-
-
-
-      display(board); //print the board after modifications
+      }
+      printf(reset);
+      display_board_special(board); //print the board after modifications
 
     }
-}
-
-int main()
-{
-
-    //_________________ Welcome message ________________________________
-
-    printf("__________________________________________________________________________________________________\n\n");
-    printf(BRED "                                 Welcome to Chess ma² \n\n" reset);
-    printf("This is the first version of the project. \n");
-    printf("In this version, you can play with a friend (or your sworn chess enemy) on a same computer.\n");
-    printf(URED "You must both have (or create) an account to play.\n\n" reset);
-
-    printf("__________________________________________________________________________________________________\n\n");
-    //_________________ Connecting to database _________________________
-    creatingTables();
-
-    //______ Get or create players
-    struct Player *player1 = Player1();
-    printf("\n \n");
-
-    struct Player *player2 = Player2();
-
-    //___________________   Start Game   ________________________________
-    struct Piece *board = init_board();
-    display_board_special(board);
-    play(board);
-
-    //___________________   Free memory_   ________________________________
-
-    free(player1->name);
-    free(player1->email);
-    free(player1);
-    free(player2->name);
-    free(player2->email);
-    free(player2);
-    free(board);
-
-    return 0;
 }
