@@ -142,9 +142,26 @@ size_t getID(char *email)
 
     err(1, "No id \n");
 }
+//print Name
+int callback_Name(void *NotUsed, int argc, char **argv,
+                    char **azColName) {
+
+    NotUsed = 0;
+
+    for (int i = 0; i < argc; i++) {
+
+        //printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        printf("%s", argv[i] ? argv[i] : "NULL");
+    }
+
+  //  printf("\n");
+
+    return 0;
+}
+
 
 //Get name from email
-const unsigned char* getNAME (char * email)
+void printNAME(char * email)
 {
     //Connection to the database
     sqlite3 *db = createDB();
@@ -153,23 +170,11 @@ const unsigned char* getNAME (char * email)
     char *sql = malloc(200 * sizeof(char));
     sprintf(sql, "Select NAME from PLAYER where email = '%s'",email);
 
+
     struct sqlite3_stmt *selectstmt;
 
-    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-
-    //If such query is possible
-    if(result == SQLITE_OK)
-    {
-           //Get name and return
-            const unsigned char* res= malloc(200 * sizeof(char));
-            res = sqlite3_column_text(selectstmt, 0);
-            printf(" %s\n", res);
-            sqlite3_finalize(selectstmt);
-            sqlite3_close(db);
-            free(sql);
-            return res;
-
-    }
+    //Execute query to print name
+    int result = sqlite3_exec(db, sql, callback_Name, 0, &selectstmt);
 
     //Close statement
     sqlite3_finalize(selectstmt);
@@ -179,8 +184,6 @@ const unsigned char* getNAME (char * email)
 
     //Free query
     free(sql);
-
-    err(1, "mail not found in db \n");
 }
 
 //get wins from mail

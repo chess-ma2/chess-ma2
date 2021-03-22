@@ -18,8 +18,11 @@ int rightPassword(char *email, unsigned char password[64]);
 //Get Id from mail
 size_t getID(char *email);
 
-//Get name from email
-const unsigned char* getNAME (char * email);
+//print Name
+int callback_Name(void *NotUsed, int argc, char **argv, char **azColName);
+
+//Get name from email to print it
+void printNAME(char * email);
 
 //Get number of party won from email
 size_t getWINS(char *email);

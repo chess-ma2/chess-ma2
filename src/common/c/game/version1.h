@@ -55,6 +55,9 @@ struct Player *Player1();
 //Create or get information from login for player2
 struct Player *Player2();
 
+//Checks if account hasn't been created and creates it
+void new_account(struct Player *pl, int *finished, char *firstTime1);
+
 //________________________ Game _______________________________________________
 // Checking if coordinates are correct
 int incorrect_char(char x);
@@ -63,6 +66,9 @@ int incorrect_char(char x);
 int incorrect_int(int x);
 
 // Play game -> reused rules function in rules.c but changed quite a lot
+// Print rules
+void print_rules();
+
 // This is the core function
 int play(struct Piece *board, struct Player *player1, struct Player *player2);
 

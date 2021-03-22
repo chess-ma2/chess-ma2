@@ -131,6 +131,7 @@ void verify_password(struct Player *pl,  int *finished, char *firstTime1)
     char * err = malloc(sizeof(char));
     printf("Please enter your password \n");
     scanf("%s", pl->password);
+    system("clear");
     if( rightPassword( pl->email, pl->password) != 0)
     {
         const char *forlen = (const char *) pl->password;
@@ -141,9 +142,6 @@ void verify_password(struct Player *pl,  int *finished, char *firstTime1)
         }
         printf(BYEL "Logged in with success \n" reset);
         // Wait for other functions to be created
-        const unsigned char* name_pl = getNAME (pl->email);
-        pl->name = (char *) name_pl;
-        free((void *)name_pl);
         //pl->password = password;
         pl->nb_won = getWINS(pl->email);
         pl->nb_lost = getLOST(pl->email);
@@ -165,18 +163,10 @@ void verify_password(struct Player *pl,  int *finished, char *firstTime1)
                 printf(reset);
                 printf("Please enter your password \n");
                 scanf(" %s", pl->password);
+                system("clear");
                 if(rightPassword( pl->email, pl->password) != 0)
                 {
-                    const char *forlen = (const char *)pl->password;
-                    int len = strlen(forlen);
-                    for(int i = 0; i < len; i++)
-                    { printf("\b"); }
                     printf(BYEL "Logged in with success \n\n" reset);
-                    // Wait for other functions to be created
-                    pl->name = "Player 1";
-                    //pl->password = password;
-                    pl->nb_won = 0;
-                    pl->nb_lost = 0;
                     *finished = 1;
                 }
                 k++;
@@ -209,12 +199,44 @@ void incorrect_email(struct Player *pl, int *finished, char *firstTime1)
 
 }
 
+//Checks if account hasn't been created and creates it
+void new_account(struct Player *pl, int *finished, char *firstTime1)
+{
+  printf("Welcome to the Chess ma² family! We're just going to ask a few questions for your profile.\n");
+  printf("Enter your name (100 char max): \n");
+  scanf(" %s", pl->name);
+  printf("Enter your email (100 char max): \n");
+  scanf(" %s", pl->email);
+  char answer;
+  if( email_in_DB( pl->email) != 0 ) {
+    printf("This mail is already affiliated to an account, do you wish to log in or create an account with another email?\n Type 'Y' for yes or 'N' for no.\n");
+    scanf(" %c", &answer);
+
+    while (!(answer == 'Y' || answer == 'N')) {
+      printf(RED "Type 'Y' for yes or 'N' for no.\n" reset);
+      scanf(" %c", &answer);
+    }
+    *firstTime1 = answer;
+    return;
+  }
+  printf("Enter your password (64 char max): \n");
+  scanf(" %s", pl->password);
+  //Clear terminal
+  system("clear");
+  printf("Your secret password is safe with us %s \n", pl->name);
+  newPLAYER( pl->name, pl->password, pl->email, 0, 0);
+  printf(BYEL "Account created with success welcome to the family! \n" reset);
+  *finished = 1;
+  pl->nb_won = 0;
+  pl->nb_lost = 0;
+
+}
+
 //Create or get information from login for player1
 struct Player *Player1()
 {
     struct Player *player1 = malloc(sizeof(struct Player));
     player1->name = malloc(100 * sizeof(char));
-    unsigned char password[64];
     player1->email = malloc(100 * sizeof(char));
     char *err = malloc(sizeof(char));
     char *firstTime1 = malloc(sizeof(char));
@@ -234,28 +256,8 @@ struct Player *Player1()
     {
         if(*firstTime1 =='Y')
         {
-            printf("Welcome to the Chess ma² family! We're just going to ask a few questions for your profile.\n");
-            printf("Enter your name (100 char max): \n");
-            scanf(" %s", player1->name);
-            printf("Enter your email (100 char max): \n");
-            scanf(" %s", player1->email);
-            printf("Enter your password (64 char max): \n");
-            scanf(" %s", player1->password);
-
-            const char *forlen =  (const char *) player1->password;
-            int len = strlen(forlen);
-            for(int i = 0; i < 20; i++)
-            {
-                printf("\b");
-            }
-            printf("Your secret password is safe with us %s \n", player1->name);
-            newPLAYER( player1->name, player1->password, player1->email, 0, 0);
-            printf(BYEL "Account created with success welcome to the family! \n" reset);
-            *finished = 1;
-            //player1->password = password;
-            player1->nb_won = 0;
-            player1->nb_lost = 0;
-    }
+            new_account( player1, finished, firstTime1);
+        }
     else
     {
         printf("Welcome back, please enter your email so we can log you in \n");
@@ -292,7 +294,6 @@ struct Player *Player2()
 {
     struct Player *player2 = malloc(sizeof(struct Player));
     player2->name = malloc(100 * sizeof(char));
-    unsigned char password[64];
     player2->email = malloc(100 * sizeof(char));
     char *err = malloc(sizeof(char));
     char *firstTime1 = malloc(sizeof(char));
@@ -312,28 +313,8 @@ struct Player *Player2()
     {
         if(*firstTime1 =='Y')
         {
-            printf("Welcome to the Chess ma² family! We're just going to ask a few questions for your profile.\n");
-            printf("Enter your name (100 char max): \n");
-            scanf(" %s", player2->name);
-            printf("Enter your email (100 char max): \n");
-            scanf(" %s", player2->email);
-            printf("Enter your password (64 char max): \n");
-            scanf(" %s", player2->password);
-
-            const char * forlen = (const char *) player2->password;
-            int len = strlen(forlen);
-            for(int i = 0; i < len; i++)
-            {
-                printf("\b");
-            }
-            printf("Your secret password is safe with us %s \n", player2->name);
-            newPLAYER( player2->name, player2->password, player2->email, 0, 0);
-            printf(BYEL "Account created with success welcome to the family! \n" reset);
-            *finished = 1;
-            //player1->password = password;
-            player2->nb_won = 0;
-            player2->nb_lost = 0;
-    }
+          new_account( player2, finished, firstTime1);
+        }
     else
     {
         printf("Welcome back, please enter your email so we can log you in \n");
@@ -379,11 +360,37 @@ int incorrect_int(int x)
     return x < 1 || x > 8; // 1 if incorrect
 }
 
+void print_rules()
+{
+  printf(RED " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n");
+  char *str = malloc(300 * (sizeof(char)));
+  printf( "|                  Rules                        |\n");
+  printf( "|                                               |\n");
+  strcpy(str, "If you wish to Withdraw please type 'W' '-1'");
+  printf("|%s   |\n", str);
+  strcpy(str, " as the original coordinates ");
+  printf("|%s%18s|\n", str, "");
+  strcpy(str, "and then type 'W' '-1' for the new coordinates ");
+  printf("|%s|\n", str);
+  printf( "|                                               |\n");
+  printf( "|                                               |\n");
+  //is asking for a stalemate
+  strcpy(str, "If you want to ask for a stalemate please");
+  printf("|%s%6s|\n", str, "");
+  strcpy(str, "type 'S' '0' as the original coordinates");
+  printf("|%s%7s|\n", str, "");
+  strcpy(str, "and then type 'S' '0' for the new coordinates");
+  printf("|%s%2s|\n", str, "");
+  printf( "|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n");
+  free(str);
+  printf(reset);
+}
+
 // Play game -> reused rules function in rules.c but changed quite a lot
 // This is the core function
 int play(struct Piece *board, struct Player *player1, struct Player *player2)
 {
-
+  print_rules();
   //_______________ Variables
   int x = 0;
   char x_char = 'A';
@@ -418,17 +425,17 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
   while( white_kingstatus != CHECKMATE || black_kingstatus != CHECKMATE ) //continue while not chessmate
     {
       printf("\n\n");
-      if( player_turn == WHITETURN)
-      {
-        if(player1->team_color == 0)
-          { printf("\n %s it's your turn! \n\n", player1->name); }
-        else {printf("\n %s it's your turn!\n\n", player2->name);}
-      }
-      else{
-        if(player1->team_color == 1)
-          { printf("\n %s it's your turn!\n\n", player1->name); }
-        else {printf("\n %s it's your turn!\n\n", player2->name);}
-      }
+      // Print the name of who's turn it is _________________________________________________________________
+      if( (player_turn == WHITETURN && player1->team_color == 0) || (player_turn == BLACKTURN && player1->team_color == 1) )
+      { printNAME(player1->email); }
+      else{ printNAME(player2->email); }
+      if(player_turn == WHITETURN)
+      {printf(" (White) ");}
+      else
+      {printf(" (Black) ");}
+      printf(" it's your turn! \n\n");
+      //______________________________________________________________________________________________________
+
       printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
       scanf(" %c%d", &x_char, &y);
       /*while(incorrect_char(x_char) || incorrect_int(y))
@@ -450,7 +457,7 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
 
       //__________________ Withdraw ______________________________________________________________________________________________
 
-      if( x == -1 && y == -1 && des_x == -1 && des_y == -1)
+      if( x_char == 'W' && y == -1 && des_x_char == 'W' && des_y == -1)
 	{
 	  if( player_turn == WHITETURN)
 	    {
@@ -497,7 +504,7 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
 
       //__________________ If null ______________________________________________________________________________________________
 
-      if( x == 0 && y == 0 && des_x == 0 && des_y == 0)
+      if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0)
 	{
     int answer;
 	  if( player_turn == WHITETURN)
@@ -650,7 +657,8 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
           }
 	     }
       //Other chess piece movements
-      int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
+      //int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
+      int possible = isValidMove(x, y-1, des_x, des_y-1, board); //movement is possible
 
       //printf("%d", possible);
       printf(RED);
@@ -669,7 +677,8 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
               printf("This move isn't possible because there aren't any chess pieces to move!\n\n");
               break;
           case 1:
-              board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
+              //board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
+              board = pieceMove(x, y-1, des_x, des_y-1, board);
               if(player_turn == WHITETURN) //change the player turn
           	  { player_turn = BLACKTURN; }
           	  else
@@ -680,4 +689,5 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
       display_board_special(board); //print the board after modifications
 
     }
+    return 0;
 }
