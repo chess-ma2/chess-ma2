@@ -615,10 +615,11 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
       x = ((int)x_char) - 65;
 
       // It's not your piece to move
-      while((player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
+      if((player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
             (player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE))
 	    {
-	       printf(URED "\n That isn't your chess piece to move \n" reset);
+	       printf(URED "\n That isn't your chess piece to move. \n" reset);
+         continue;
          /*while(incorrect_char(x_char) || incorrect_int(y))
          {
            printf("Please enter the original coordinates of" URED "your" reset "chess piece you want to move (ex: A 3 for A3) : \n");
