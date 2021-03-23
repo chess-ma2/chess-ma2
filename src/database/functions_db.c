@@ -207,7 +207,7 @@ size_t getWINS(char *email)
        if (sqlite3_step(selectstmt) == SQLITE_ROW)
        {
            //Get id and return
-            size_t res = (size_t) sqlite3_column_double(selectstmt, 0);
+            size_t res = (size_t) sqlite3_column_double(selectstmt, 8);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
             free(sql);
@@ -248,7 +248,7 @@ size_t getLOST(char *email)
        if (sqlite3_step(selectstmt) == SQLITE_ROW)
        {
            //Get id and return
-            size_t res = (size_t) sqlite3_column_double(selectstmt, 0);
+            size_t res = (size_t) sqlite3_column_double(selectstmt, 9);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
             free(sql);
@@ -429,12 +429,15 @@ void delete_user(char * email)
 }
 
 //6) Ordering db depeding on the scores
-/*
+
+
 void order_champ()
 {
     //Getting the DB
     sqlite3 *db = createDB();
-
+    
+    //struct my_linked_list *head = my_linked_list_alloc();
+    
     char *zErrMsg = 0;
     char *sql = malloc(100 * sizeof(char));
     int rc;
@@ -468,44 +471,19 @@ void order_champ()
 
 size_t get_rank(char * email)
 {
-    //Getting the DB
-    sqlite3 *db = createDB();
     //ordering the db depending on the scores
     order_champ();
-
-    //Create SQL query
-    char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-
-    struct sqlite3_stmt *selectstmt;
-
-    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-
-    //If such query is possible
-    if(result == SQLITE_OK)
+    int i=0;
+    //find a way to find column length
+    while (i<1)
     {
-        printf("%i\n",sqlite3_step(selectstmt));
-        //If such row exists
-       if (sqlite3_step(selectstmt) == SQLITE_ROW)
-       {
-           //Get id and return
-            size_t res = (size_t) sqlite3_column_int(selectstmt, 0);
-            sqlite3_finalize(selectstmt);
-            sqlite3_close(db);
-            free(sql);
-            return res;
-       }
+        if ((char *) sqlite3_column_text(i, 7) == email)
+        {
+            return i+1;
+        }
+        i++;
     }
+    return -1;
+    
 
-    //Close statement
-    sqlite3_finalize(selectstmt);
-
-    //Close connection to database
-    sqlite3_close(db);
-
-    //Free query
-    free(sql);
-
-    err(1, "couldn't get the rank \n");
-
-}*/
+}

@@ -1,7 +1,7 @@
 /**
- * @author Anna
+ * @author Anna Marine
  * @date 10/03/2021
- * @details Tests: Creating the database and its tables + verifying password
+ * @details Tests: Creating the database and its tables + verifying password + other functions that were made
  */
 
 #include "create_db.h"
@@ -92,14 +92,14 @@ int main()
 
 
     //works
-    /*printf("updating victory\n");
+    printf("updating victory\n");
     update_victory(email);
     update_victory(email);
     printf("ok\n");
 
     printf("updating loss\n");
     update_loss(email);
-    printf("okay\n");*/
+    printf("okay\n");
 
     //OKAY
     /*printf("updating name\n");
@@ -130,6 +130,10 @@ int main()
     update_victory(email);
     printf("%zu\n", getWINS(email));
     printf("ok\n");*/
+    
+    /*printf("trying to get rank");
+    printf("%zu\n",get_rank(email));
+    printf("worked!\n");*/
 
 
     free(email);
