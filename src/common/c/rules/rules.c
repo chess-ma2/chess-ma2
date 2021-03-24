@@ -7,18 +7,21 @@
 
 /*
 
-File main.c containing all the functions relating the a game.
+File rules.c containing all the functions relating the a game.
 By Marie Maturana & Antoine
 Start the 2021-03-04
 
 */
 
+
 /**
  * @author Marie Maturana & Antoine
- * @date Start 06/03/2021
- * @details Small print of board for debug the game
- * @param board the board of the game
+ * @date Start 04/03/2021
+ * @details Small print of board for debug the game 
+ * @param print the board of the game
  */
+
+
 void display(struct Piece *board)
 {
   printf("   ");
@@ -176,7 +179,9 @@ int rules()
 	{
 	  printf(" \nVous avez sélectionner une pièce de l'adversaire\n"); 
 	}
-      else if( white_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type == KING)
+
+      
+      if( white_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type == KING)
 	{
 	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x+1)].color, board);
 	  white_rock = CANT_ROCK;
@@ -196,7 +201,8 @@ int rules()
 
 	    }
 	}
-      else if( black_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type == KING)
+
+      if( black_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type == KING)
 	{
 	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x -1, des_y -1, board[(y-1)*8+(x+1)].color, board);
 	  black_rock = CANT_ROCK;
@@ -261,7 +267,10 @@ int rules()
 
       display(board); //print the board after modifications
 
-    }  
+    }
+
+
+  free(board);
 
   return 0;
    
