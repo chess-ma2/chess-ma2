@@ -26,6 +26,7 @@ enum king_status{
 		 NOTHING= 0,
 		 CHECKMATE,
 		 CHECK,
+		 PAT, 
 };
 
 

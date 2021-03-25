@@ -313,7 +313,22 @@ int rules()
 	      winner = 0;
 	      break; 
 	    }
-	  
+
+	   if(player_turn == WHITETURN && pat(x_kingb, y_kingb,board)) //check if I put the opponent king in checkmat
+	    {
+	      black_kingstatus = PAT;
+	      winner = 2 ;
+	      printf("EGALITÉ\n");
+	      return 0;
+	    }
+	   if(player_turn == BLACKTURN && pat(x_kingw, y_kingw,board))
+	    {
+	      white_kingstatus = PAT;
+	      winner = 2;
+	      printf("EGALITÉ\n");
+	      return 0;
+	    }
+	   	  
 	  if(player_turn == WHITETURN) //change the player turn
 	    {
 	      player_turn = BLACKTURN; 
