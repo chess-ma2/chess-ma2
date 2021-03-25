@@ -34,11 +34,11 @@ int main()
     printf("\033[0;35m");
     printf("Test for new player \n");
     printf("Enter your name (100 char max): \n");
-    scanf("%s", name);
+    scanf(" %s", name);
     printf("Enter your email (100 char max): \n");
-    scanf("%s", email);
+    scanf(" %s", email);
     printf("Enter your password (64 char max): \n");
-    scanf("%s", password);
+    scanf(" %s", password);
     system("clear");
     printf("\033[0m");
 
@@ -73,7 +73,7 @@ int main()
     unsigned char password2[64];
     printf("\033[0;35m");
     printf("Re-enter your password: \n");
-    scanf("%s", password2);
+    scanf(" %s", password2);
     printf("\033[0m");
 
     if(rightPassword(email, password2) == 1)
@@ -130,7 +130,7 @@ int main()
     update_victory(email);
     printf("%zu\n", getWINS(email));
     printf("ok\n");*/
-    
+
     /*printf("trying to get rank");
     printf("%zu\n",get_rank(email));
     printf("worked!\n");*/

@@ -130,16 +130,10 @@ void verify_password(struct Player *pl,  int *finished, char *firstTime1)
 {
     char * err = malloc(sizeof(char));
     printf("Please enter your password \n");
-    scanf("%s", pl->password);
+    scanf(" %s", pl->password);
     system("clear");
-    if( rightPassword( pl->email, pl->password) != 0)
+    if( rightPassword( pl->email, pl->password) == 1)
     {
-        const char *forlen = (const char *) pl->password;
-        int len = strlen(forlen);
-        for(int i = 0; i < len; i++)
-        {
-            printf("\b");
-        }
         printf(BYEL "Logged in with success \n" reset);
         // Wait for other functions to be created
         //pl->password = password;
@@ -193,7 +187,10 @@ void incorrect_email(struct Player *pl, int *finished, char *firstTime1)
         }
         k++;
     }
-    printf(RED "Error: Email doesn't exist, please create an account \n\n" reset);
+
+    if ( *finished == 0) {
+      printf(RED "Error: Email doesn't exist, please create an account \n\n" reset);
+    }
     *firstTime1 = 'Y';
 
 
@@ -209,14 +206,17 @@ void new_account(struct Player *pl, int *finished, char *firstTime1)
   scanf(" %s", pl->email);
   char answer;
   if( email_in_DB( pl->email) != 0 ) {
-    printf("This mail is already affiliated to an account, do you wish to log in or create an account with another email?\n Type 'Y' for yes or 'N' for no.\n");
+    printf("This mail is already affiliated to an account, do you wish to log in or create an account with another email?\n Type 'L' for login or 'C' for creating a new account.\n");
     scanf(" %c", &answer);
 
-    while (!(answer == 'Y' || answer == 'N')) {
-      printf(RED "Type 'Y' for yes or 'N' for no.\n" reset);
+    while (!(answer == 'L' || answer == 'C')) {
+      printf(RED "Type 'L' for login or 'C' for creating a new account.\n" reset);
       scanf(" %c", &answer);
     }
-    *firstTime1 = answer;
+
+    if (answer == 'C') {
+      *firstTime1 = 'Y';
+    }
     return;
   }
   printf("Enter your password (64 char max): \n");
@@ -347,6 +347,146 @@ struct Player *Player2()
 }
 
 //_________________________________________  Game _________________________________________
+// Withdraw subfunction
+int withdraw(enum turn player_turn, struct Player *pl1, struct Player *pl2)
+{
+  if( (player_turn == WHITETURN && pl1->team_color == 0 ) || (player_turn == BLACKTURN && pl1->team_color == 1))
+    {
+        //Player 2 wins
+        printf(WHTHB HMAG);
+        printNAME(pl1->email);
+        printf(" lost by resignation, ");
+        printNAME(pl2->email);
+        printf(" wins! Congrats to the ");
+        if (player_turn == WHITETURN) {
+          printf("black team!\n");
+        }
+        else{
+          printf("white team!\n");
+        }
+        printf(reset);
+        update_victory(pl2->email);
+        update_loss(pl1->email);
+      }
+    else
+      {
+        //Player 1 wins
+        printf(WHTHB HMAG);
+        printNAME(pl2->email);
+        printf(" lost by resignation, ");
+        printNAME(pl1->email);
+        printf(" wins! Congrats to the ");
+        if (player_turn == WHITETURN) {
+          printf("black team!\n");
+        }
+        else{
+          printf("white team!\n");
+        }
+        printf(reset);
+        update_victory(pl1->email);
+        update_loss(pl2->email);
+      }
+    return 0;
+}
+
+struct res_stalemate{
+    int answer;
+    enum turn player_turn;
+};
+
+//Stalemate subfunction
+struct res_stalemate stalemate(enum turn player_turn, struct Player *player1, struct Player *player2)
+{
+  struct res_stalemate res;
+  res.answer = 2;
+
+  if( player_turn == WHITETURN)
+    {
+      if(player1->team_color == 0)
+        {printNAME(player1->email);}
+      else
+      {printNAME(player2->email);}
+      printf(" (White) is asking for a stalemate. \n");
+    }
+    else{
+      if(player1->team_color == 1)
+        {printNAME(player1->email);}
+      else
+      {printNAME(player2->email);}
+      printf(" (Black) is asking for a stalemate. \n");
+
+    }
+      int answer;
+      printf(" Type " GRN "1" reset" if you accept or else type " RED "0 \n" reset);
+      scanf(" %d", &answer);
+
+      // In case answer isn't 1 or 0
+      while(!(answer == 1 || answer == 0))
+      {
+        printf(URED "Please try again...\n" reset);
+        printf("Type " GRN "1" reset" if you accept or else type " RED "0 \n" reset);
+        scanf(" %d", &answer);
+      }
+
+      if( answer == 1) // Accepted = draw
+        {
+          if(player_turn == WHITETURN)
+          {
+            printf(BGRN);
+            if(player1->team_color == 1)
+              printNAME(player1->email);
+            else
+              printNAME(player2->email);
+
+            printf(" (Black) accepted the stalemate\n" reset);
+
+            printf(BHGRN "\n It's a draw!! \n" reset);
+            update_victory(player1->email);
+            update_victory(player2->email);
+            res.answer = 0;
+         }
+         else{
+
+           printf(BGRN);
+           if(player1->team_color == 0)
+             printNAME(player1->email);
+           else
+             printNAME(player2->email);
+
+           printf( "(White) accepted the stalemate\n" reset);
+
+           printf(BHGRN "\n It's a draw!! \n" reset);
+           update_victory(player1->email);
+           update_victory(player2->email);
+           res.answer = 0;
+
+         }
+       }
+      else // Not accepted
+        {
+          printf(BRED);
+          if(player_turn == WHITETURN)
+          {
+            if(player1->team_color == 1)
+              printNAME(player1->email);
+            else
+              printNAME(player2->email);
+
+            printf(" (Black) refuses so the game continues.\n" reset);
+            res.player_turn = BLACKTURN;
+         }
+         else{
+             if(player1->team_color == 0)
+               printNAME(player1->email);
+             else
+               printNAME(player2->email);
+
+             printf(" (White) refuses so the game continues.\n" reset);
+             res.player_turn = WHITETURN;
+         }
+       }
+      return res;
+}
 
 // Checking if coordinates are correct
 int incorrect_char(char x)
@@ -363,26 +503,20 @@ int incorrect_int(int x)
 void print_rules()
 {
   printf(RED " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n");
-  char *str = malloc(300 * (sizeof(char)));
   printf( "|                  Rules                        |\n");
   printf( "|                                               |\n");
-  strcpy(str, "If you wish to Withdraw please type 'W' '-1'");
-  printf("|%s   |\n", str);
-  strcpy(str, " as the original coordinates ");
-  printf("|%s%18s|\n", str, "");
-  strcpy(str, "and then type 'W' '-1' for the new coordinates ");
-  printf("|%s|\n", str);
+  printf( "| If you wish to Withdraw please type 'W0'      |\n");
+  printf( "|              as the original coordinates      |\n");
+  printf( "| and then type 'W0' for the new coordinates    |\n");
   printf( "|                                               |\n");
   printf( "|                                               |\n");
-  //is asking for a stalemate
-  strcpy(str, "If you want to ask for a stalemate please");
-  printf("|%s%6s|\n", str, "");
-  strcpy(str, "type 'S' '0' as the original coordinates");
-  printf("|%s%7s|\n", str, "");
-  strcpy(str, "and then type 'S' '0' for the new coordinates");
-  printf("|%s%2s|\n", str, "");
+  printf( "| If you want to ask for a stalemate please     |\n");
+  printf( "|      type 'S0' as the original coordinates    |\n");
+  printf( "| and then type 'S0' for the new coordinates    |\n");
+  printf( "|                                               |\n");
+  printf( "| White team =  ♙  ♖  ♘  ♗  ♔  ♕                |\n");
+  printf( "| Black team =  ♟  ♜  ♞  ♝  ♚  ♛                |\n");
   printf( "|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n");
-  free(str);
   printf(reset);
 }
 
@@ -398,8 +532,6 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
   int des_x = 0;
   char des_x_char = 'A';
   int des_y = 0;
-
-  int winner; //1 = white win else black
 
   enum turn player_turn = WHITETURN; // team's turn
   enum rock white_rock = CAN_ROCK;
@@ -436,173 +568,34 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
       printf(" it's your turn! \n\n");
       //______________________________________________________________________________________________________
 
+      //Get original coordinates
       printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
       scanf(" %c%d", &x_char, &y);
-      /*while(incorrect_char(x_char) || incorrect_int(y))
-      {
-        printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
-        printf("Please enter the original coordinates of the chess piece you want to move (ex: A 3 for A3) : \n");
-        scanf(" %c %d\n", &x_char, &y);
-      }*/
       x = ((int)x_char) - 65;
+
+      //Get new coordinates
       printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
       scanf(" %c%d", &des_x_char, &des_y);
-      /*while(incorrect_char(des_x_char) || incorrect_int(des_y))
-      {
-        printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
-        printf("Please enter the new coordinates of the chess piece you want to move (ex: B 1 for B1) : \n");
-        scanf(" %c %d\n", &des_x_char, &des_y);
-      }*/
       des_x = ((int)des_x_char) - 65;
 
       //__________________ Withdraw ______________________________________________________________________________________________
 
-      if( x_char == 'W' && y == -1 && des_x_char == 'W' && des_y == -1)
-	{
-	  if( player_turn == WHITETURN)
+      if( x_char == 'W' && y == 0 && des_x_char == 'W' && des_y == 0)
 	    {
-	      winner = 0;
-        if(player1->team_color == 0)
-        {
-          //Player 2 wins (black)
-          printf(WHTHB HMAG "\n %s lost by resignation, %s wins! Congrats to the black team!\n" reset, player1->name, player2->name);
-          update_victory(player2->email);
-          update_loss(player1->email);
-        }
-        else
-        {
-          //Player 1 wins (black)
-          printf(WHTHB HMAG "\n %s lost by resignation, %s wins! Congrats to the black team!\n" reset, player2->name, player1->name);
-          update_victory(player1->email);
-          update_loss(player2->email);
-        }
+        return withdraw(player_turn, player1, player2);
+	     }
 
-	      return 0;
-	    }
-	  else
-	    {
-	      winner = 1;
-        if(player1->team_color == 0)
-        {
-          //Player 1 wins (white)
-          printf(BLKHB HMAG "\n %s lost by resignation, %s wins! Congrats to the white team!\n" reset, player2->name, player1->name);
-          update_victory(player1->email);
-          update_loss(player2->email);
-        }
-        else
-        {
-          //Player 2 wins (white)
-          printf(BLKHB HMAG "\n %s lost by resignation, %s wins! Congrats to the white team!\n" reset, player1->name, player2->name);
-          update_victory(player2->email);
-          update_loss(player1->email);
-
-        }
-	      return 0;
-	    }
-
-	}
-
-      //__________________ If null ______________________________________________________________________________________________
+      //__________________ If Stalemate ______________________________________________________________________________________________
 
       if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0)
-	{
-    int answer;
-	  if( player_turn == WHITETURN)
 	    {
-        if(player1->team_color == 0)
-          {printf("%s,", player1->name);}
-        else
-        {printf("%s,", player2->name);}
-        printf("White is asking for a stalemate. Type " GRN "1" reset" if you accept or else type " RED "0" reset);
-	      scanf("%d", &answer);
+           struct res_stalemate res = stalemate(player_turn, player1, player2);
 
-        // In case answer isn't 1 or 0
-        while(!(answer == 1 || answer == 0))
-        {
-          printf(URED "Please try again...\n" reset);
-          printf("Type " GRN "1" reset" if you accept or else type " RED "0" reset);
-  	      scanf("%d", &answer);
-        }
-
-        //______________________ Stalemate _____________________________________________________________________________________
-	      if( answer == 1) // Accepted = draw
-		      {
-		          winner = 2;
-              printf(BGRN);
-              if(player1->team_color == 1)
-                {
-                  printf("\n%s",player1->name);
-                 }
-              else
-              {printf("\n%s,", player2->name);}
-              printf( "(Black) accepted the stalemate\n" reset);
-		          printf(BHGRN "\n It's a draw!! \n" reset);
-              update_victory(player1->email);
-              update_victory(player1->email);
-		          return 0;
-		       }
-	      else // Not accepted
-		      {
-            printf(BRED);
-            if(player1->team_color == 1)
-              {
-                printf("\n%s",player1->name);
-               }
-            else
-            {printf("\n%s,", player2->name);}
-		        printf("\n(Black) refuses so the game continues.\n" reset);
-		       }
-
-	      player_turn = BLACKTURN;
-
-	    }
-	  else
-	    {
-        if(player1->team_color == 1) // If black
-          {printf("%s,", player1->name);}
-        else
-        {printf("%s,", player2->name);}
-        printf("Black is asking for a stalemate. Type " GRN "1" reset" if you accept or else type " RED "0" reset);
-	      scanf("%d", &answer);
-
-        // In case answer isn't 1 or 0
-        while(!(answer == 1 || answer == 0))
-        {
-          printf(URED "Please try again...\n" reset);
-          printf("Type " GRN "1" reset" if you accept or else type " RED "0" reset);
-  	      scanf("%d", &answer);
-        }
-
-	      if( answer == 1) // If white accepts
-		    {
-		        winner = 2;
-            printf(BGRN);
-            if(player1->team_color == 0)
-              {
-                printf("\n%s",player1->name);
-               }
-            else
-            {printf("\n%s,", player2->name);}
-            printf( "(White) accepted the stalemate\n" reset);
-            printf(BHGRN "\n It's a draw!! \n" reset);
-            update_victory(player1->email);
-            update_victory(player1->email);
-		        return 0;
-		}
-	      else// Not accepted
-		      {
-            printf(BRED);
-            if(player1->team_color == 0)
-              {
-                printf("\n%s",player1->name);
-               }
-            else
-            {printf("\n%s,", player2->name);}
-		        printf("\n(White) refuses so the game continues.\n" reset);
-		        }
-	      player_turn = WHITETURN;
-	    }
-	}
+           if (res.answer == 0)
+            {return 0;}
+          else
+            {player_turn = res.player_turn;}
+	     }
 
       //--------------------------------------------------------------------------------------
       // Make sure the coordonates are correct

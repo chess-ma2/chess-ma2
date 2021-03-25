@@ -36,6 +36,12 @@ struct Player {
 
 };
 
+// Stalemate answer structure
+struct res_stalemate{
+    int answer;
+    enum turn player_turn;
+};
+
 //________________ Printing the chess board and chess pieces __________________
 //Prints chess pieces
 void print_special_CHAR(struct Piece current, int color);
@@ -59,6 +65,12 @@ struct Player *Player2();
 void new_account(struct Player *pl, int *finished, char *firstTime1);
 
 //________________________ Game _______________________________________________
+//Stalemate subfunction
+struct res_stalemate stalemate(enum turn player_turn, struct Player *player1, struct Player *player2);
+
+// Withdraw subfunction
+int withdraw(enum turn player_turn, struct Player *pl1, struct Player *pl2);
+
 // Checking if coordinates are correct
 int incorrect_char(char x);
 
