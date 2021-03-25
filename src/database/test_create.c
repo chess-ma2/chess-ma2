@@ -91,7 +91,7 @@ int main()
     }
 
 
-    //works
+    /*//works
     printf("updating victory\n");
     update_victory(email);
     update_victory(email);
@@ -102,26 +102,26 @@ int main()
     printf("okay\n");
 
     //OKAY
-    /*printf("updating name\n");
+    printf("updating name\n");
     update_name(email,"tryallll");
-    printf("DONE!!\n");*/
+    printf("DONE!!\n");
 
     //OKAY
-    /*printf("trying to update user email\n");
+    printf("trying to update user email\n");
     char *mail = malloc(100 * sizeof(char));
     mail="marine.thunet@hotmail.fr";
     update_email( email, mail);
     //free(mail);
-    printf("!!!!SUCCESS!!!!!\n");*/
+    printf("!!!!SUCCESS!!!!!\n");
 
     //OKAY
-    /*printf("trying to delete user\n");
+    printf("trying to delete user\n");
     delete_user(email);
-    printf("delete is a success\n");*/
+    printf("delete is a success\n");
 
     //testing the get victory, lost and name
     //partly works name doesn't bc of the static
-    /*printf("%s\n",getNAME(email));
+    //printf("%s\n",printNAME(email));
     printf("%zu\n", getWINS(email));
     printf("%zu\n", getLOST(email));
 
@@ -129,7 +129,7 @@ int main()
     update_victory(email);
     update_victory(email);
     printf("%zu\n", getWINS(email));
-    printf("ok\n");*/
+    printf("ok\n");
 
     /*printf("trying to get rank");
     printf("%zu\n",get_rank(email));

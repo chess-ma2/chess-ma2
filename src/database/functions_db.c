@@ -128,7 +128,8 @@ size_t getID(char *email)
 }
 //print Name
 int callback_Name(void *NotUsed, int argc, char **argv,
-                    char **azColName) {
+                    char **azColName)
+{
 
     NotUsed = 0;
 
@@ -187,7 +188,7 @@ size_t getWINS(char *email)
 
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select GAMES_WON from PLAYER where email = '%s'",email);
+    sprintf(sql, "Select GAMES_WON from PLAYER where EMAIL = '%s'",email);
 
     struct sqlite3_stmt *selectstmt;
 
@@ -228,7 +229,7 @@ size_t getLOST(char *email)
 
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select GAMES_LOST from PLAYER where email = '%s'",email);
+    sprintf(sql, "Select GAMES_LOST from PLAYER where EMAIL = '%s'",email);
 
     struct sqlite3_stmt *selectstmt;
 
@@ -269,8 +270,6 @@ void update_victory(char * email)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
 
     char *zErrMsg = 0;
     int rc;
@@ -279,7 +278,7 @@ void update_victory(char * email)
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET GAMES_WON = GAMES_WON + 1\n"\
-            "WHERE ID = '%zu';",id);
+            "WHERE EMAIL = '%s';",email);
 
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
@@ -300,8 +299,6 @@ void update_loss( char * email)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
 
     char *zErrMsg = 0;
     int rc;
@@ -310,7 +307,7 @@ void update_loss( char * email)
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET GAMES_LOST = GAMES_LOST + 1\n"\
-            "WHERE ID = '%zu';",id);
+            "WHERE EMAIL = '%s';",email);
 
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
@@ -331,8 +328,6 @@ void update_name( char * email, char * new)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
 
     char *zErrMsg = 0;
     int rc;
@@ -341,7 +336,7 @@ void update_name( char * email, char * new)
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET NAME = '%s'\n"\
-            "WHERE ID = '%zu';",new,id);
+            "WHERE EMAIL = '%s';",new,email);
 
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
@@ -362,8 +357,6 @@ void update_email( char * email, char * new)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
 
     char *zErrMsg = 0;
     int rc;
@@ -372,7 +365,7 @@ void update_email( char * email, char * new)
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET EMAIL = '%s'\n"\
-            "WHERE ID = '%zu';",new,id);
+            "WHERE EMAIL = '%s';",new,email);
 
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
@@ -393,8 +386,6 @@ void delete_user(char * email)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
 
     char *zErrMsg = 0;
     int rc;
@@ -405,7 +396,7 @@ void delete_user(char * email)
             "FROM\n"\
             "   PLAYER\n"\
             "WHERE\n"\
-            "   ID = '%zu';",id);
+            "   EMAIL = '%s';",email);
 
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
