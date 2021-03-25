@@ -143,6 +143,7 @@ int rules()
 		}
 
 	      player_turn = BLACKTURN;
+	      continue; 
 	    
 	    }
 	  else
@@ -165,29 +166,34 @@ int rules()
 		}
 
 	      player_turn = WHITETURN;
+	      continue; 
 	    }
 	}
 
       //--------------------------------------------------------------------------------------
 
-      
+
       if(player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE)
 	{
-	  printf("\nVous avez sélectionner une pièce de l'adversaire\n");  
+	  printf("\nVous avez sélectionner une pièce de l'adversaire\n");
+	  continue; 
 	}
-      else if(player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE)
+      if(player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE)
 	{
-	  printf(" \nVous avez sélectionner une pièce de l'adversaire\n"); 
+	  printf(" \nVous avez sélectionner une pièce de l'adversaire\n");
+	  continue; 
 	}
-
       
-      if( white_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type == KING)
+      if( white_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
 	{
-	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x+1)].color, board);
-	  white_rock = CANT_ROCK;
+	  
+	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x-1)].color, board);
 
 	  if (possible_rock == 1)
 	    {
+
+	      white_rock = CANT_ROCK;
+	  
 	      board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
 	  
 	      if(player_turn == WHITETURN) 
@@ -200,15 +206,19 @@ int rules()
 		}
 
 	    }
+
+	  display(board); 
+
+	  continue; 
 	}
 
-      if( black_rock == CAN_ROCK && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type == KING)
+      if( black_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
 	{
-	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x -1, des_y -1, board[(y-1)*8+(x+1)].color, board);
-	  black_rock = CANT_ROCK;
+	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x -1, des_y -1, board[(y-1)*8+(x-1)].color, board);
 
 	  if (possible_rock == 1)
 	    {
+	      black_rock = CANT_ROCK;
 	      board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
 	  
 	      if(player_turn == WHITETURN)//change the player turn
@@ -221,6 +231,10 @@ int rules()
 		}
 
 	    }
+
+	  display(board); 
+
+	  continue; 
 	}
 
 	 
