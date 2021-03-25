@@ -1,4 +1,5 @@
 #include "pieces.c"
+#include "check_and_pat.c"
 #include "plate.c"
 #include <stdio.h>
 #include <math.h>
@@ -74,7 +75,14 @@ int rules()
   int des_x = 0;
   int des_y = 0;
 
-  int winner; //1 = white win else black 
+  //kings'positions to know if check or checkmat
+
+  int x_kingb = 4 ; 
+  int y_kingb = 0;
+  int x_kingw = 4;
+  int y_kingw = 7; 
+
+  int winner = 0; //1 = white win else black 
   
   enum turn player_turn = WHITETURN; // team's turn
   
@@ -195,6 +203,9 @@ int rules()
 	      white_rock = CANT_ROCK;
 	  
 	      board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+
+	      x_kingw = des_x - 1; 
+	      y_kingw = des_y - 1; 
 	  
 	      if(player_turn == WHITETURN) 
 		{
@@ -219,7 +230,11 @@ int rules()
 	  if (possible_rock == 1)
 	    {
 	      black_rock = CANT_ROCK;
+	      
 	      board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+
+	      x_kingb = des_x - 1; 
+	      y_kingb = des_y - 1; 
 	  
 	      if(player_turn == WHITETURN)//change the player turn
 		{
@@ -239,8 +254,6 @@ int rules()
 
 	 
       int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
-
-      printf("%d", possible); 
 
       if (possible == 0)
 	{
@@ -264,7 +277,42 @@ int rules()
 	  
       if (possible == 1)
 	{
+	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
+	    {
+	      x_kingw = des_x - 1; 
+	      y_kingw = des_y - 1; 
+	    }
+
+	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == BLACK)
+	    {
+	      x_kingb = des_x - 1; 
+	      y_kingb = des_y - 1; 
+	    }
+
 	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
+
+	   if(player_turn == BLACKTURN && kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1)
+	    {
+	      printf("Echec : le roi blanc est en échec \n"); 
+	    }
+
+	   if(player_turn == WHITETURN && kingcheck_place( x_kingb, y_kingb, des_x-1, des_y-1, board) == 1)
+	    {
+	      printf("Echec : le roi noir est en échec \n"); 
+	    }
+
+	   if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb,board)) //check if I put the opponent king in checkmat
+	    {
+	      black_kingstatus = CHECKMATE;
+	      winner = 1 ;
+	      break; 
+	    }
+	   if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw,board))
+	    {
+	      white_kingstatus = CHECKMATE;
+	      winner = 0;
+	      break; 
+	    }
 	  
 	  if(player_turn == WHITETURN) //change the player turn
 	    {
@@ -276,13 +324,20 @@ int rules()
 	    }
 
 	}
-    
-
 
       display(board); //print the board after modifications
 
     }
 
+  if(winner == 1)
+    {
+      printf("Les blancs ont gagnés \n");
+    }
+
+    if(winner == 0)
+    {
+      printf("Les noirs ont gagnés \n");
+    }
 
   free(board);
 
