@@ -23,11 +23,11 @@ int email_in_DB(char *email)
 
     //Create SQL query
      sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-    
+
     struct sqlite3_stmt *selectstmt;
-    
+
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
+
     //If such query is possible
     if(result == SQLITE_OK)
     {
@@ -35,16 +35,16 @@ int email_in_DB(char *email)
         if(sqlite3_step(selectstmt) == SQLITE_ROW)
             inMail = 1;
     }
-    
+
     //Close statement
     sqlite3_finalize(selectstmt);
-    
+
     //Close connection to database
     sqlite3_close(db);
 
     //Free query
     free(sql);
-    
+
     return inMail;
 }
 
@@ -55,42 +55,26 @@ int rightPassword(char *email, unsigned char password[64])
     sqlite3 *db = createDB();
 
     char *sql = malloc(300 * sizeof(char));
-  
+
+    //Hash password
+    unsigned long* res = SHA_1(password);
+
     //Create SQL query
-     sprintf(sql, "Select PASSWORD1,PASSWORD2,PASSWORD3,PASSWORD4,PASSWORD5 from PLAYER where email = %s",email);
+    sprintf(sql, "Select * from PLAYER WHERE EMAIL = '%s' AND PASSWORD1 = '%lx' AND PASSWORD2 = '%lx' AND PASSWORD3 = '%lx' AND PASSWORD4 = '%lx' AND PASSWORD5 = '%lx'",email, res[0], res[1], res[2], res[3], res[4]);
 
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
-    //Hash password 
-    unsigned long* res = SHA_1(password);
-    int right = 1;
+    int right = 0;
 
     //If such query is possible
     if(result == SQLITE_OK)
     {
-            //Checking if a hash isn't correct
-            unsigned long pass1 = (unsigned long) sqlite3_column_text(selectstmt, 0);
-            if(pass1 != res[0])
-                right = 0;                
-
-            unsigned long pass2 = (unsigned long) sqlite3_column_text(selectstmt, 1);
-            if(pass2 != res[1])
-                right = 0;
-
-            unsigned long pass3 = (unsigned long) sqlite3_column_text(selectstmt, 2);
-            if(pass3 != res[2])
-                right = 0;
-
-            unsigned long pass4 = (unsigned long) sqlite3_column_text(selectstmt, 3);
-            if(pass4 != res[3])
-                right = 0;
-
-            unsigned long pass5 = (unsigned long) sqlite3_column_text(selectstmt, 4);
-            if(pass5 != res[4])
-                right = 0;
-
+      //right = 1;
+      if (sqlite3_step(selectstmt) == SQLITE_ROW) // Record found
+      {
+        right = 1;
+      }
     }
 
     //Close statement
@@ -114,25 +98,21 @@ size_t getID(char *email)
 
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-    
+    sprintf(sql, "Select ID from PLAYER where email = '%s'",email);
+
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
+
     //If such query is possible
     if(result == SQLITE_OK)
     {
-        //If such row exists
-       if (sqlite3_step(selectstmt) == SQLITE_ROW)
-       {
            //Get id and return
             size_t res = (size_t) sqlite3_column_int(selectstmt, 0);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
             free(sql);
             return res;
-       }
     }
 
     //Close statement
@@ -146,47 +126,58 @@ size_t getID(char *email)
 
     err(1, "No id \n");
 }
+//print Name
+int callback_Name(void *NotUsed, int argc, char **argv,
+                    char **azColName)
+{
+
+    NotUsed = 0;
+
+
+    for (int i = 0; i < argc; i++) {
+        azColName[i] = azColName[i];
+        printf("%s", argv[i] ? argv[i] : "NULL");
+    }
+
+  //  printf("\n");
+
+    return 0;
+}
+
 
 //Get name from email
-const unsigned char* getNAME (char * email)
+void printNAME(char * email)
 {
     //Connection to the database
     sqlite3 *db = createDB();
 
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-    
-    struct sqlite3_stmt *selectstmt;
+    sprintf(sql, "Select NAME from PLAYER where email = '%s'",email);
 
-    int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
-    //If such query is possible
-    if(result == SQLITE_OK)
+
+    //struct sqlite3_stmt *selectstmt;
+    char *err_msg = 0;
+
+    //Execute query to print name
+    if (sqlite3_exec(db, sql, callback_Name, 0, &err_msg) != SQLITE_OK )
     {
-        //If such row exists
-       if (sqlite3_step(selectstmt) == SQLITE_ROW)
-       {
-           //Get id and return
-            const unsigned char* res= malloc(200 * sizeof(char));
-            res = sqlite3_column_text(selectstmt,1);
-            sqlite3_finalize(selectstmt);
-            sqlite3_close(db);
-            free(sql);
-            return res;
-       }
+
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
     }
 
+
     //Close statement
-    sqlite3_finalize(selectstmt);
+    //sqlite3_finalize(selectstmt);
 
     //Close connection to database
     sqlite3_close(db);
 
     //Free query
     free(sql);
-
-    err(1, "mail not found in db \n");
 }
 
 //get wins from mail
@@ -197,12 +188,12 @@ size_t getWINS(char *email)
 
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-    
+    sprintf(sql, "Select GAMES_WON from PLAYER where EMAIL = '%s'",email);
+
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
+
     //If such query is possible
     if(result == SQLITE_OK)
     {
@@ -210,7 +201,7 @@ size_t getWINS(char *email)
        if (sqlite3_step(selectstmt) == SQLITE_ROW)
        {
            //Get id and return
-            size_t res = (size_t) sqlite3_column_int(selectstmt, 8);
+            size_t res = (size_t) sqlite3_column_double(selectstmt, 0);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
             free(sql);
@@ -238,12 +229,12 @@ size_t getLOST(char *email)
 
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
-    sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-    
+    sprintf(sql, "Select GAMES_LOST from PLAYER where EMAIL = '%s'",email);
+
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
+
     //If such query is possible
     if(result == SQLITE_OK)
     {
@@ -251,7 +242,7 @@ size_t getLOST(char *email)
        if (sqlite3_step(selectstmt) == SQLITE_ROW)
        {
            //Get id and return
-            size_t res = (size_t) sqlite3_column_int(selectstmt, 9);
+            size_t res = (size_t) sqlite3_column_double(selectstmt, 0);
             sqlite3_finalize(selectstmt);
             sqlite3_close(db);
             free(sql);
@@ -279,27 +270,25 @@ void update_victory(char * email)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
-    
+
     char *zErrMsg = 0;
     int rc;
     char *sql = malloc(100 * sizeof(char));
-    
+
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET GAMES_WON = GAMES_WON + 1\n"\
-            "WHERE ID = '%zu';",id);
-    
+            "WHERE EMAIL = '%s';",email);
+
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "victory update error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
-    
+
     //closing
     free(sql);
     sqlite3_close(db);
@@ -310,27 +299,25 @@ void update_loss( char * email)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
-    
+
     char *zErrMsg = 0;
     int rc;
     char *sql = malloc(100 * sizeof(char));
-    
+
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET GAMES_LOST = GAMES_LOST + 1\n"\
-            "WHERE ID = '%zu';",id);
-    
+            "WHERE EMAIL = '%s';",email);
+
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "loss update error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
-    
+
     //closing
     free(sql);
     sqlite3_close(db);
@@ -341,27 +328,25 @@ void update_name( char * email, char * new)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
-    
+
     char *zErrMsg = 0;
     int rc;
     char *sql = malloc(100 * sizeof(char));
-    
+
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET NAME = '%s'\n"\
-            "WHERE ID = '%zu';",new,id);
-    
+            "WHERE EMAIL = '%s';",new,email);
+
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "update name error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
-    
+
     //closing
     free(sql);
     sqlite3_close(db);
@@ -372,27 +357,25 @@ void update_email( char * email, char * new)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
-    
+
     char *zErrMsg = 0;
     int rc;
     char *sql = malloc(100 * sizeof(char));
-    
+
     //creating the query
     sprintf(sql, "UPDATE PLAYER\n"\
             "SET EMAIL = '%s'\n"\
-            "WHERE ID = '%zu';",new,id);
-    
+            "WHERE EMAIL = '%s';",new,email);
+
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "update email error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
-    
+
     //closing
     free(sql);
     sqlite3_close(db);
@@ -403,29 +386,27 @@ void delete_user(char * email)
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    //Getting the right id
-    size_t id= getID(email);
-    
+
     char *zErrMsg = 0;
     int rc;
     char *sql = malloc(100 * sizeof(char));
-    
+
     //creating the query
     sprintf(sql, "DELETE\n"\
             "FROM\n"\
             "   PLAYER\n"\
             "WHERE\n"\
-            "   ID = '%zu';",id);
-    
+            "   EMAIL = '%s';",email);
+
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "delete user error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
-    
+
     //closing
     free(sql);
     sqlite3_close(db);
@@ -437,11 +418,11 @@ void order_champ()
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    
+
     char *zErrMsg = 0;
     char *sql = malloc(100 * sizeof(char));
     int rc;
-    
+
     //creating the query
     sprintf(sql,
             "SELECT\n"\
@@ -451,16 +432,16 @@ void order_champ()
        "ORDER BY\n"\
             "   GAMES_WON DESC,\n"\
                 "   GAMES_LOST ASC;");
-    
+
     //execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "order champ error: %s\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
-    
+
     //closing
     free(sql);
     sqlite3_close(db);
@@ -475,15 +456,15 @@ size_t get_rank(char * email)
     sqlite3 *db = createDB();
     //ordering the db depending on the scores
     order_champ();
-    
+
     //Create SQL query
     char *sql = malloc(200 * sizeof(char));
     sprintf(sql, "Select * from PLAYER where email = '%s'",email);
-    
+
     struct sqlite3_stmt *selectstmt;
 
     int result = sqlite3_prepare_v2(db, sql, -1, &selectstmt, NULL);
-    
+
     //If such query is possible
     if(result == SQLITE_OK)
     {
@@ -510,5 +491,5 @@ size_t get_rank(char * email)
     free(sql);
 
     err(1, "couldn't get the rank \n");
-    
+
 }*/

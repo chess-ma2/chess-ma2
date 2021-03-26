@@ -2,4 +2,4 @@
 **/target/**
 *.out
 *.o
-*.DStore
+*.DS_Store

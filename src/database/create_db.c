@@ -34,7 +34,6 @@ void creatingTables()
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    int rc;
     char *zErrMsg = 0;
     char *sql;
     char *sql2;
@@ -51,15 +50,13 @@ void creatingTables()
       "EMAIL          TEXT," \
       "GAMES_WON      REAL,"\
       "GAMES_LOST     REAL );";
-   
+
    /* Execute SQL statement */
-   rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);  
-   if( rc != SQLITE_OK ){
+   sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+   /*if( rc != SQLITE_OK ){
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "Player table created successfully\n");
-   }
+   }*/
 
    //________________________________________________________
 
@@ -72,13 +69,11 @@ void creatingTables()
       "TIME_RUN       REAL );";
 
    /* Execute SQL statement */
-   int rc2 = sqlite3_exec(db, sql2, NULL, 0, &zErrMsg);
-   if( rc2 != SQLITE_OK ){
+   sqlite3_exec(db, sql2, NULL, 0, &zErrMsg);
+   /*if( rc2 != SQLITE_OK ){
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "AI table created successfully\n");
-   }
+   }*/
 
    //________________________________________________________
 
@@ -92,7 +87,7 @@ void newPLAYER(char *name, unsigned char password[64], char *email, size_t nb_wo
 {
     //Getting the DB
     sqlite3 *db = createDB();
-    
+
     // Creating new player
     char *zErrMsg = 0;
     int rc;
@@ -100,12 +95,12 @@ void newPLAYER(char *name, unsigned char password[64], char *email, size_t nb_wo
     unsigned long *res = SHA_1(password);
 
     // Create the query
-    sprintf(sql, "INSERT INTO PLAYER (NAME,PASSWORD1,PASSWORD2,PASSWORD3,PASSWORD4,PASSWORD5,EMAIL,GAMES_WON,GAMES_LOST) VALUES ('%s', '%lx', '%lx', '%lx', '%lx', '%lx', '%s', '%zu', '%zu'); ", 
+    sprintf(sql, "INSERT INTO PLAYER (NAME,PASSWORD1,PASSWORD2,PASSWORD3,PASSWORD4,PASSWORD5,EMAIL,GAMES_WON,GAMES_LOST) VALUES ('%s', '%lx', '%lx', '%lx', '%lx', '%lx', '%s', '%zu', '%zu'); ",
             name, res[0], res[1], res[2], res[3], res[4], email, nb_won, nb_lost);
 
     //Execute query
-    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg); 
-    
+    rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -135,7 +130,7 @@ void newAI(char *type, size_t nb_won, size_t nb_lost, size_t time)
 
     //Execute query
     rc = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
-    
+
     //If error in query
     if( rc != SQLITE_OK ){
         fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -145,4 +140,3 @@ void newAI(char *type, size_t nb_won, size_t nb_lost, size_t time)
     free(sql);
     sqlite3_close(db);
 }
-
