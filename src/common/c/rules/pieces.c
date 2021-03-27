@@ -131,7 +131,7 @@ struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *b
 		  board[0*8+5].type = ROOK;
 		}
 	    }
-	  else if (des_x == 2 && des_y == 7) //big rock
+	  else if (des_x == 2 && des_y == 0) //big rock
 	    {
 	      if( board[0*8+3].type == NONE && board[0*8+2].type == NONE && board[0*8+1].type == NONE && board[0*8+0].type == ROOK)
 		{
