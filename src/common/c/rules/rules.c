@@ -193,8 +193,7 @@ int rules()
 	}
       
       if( white_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
-	{
-	  
+	{	  
 	  int possible_rock = isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x-1)].color, board);
 
 	  if (possible_rock == 1)

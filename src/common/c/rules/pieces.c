@@ -574,7 +574,7 @@ Start the 2021-03-12
 int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece,  struct Piece *board)
 {
 
-  if(color_piece)
+  if(color_piece == 1)
     {
       if( x == 4 && y == 7)
 	{
@@ -595,7 +595,7 @@ int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece,  struc
 	} 
 	
     }
-  if(!color_piece)
+  if(color_piece == 0)
     {
       if( x == 4 && y == 0)
 	{
@@ -606,7 +606,7 @@ int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece,  struc
 		  return 1; 
 		}
 	    }
-	  else if (des_x == 2 && des_y == 7) 
+	  else if (des_x == 2 && des_y == 0) 
 	    {
 	      if( board[0*8+3].type == NONE && board[0*8+2].type == NONE && board[0*8+1].type == NONE && board[0*8+0].type == ROOK)
 		{
