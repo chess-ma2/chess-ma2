@@ -215,12 +215,13 @@ int rules()
 		  player_turn = WHITETURN; 
 		}
 
+	      display(board); 
+
+	      continue; 
+
 	    }
 
-	  display(board); 
-
-	  continue; 
-	}
+	 } 
 
       if( black_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
 	{
@@ -244,11 +245,12 @@ int rules()
 		  player_turn = WHITETURN; 
 		}
 
+	      
+	      display(board); 
+
+	      continue; 
+
 	    }
-
-	  display(board); 
-
-	  continue; 
 	}
 
 	 
@@ -279,13 +281,16 @@ int rules()
 	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
 	    {
 	      x_kingw = des_x - 1; 
-	      y_kingw = des_y - 1; 
+	      y_kingw = des_y - 1;
+	      white_rock = CANT_ROCK;
+	      
 	    }
 
 	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == BLACK)
 	    {
 	      x_kingb = des_x - 1; 
-	      y_kingb = des_y - 1; 
+	      y_kingb = des_y - 1;
+	      black_rock = CANT_ROCK;
 	    }
 
 	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
