@@ -98,6 +98,12 @@ int rules()
   
   while( white_kingstatus != CHECKMATE || black_kingstatus != CHECKMATE ) //continue while not chessmate
     {
+       printf("position du roi blanc x %d\n" , x_kingw) ;
+       printf("position du roi blanc y %d\n" , y_kingw) ;
+
+       printf("position du roi noir x %d\n" , x_kingb) ;
+       printf("position du roi noir y %d\n" , y_kingb) ; 
+      
       printf("\n\n");
   
       printf("Entrez une valeur : \n");
@@ -181,12 +187,12 @@ int rules()
       //--------------------------------------------------------------------------------------
 
 
-      if(player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE)
+      if(player_turn == WHITETURN && board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type != NONE)
 	{
 	  printf("\nVous avez sélectionner une pièce de l'adversaire\n");
 	  continue; 
 	}
-      if(player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE)
+      if(player_turn == BLACKTURN && board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type != NONE)
 	{
 	  printf(" \nVous avez sélectionner une pièce de l'adversaire\n");
 	  continue; 
@@ -278,6 +284,12 @@ int rules()
 	  
       if (possible == 1)
 	{
+
+	  printf("Couleur de la piece %d.\n", board[(y-1)*8+(x-1)].color);
+
+	  printf("Type de la piece %d\n", board[(y-1)*8+(x-1)].type);
+
+	  
 	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
 	    {
 	      x_kingw = des_x - 1; 
@@ -286,7 +298,7 @@ int rules()
 	      
 	    }
 
-	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == BLACK)
+	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
 	    {
 	      x_kingb = des_x - 1; 
 	      y_kingb = des_y - 1;
@@ -297,11 +309,15 @@ int rules()
 
 	   if(player_turn == BLACKTURN && kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1)
 	    {
+	      printf("position du roi x %d\n" , x_kingb) ;
+	      printf("position du roi x %d\n" , y_kingb) ; 
 	      printf("Echec : le roi blanc est en échec \n"); 
 	    }
 
 	   if(player_turn == WHITETURN && kingcheck_place( x_kingb, y_kingb, des_x-1, des_y-1, board) == 1)
 	    {
+	      printf("position du roi x %d\n" , x_kingw) ;
+	      printf("position du roi x %d\n" , y_kingw) ; 
 	      printf("Echec : le roi noir est en échec \n"); 
 	    }
 
