@@ -8,6 +8,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdlib>
 #include "RSA.h"
 
 // Étape 1: #TODO by Marie
@@ -21,11 +22,71 @@
    Retourner couple (n, e)
    */
 
+
+int findprimenumber(double a, double b)
+{
+  double r = a%b;
+  double tmp = 0;
+  
+  while (r != 0)
+    {
+      tmp = r; 
+      r = a%b;
+      a = b;
+      b = tmp; 
+    }
+
+  return b;
+}
+
+union public_key genpub()
+{
+  double e = 2;
+  double p = rand();
+  double q = rand(); 
+
+  while(1)
+    {
+      if(findprimenumber(p, q) == 1)
+	{
+	  break;
+	}
+
+      else
+	{
+	  p = rand();
+	  q = rand(); 
+	}
+
+    }
+  
+  double n = p*q;
+  double m = (p-1)*(q-1);
+
+  while( e < m )
+    {
+      if(findprimenumber(m, i) == 1)
+	{
+	  break;
+	}
+      
+      e+=1; 
+    }
+
+  union public_key res;
+  res.n = n;
+  res.e = e;
+  res.m = m; 
+  return res;
+  
+} 
+ 
+
 // Étape 2: #TODO by Anna
 /*
   cléPrivée(e, m, n) :
 
-   Algorithme d'Euclide étendu pour calculer d (l'inverse de la multiplication
+   Algorithme d'Euclide étendu pour calculer d l'inverse de la multiplication
    de e mod m)
 
    Retourner couple (n, d)
@@ -114,3 +175,24 @@ int* encodeMessage(int len, int bytes, char* message, double e, double n)
    Pour chaque caractère du message
       lettreClaire = lettreChiffrée ^ d mod n 
  */
+
+int* decodeMessage(int len, int bytes, char* message, double d, double n)
+{
+    int *decodedMessage = malloc((len / bytes) * sizeof(int));
+
+    int x;
+    
+    for(i = 0; i < len; i+= bytes)
+    {
+        x = 0;
+	
+        for(int j = 0; j < bytes; j++)
+        {
+            x += message[ i + j ] * (1 << (7 * j));
+        }
+	
+        dencodedMessage[i / bytes] = expmod( x, d, n);
+    }
+    
+    return decodedMessage;
+}
