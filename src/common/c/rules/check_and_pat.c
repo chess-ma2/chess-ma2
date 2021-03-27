@@ -32,6 +32,8 @@ int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Pie
 
       if(isValidMove(x_piece, y_piece, x_king, y_king, board) == 1)
 	{
+	  printf("%d %d", x_piece, y_piece);
+	  printf("couleur %d type %d", board[y_piece*8+x_piece].color, board[y_piece*8+x_piece].type); 
 	  return 1 ;
 	} 
     } 
@@ -67,12 +69,12 @@ int check_mat(int x_king, int y_king, struct Piece *board)
 
   if(board[(y_king)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king)*8+(x_king-1)].type != 0 && (x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
     {
-      sum += 1;
+      sum += 1; 
     }
 
-  if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
+  else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
     {
-      sum += piece_to_place(x_king - 1, y_king, board);
+      sum += piece_to_place(x_king - 1, y_king, board); 
     }
 
   else
@@ -87,7 +89,7 @@ int check_mat(int x_king, int y_king, struct Piece *board)
       sum += 1;
     }
    
-  if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+   else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
       sum += piece_to_place(x_king, y_king - 1, board);
     }
@@ -102,9 +104,9 @@ int check_mat(int x_king, int y_king, struct Piece *board)
 
    if(board[(y_king-1)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king-1)].type != 0 && (x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
      {
-       sum += 1;
+       sum += 1; 
      }
-  if ((x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+   else if ((x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
       sum += piece_to_place(x_king - 1, y_king - 1, board);
     }
@@ -121,9 +123,10 @@ int check_mat(int x_king, int y_king, struct Piece *board)
     {
       sum += 1;
     }
-   if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+     else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
       sum += piece_to_place(x_king + 1, y_king + 1, board);
+      
     }
 
   else
@@ -139,9 +142,9 @@ int check_mat(int x_king, int y_king, struct Piece *board)
      }
 
 
-   if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
+   else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
      {
-       sum += piece_to_place(x_king + 1, y_king, board);
+       sum += piece_to_place(x_king + 1, y_king, board); 
      }
 
    else
@@ -156,7 +159,7 @@ int check_mat(int x_king, int y_king, struct Piece *board)
       sum += 1;
     }
    
-  if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+  else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
       sum += piece_to_place(x_king, y_king+1, board);
     }
@@ -172,10 +175,10 @@ int check_mat(int x_king, int y_king, struct Piece *board)
    
   if(board[(y_king-1)*8+(x_king+1)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king+1)].type != 0 && (x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
     {
-      sum += 1;
+      sum += 1; 
     }
   
-  if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
+  else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
     {
       sum += piece_to_place(x_king + 1, y_king - 1, board);
     }
@@ -190,16 +193,16 @@ int check_mat(int x_king, int y_king, struct Piece *board)
 
    if(board[(y_king+1)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king+1)*8+(x_king-1)].type != 0 && (x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
      {
-       sum += 1;
+       sum += 1; 
      }
-   if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+   else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
      {
        sum += piece_to_place(x_king - 1, y_king + 1, board);
      }
 
    else
      {
-       sum += 1;
+       sum += 1; 
      }
 
   //---------------------------------------------------------------------

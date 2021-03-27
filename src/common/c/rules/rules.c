@@ -184,7 +184,7 @@ int rules()
 	    }
 	}
 
-      //--------------------------------------------------------------------------------------
+      //------------------------------------------TURN PB-------------------------------------
 
 
       if(player_turn == WHITETURN && board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type != NONE)
@@ -197,6 +197,8 @@ int rules()
 	  printf(" \nVous avez sélectionner une pièce de l'adversaire\n");
 	  continue; 
 	}
+
+      //------------------------------------------------ROCK---------------------------------
       
       if( white_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
 	{	  
@@ -259,6 +261,7 @@ int rules()
 	    }
 	}
 
+      //---------------------------------------------DIFFERENT ERRORS----------------------------------------------------
 	 
       int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
 
@@ -281,6 +284,8 @@ int rules()
 	{
 	  printf("Le mouvement n'est pas possible car vous n'avez sélectionné aucune piece à bouger.\n");
 	}
+
+      //--------------------------------------------------------------------------------------------------------------------------------------
 	  
       if (possible == 1)
 	{
@@ -290,7 +295,7 @@ int rules()
 	  printf("Type de la piece %d\n", board[(y-1)*8+(x-1)].type);
 
 	  
-	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING)
+	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
 	    {
 	      x_kingw = des_x - 1; 
 	      y_kingw = des_y - 1;
@@ -305,7 +310,7 @@ int rules()
 	      black_rock = CANT_ROCK;
 	    }
 
-	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board);
+	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board); //move and update the new board
 
 	   if(player_turn == BLACKTURN && kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1)
 	    {
@@ -321,27 +326,27 @@ int rules()
 	      printf("Echec : le roi noir est en échec \n"); 
 	    }
 
-	   if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb,board)) //check if I put the opponent king in checkmat
+	   if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb, board)== 1) //check if I put the opponent king in checkmat
 	    {
 	      black_kingstatus = CHECKMATE;
 	      winner = 1 ;
 	      break; 
 	    }
-	   if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw,board))
+	   if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw, board)== 1)
 	    {
 	      white_kingstatus = CHECKMATE;
 	      winner = 0;
 	      break; 
 	    }
 
-	   if(player_turn == WHITETURN && pat(x_kingb, y_kingb,board)) //check if I put the opponent king in checkmat
+	   if(player_turn == WHITETURN && pat(x_kingb, y_kingb, board)) //check if I put the opponent king in checkmat
 	    {
 	      black_kingstatus = PAT;
 	      winner = 2 ;
 	      printf("EGALITÉ\n");
 	      return 0;
 	    }
-	   if(player_turn == BLACKTURN && pat(x_kingw, y_kingw,board))
+	   if(player_turn == BLACKTURN && pat(x_kingw, y_kingw, board))
 	    {
 	      white_kingstatus = PAT;
 	      winner = 2;
