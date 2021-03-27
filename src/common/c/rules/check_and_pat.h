@@ -1,5 +1,5 @@
-#ifndef PIECES_H
-#define PIECES_H
+#ifndef CHECK_AND_PAT_H
+#define CHECK_AND_PAT_H
 
 
 /*
@@ -11,11 +11,11 @@ Start the 2021-03-23
 
 */
 
-int othermove_pat(struct Piece *board); 
+int othermove_pat(struct Piece *board);
 
 int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Piece *board);
 
-int piece_to_place(int x_place, int y_place, struct Piece *board); 
+int piece_to_place(int x_place, int y_place, struct Piece *board);
 
 int check_mat(int x_king, int y_king, struct Piece *board);
 
