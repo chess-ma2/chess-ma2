@@ -306,16 +306,12 @@ int rules()
 	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board); //move and update the new board
 
 	   if(player_turn == BLACKTURN && kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1)
-	    {
-	      printf("position du roi x %d\n" , x_kingb) ;
-	      printf("position du roi x %d\n" , y_kingb) ; 
+	    { 
 	      printf("Echec : le roi blanc est en échec \n"); 
 	    }
 
 	   if(player_turn == WHITETURN && kingcheck_place( x_kingb, y_kingb, des_x-1, des_y-1, board) == 1)
-	    {
-	      printf("position du roi x %d\n" , x_kingw) ;
-	      printf("position du roi x %d\n" , y_kingw) ; 
+	    { 
 	      printf("Echec : le roi noir est en échec \n"); 
 	    }
 

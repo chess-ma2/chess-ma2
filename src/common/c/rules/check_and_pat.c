@@ -29,9 +29,9 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
 		      x_king = des_x;
 		      y_king = des_y; 
 
-		      if (checkmat_firstcondition(x_king, y_king, board) == 0)
+		      if (piece_to_place( x_king, y_king, board) == 0)
 			{ 
-			  return 0; 
+			  return 1; 
 			}
 			  
 		    }
@@ -46,12 +46,12 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
 			}
 			  
 			  
-		      board = pieceMove_Rock(x, y, des_x, des_y, board);
+		      board = pieceMove(x, y, des_x, des_y, board);
 
 
-		      if (checkmat_firstcondition(x_king, y_king, board) == 0)
+		      if (piece_to_place( x_king, y_king,board)== 0 )
 			{ 
-			  return 0; 
+			  return 1; 
 			}			 
 			  
 	 
@@ -68,7 +68,8 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
     }
       
 
-return 1; 
+return 0;
+ 
 }
 
 
@@ -298,7 +299,7 @@ int checkmat_firstcondition(int x_king, int y_king, struct Piece *board)
 
 int check_mat(int x_king, int y_king, int can_rock, struct Piece *board)
 {
-  if(checkmat_secondcondition(x_king, can_rock, y_king, board) == 0 && checkmat_firstcondition(x_king, y_king, board) == 1)
+  if(checkmat_secondcondition(x_king, y_king, can_rock, board) == 0 && checkmat_firstcondition(x_king, y_king, board) == 1)
     {
       return 1;
     }
