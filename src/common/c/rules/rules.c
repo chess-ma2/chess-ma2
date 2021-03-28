@@ -5,7 +5,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-
 /*
 
 File rules.c containing all the functions relating the a game.
@@ -98,13 +97,7 @@ int rules()
   
   while( white_kingstatus != CHECKMATE || black_kingstatus != CHECKMATE ) //continue while not chessmate
     {
-       printf("position du roi blanc x %d\n" , x_kingw) ;
-       printf("position du roi blanc y %d\n" , y_kingw) ;
-
-       printf("position du roi noir x %d\n" , x_kingb) ;
-       printf("position du roi noir y %d\n" , y_kingb) ; 
-      
-      printf("\n\n");
+       printf("\n\n");
   
       printf("Entrez une valeur : \n");
   
@@ -326,13 +319,13 @@ int rules()
 	      printf("Echec : le roi noir est en échec \n"); 
 	    }
 
-	   if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb, board)== 1) //check if I put the opponent king in checkmat
+	   if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb, black_rock, board)== 1) //check if I put the opponent king in checkmat
 	    {
 	      black_kingstatus = CHECKMATE;
 	      winner = 1 ;
 	      break; 
 	    }
-	   if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw, board)== 1)
+	   if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw, white_rock, board)== 1)
 	    {
 	      white_kingstatus = CHECKMATE;
 	      winner = 0;
