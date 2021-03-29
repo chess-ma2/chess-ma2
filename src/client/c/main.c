@@ -9,6 +9,7 @@
 #define CLIENT_MAINC
 
 #include "launch/launch.c"
+#include "network/network.c"
 #include "../../common/c/data/file_io.c"
 /**
  * @author Marine
@@ -21,7 +22,7 @@ int main(int argc, char ** argv)
     char * str = load_io("bonjour.txt");
     printf("Found with code: %s\n", str);
     free(str);*/
-
+    start_network();
     return launch_client(argc, argv);
 
 

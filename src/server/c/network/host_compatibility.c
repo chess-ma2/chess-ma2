@@ -25,6 +25,7 @@ int start_compatibility_network()
     {
         return 9;
     }
+    e = pthread_join(pid, NULL);
     return 0;
 }
 

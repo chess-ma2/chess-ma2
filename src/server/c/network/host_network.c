@@ -13,7 +13,7 @@
 int start_host_network()
 {
     //Init compatibility port
- //   start_compatibility_network();
+    start_compatibility_network();
     return 0;
 }
 

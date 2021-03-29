@@ -8,6 +8,7 @@
 #ifndef SERVER_MAINC
 #define SERVER_MAINC
 
+#include "network/host_network.c"
 /**
  * @author Marine
  * @date 01/03/2021
@@ -15,6 +16,8 @@
  */
 int main(int argc, char ** argv)
 {
+    start_host_network();
+
     return 0;
 }
 

@@ -48,6 +48,7 @@ int define_connection(const char *host, const char *port, int *fd_socket)
     //...
     //In final, close socket:
     //close(cnx);
+    *fd_socket = cnx;
     return 0;
 }
 

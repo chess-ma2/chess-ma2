@@ -12,23 +12,24 @@
 
 int start_network(void)
 {
-    printf("Network starting...")
+    printf("Network starting...");
     int e =  check_compatibility();
 
     if (e != 0)
     {
         printf(
-                "Error in network start with compatibility check, code: %i",
+                "Error in network start with compatibility check, code: %i\n",
                 e);
         return e;
     }
 
-    printf("Network V%i is compatible!", CHESS_MA2_NETWORK_VERSION);
+    printf("Network V%i is compatible!\n", CHESS_MA2_NETWORK_VERSION);
 
     //Todo add steps with hash ...
     //Here is only a proof of good work of LAYER 4 and 5
 
 
+    return 0;
 }
 
 //End safety guard
