@@ -21,6 +21,7 @@
  */
 int main(int argc, char ** argv)
 {
+  /*
     struct Piece * board= init_board();
     
     char * new_char = board_to_char(board);
@@ -45,7 +46,8 @@ int main(int argc, char ** argv)
     free(board);
     free(new_board);
     return 0;
-    //return rules();
+  */
+   return rules();
 }
 
 //End safety loop
