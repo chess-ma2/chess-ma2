@@ -13,7 +13,7 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
 {
 
   int tmp1 = x_king;
-  int tmp2 = y_king;
+  int tmp2 = y_king; 
   
   for(int y = 0; y < 8; y++) 
     {
@@ -23,17 +23,20 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
 	    {
 	      for(int des_x = 0; des_x < 8; des_x++)
 		{
+		   
+		  
 		  if (can_rock == 1 && isValidMove_Rock( x, y, des_x, des_y, board[y*8+x].color, board) == 1)
 		    { 
 		      board = pieceMove_Rock(x, y, des_x, des_y, board);
 		      x_king = des_x;
 		      y_king = des_y; 
 
-		      if (checkmat_firstcondition(x_king, y_king, board) == 0)
-			{ 
-			  return 0; 
+		      if (piece_to_place( x_king, y_king, board) == 0)
+			{
+			  board = pieceMove(des_x, des_y, x, y, board);
+			  return 1; 
 			}
-			  
+			  board = pieceMove(des_x, des_y, x, y, board);
 		    }
 		    
 		  else if(isValidMove(x, y, des_x, des_y, board) == 1)
@@ -46,14 +49,17 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
 			}
 			  
 			  
-		      board = pieceMove_Rock(x, y, des_x, des_y, board);
+		      board = pieceMove(x, y, des_x, des_y, board);
 
 
-		      if (checkmat_firstcondition(x_king, y_king, board) == 0)
-			{ 
-			  return 0; 
+		      if (piece_to_place( x_king, y_king,board)== 0 )
+			{
+
+			  printf("plus d'échec quand la piece %d %d va a %d %d\n", x, y, des_x, des_y);
+			   board = pieceMove(des_x, des_y, x, y, board);
+			  return 1; 
 			}			 
-			  
+		      board = pieceMove(des_x, des_y, x, y, board);
 	 
 		    }
 
@@ -68,7 +74,8 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
     }
       
 
-return 1; 
+return 0;
+ 
 }
 
 
@@ -298,7 +305,7 @@ int checkmat_firstcondition(int x_king, int y_king, struct Piece *board)
 
 int check_mat(int x_king, int y_king, int can_rock, struct Piece *board)
 {
-  if(checkmat_secondcondition(x_king, can_rock, y_king, board) == 0 && checkmat_firstcondition(x_king, y_king, board) == 1)
+  if(checkmat_firstcondition(x_king, y_king, board) == 1) // && checkmat_secondcondition(x_king, y_king, can_rock, board) == 0)
     {
       return 1;
     }
@@ -318,7 +325,7 @@ int pat(int x_king, int y_king, struct Piece *board)
       sum += 1;
     }
 
-  if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
+  else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
     {
       sum += piece_to_place(x_king - 1, y_king, board);
     }
@@ -335,7 +342,7 @@ int pat(int x_king, int y_king, struct Piece *board)
       sum += 1;
     }
    
-  if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+   else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
       sum += piece_to_place(x_king, y_king - 1, board);
     }
@@ -352,7 +359,7 @@ int pat(int x_king, int y_king, struct Piece *board)
      {
        sum += 1;
      }
-  if ((x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+   else if ((x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
       sum += piece_to_place(x_king - 1, y_king - 1, board);
     }
@@ -369,7 +376,7 @@ int pat(int x_king, int y_king, struct Piece *board)
     {
       sum += 1;
     }
-   if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+     else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
       sum += piece_to_place(x_king + 1, y_king + 1, board);
     }
@@ -387,7 +394,7 @@ int pat(int x_king, int y_king, struct Piece *board)
      }
 
 
-   if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
+   else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
      {
        sum += piece_to_place(x_king + 1, y_king, board);
      }
@@ -404,7 +411,7 @@ int pat(int x_king, int y_king, struct Piece *board)
       sum += 1;
     }
    
-  if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+  else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
       sum += piece_to_place(x_king, y_king+1, board);
     }
@@ -423,7 +430,7 @@ int pat(int x_king, int y_king, struct Piece *board)
       sum += 1;
     }
   
-  if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
+  else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
     {
       sum += piece_to_place(x_king + 1, y_king - 1, board);
     }
@@ -440,7 +447,7 @@ int pat(int x_king, int y_king, struct Piece *board)
      {
        sum += 1;
      }
-   if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+   else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
      {
        sum += piece_to_place(x_king - 1, y_king + 1, board);
      }
