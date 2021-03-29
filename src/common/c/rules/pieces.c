@@ -31,8 +31,9 @@ struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
   struct Piece piece_des = board[des_y*8+des_x];
 
       
-  board[des_y*8 + des_x] = piece ; //move the piece
-  board[y*8+ x].type = NONE;;
+  board[des_y*8 + des_x] = piece ;//move the piece
+  board[y*8+ x].type = NONE;
+  board[y*8+ x].color = 0;
 
   if( piece_des.type != NONE ) //catch an adverse piece
     {
@@ -98,9 +99,13 @@ struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *b
 	      if( board[7*8+5].type == NONE && board[7*8+6].type == NONE && board[7*8+7].type == ROOK)
 		{
 		  board[y*8+x].type = NONE;
+		  board[y*8+x].color = 0;
 		  board[des_y*8+des_x].type = KING;
-		  board[7*8+7].type = NONE; 
+		  board[des_y*8+des_x].color = WHITE;
+		  board[7*8+7].type = NONE;
+		  board[7*8+7].color = 0;
 		  board[7*8+5].type = ROOK;
+		  board[7*8+5].color = WHITE;
 		}
 	    }
 	  else if (des_x == 2 && des_y == 7) //big rock
@@ -108,9 +113,13 @@ struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *b
 	      if( board[7*8+3].type == NONE && board[7*8+2].type == NONE && board[7*8+1].type == NONE && board[7*8+0].type == ROOK)
 		{
 		  board[y*8+x].type = NONE;
+		  board[y*8+x].color = 0;
 		  board[des_y*8+des_x].type = KING;
-		  board[7*8+0].type = NONE; 
+		  board[des_y*8+des_x].color = WHITE;
+		  board[7*8+0].type = NONE;
+		  board[7*8+0].color = 0;
 		  board[7*8+3].type = ROOK;
+		  board[7*8+3].color = WHITE;
 		}
 	    }
 	} 
@@ -125,9 +134,13 @@ struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *b
 	      if( board[0*8+5].type == NONE && board[0*8+6].type == NONE && board[0*8+7].type == ROOK)
 		{
 		  board[y*8+x].type = NONE;
+		  board[y*8+x].color = 0;
 		  board[des_y*8+des_x].type = KING;
-		  board[0*8+7].type = NONE; 
+		  board[des_y*8+des_x].color = BLACK;
+		  board[0*8+7].type = NONE;
+		  board[0*8+7].color = 0; 
 		  board[0*8+5].type = ROOK;
+		  board[0*8+5].color = BLACK;
 		}
 	    }
 	  else if (des_x == 2 && des_y == 0) //big rock
@@ -135,9 +148,13 @@ struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *b
 	      if( board[0*8+3].type == NONE && board[0*8+2].type == NONE && board[0*8+1].type == NONE && board[0*8+0].type == ROOK)
 		{
 		  board[y*8+x].type = NONE;
+		  board[y*8+x].color = 0;
 		  board[des_y*8+des_x].type = KING;
-		  board[0*8+0].type = NONE; 
+		  board[des_y*8+des_x].color = BLACK;
+		  board[0*8+0].type = NONE;
+		  board[0*8+0].color = 0; 
 		  board[0*8+3].type = ROOK;
+		  board[0*8+3].color = BLACK;
 		}
 	    }
 	} 
