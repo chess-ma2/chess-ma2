@@ -83,14 +83,14 @@ return 0;
 //return 0 si possible
 // sinon return 1
 
-int othermove_pat(struct Piece *board)
+int othermove_pat1(struct Piece *board)
 {
 
   for(int y = 0; y < 8; y++) 
     {
       for(int x = 0; x < 8; x++)
 	{
-	  if(piece_to_place(x, y, board) == 1)
+	  if(othermove_pat2(x, y, board) == 1)
 	    {
 	      return 1;
 	    }
@@ -98,6 +98,25 @@ int othermove_pat(struct Piece *board)
     }
 
   return 0;
+}
+
+
+int othermove_pat2(int x_place, int y_place,struct Piece *board)
+{
+
+  for(int y = 0; y < 8; y++) 
+    {
+      for(int x = 0; x < 8; x++)
+	{
+	  if(isValidMove(x_place, y_place, x, y, board) == 1)
+	    {
+	      return 1;
+	    }
+	}
+    }
+
+  return 0;
+  
 }
 
 int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Piece *board)
@@ -460,7 +479,7 @@ int pat(int x_king, int y_king, struct Piece *board)
   //---------------------------------------------------------------------
 
   
-   if(piece_to_place(x_king, y_king, board) == 0 && sum == 8 &&  othermove_pat(board) == 0)
+   if(piece_to_place(x_king, y_king, board) == 0 && sum == 8 &&  othermove_pat1(board) == 0)
      {
        return 1;
      }

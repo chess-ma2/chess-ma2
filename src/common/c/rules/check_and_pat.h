@@ -13,7 +13,9 @@ Start the 2021-03-23
 
 int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece *board) ;
 
-int othermove_pat(struct Piece *board);
+int othermove_pat1(struct Piece *board);
+
+int othermove_pat2(int x_place, int y_place,struct Piece *board);
 
 int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Piece *board);
 
