@@ -279,11 +279,6 @@ int rules()
       if (possible == 1)
 	{
 
-	  printf("Couleur de la piece %d.\n", board[(y-1)*8+(x-1)].color);
-
-	  printf("Type de la piece %d\n", board[(y-1)*8+(x-1)].type);
-
-	  
 	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
 	    {
 	      x_kingw = des_x - 1; 
@@ -300,6 +295,45 @@ int rules()
 	    }
 
 	  board = pieceMove(x-1, y-1, des_x-1, des_y-1, board); //move and update the new board
+	  
+	  if(player_turn == BLACKTURN && piece_to_place(x_kingb, y_kingb, board) == 1)
+	    {
+	      board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
+	      printf("Mouvement impossible car ton roi est en échec dans cette position\n");
+	      if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+		{
+		  x_kingb = x - 1; 
+		  y_kingb = y - 1;
+		}
+	      continue; 
+	    }
+
+	  if(player_turn == WHITETURN && piece_to_place(x_kingw, y_kingw, board) == 1)
+	    {
+	      board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
+	      printf("Mouvement impossible car ton roi est en échec dans cette position\n");
+	      if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+		{
+		  x_kingw = x - 1; 
+		  y_kingw = y - 1;
+		}
+	      continue; 
+	    }
+
+	   if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+	    {
+	      x_kingw = des_x - 1; 
+	      y_kingw = des_y - 1;
+	      white_rock = CANT_ROCK;
+	      
+	    }
+
+	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
+	    {
+	      x_kingb = des_x - 1; 
+	      y_kingb = des_y - 1;
+	      black_rock = CANT_ROCK;
+	    }
 
 	   if(player_turn == BLACKTURN && kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1)
 	    { 
