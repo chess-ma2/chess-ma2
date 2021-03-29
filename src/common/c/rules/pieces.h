@@ -58,15 +58,15 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board);
 
 int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
 
-int isValidMove_Rook(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+int isValidMove_Rook(int x, int y, int des_x, int des_y, struct Piece *board);
 
-int isValidMove_Bishop(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+int isValidMove_Bishop(int x, int y, int des_x, int des_y, struct Piece *board);
 
-int isValidMove_Knight(int x, int y, int des_x, int des_y, int color_piece);
+int isValidMove_Knight(int x, int y, int des_x, int des_y);
 
-int isValidMove_Queen(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
+int isValidMove_Queen(int x, int y, int des_x, int des_y, struct Piece *board);
 
-int isValidMove_King(int x, int y, int des_x, int des_y, int color_piece);
+int isValidMove_King(int x, int y, int des_x, int des_y);
 
 int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board);
 

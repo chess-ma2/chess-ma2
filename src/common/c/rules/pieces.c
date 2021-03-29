@@ -170,7 +170,7 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
       return 2;
     }
 
-  if ( board[des_y*8+des_x].color == color_piece &&  board[des_y*8+des_x].type != NONE )
+  if ( board[des_y*8+des_x].color == (enum Color)color_piece &&  board[des_y*8+des_x].type != NONE )
     {
       return 3; //same color piece a destination
     }
@@ -187,27 +187,27 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
 
   if ( piece.type == ROOK)
     {
-      return  isValidMove_Rook( x, y, des_x, des_y, color_piece, board); //can move the rook
+      return  isValidMove_Rook( x, y, des_x, des_y,  board); //can move the rook
     }
 
   if ( piece.type == BISHOP)
     {
-      return isValidMove_Bishop( x, y, des_x, des_y, color_piece, board); //can move the bishop
+      return isValidMove_Bishop( x, y, des_x, des_y, board); //can move the bishop
     }
 
   if ( piece.type == KNIGHT)
     {
-      return  isValidMove_Knight( x, y, des_x, des_y, color_piece); //can move the knight 
+      return  isValidMove_Knight( x, y, des_x, des_y); //can move the knight 
     }
    
   if ( piece.type == QUEEN )
     {
-      return  isValidMove_Queen( x, y, des_x, des_y, color_piece, board); //can move the queen
+      return  isValidMove_Queen( x, y, des_x, des_y, board); //can move the queen
     }
 
   if ( piece.type == KING)
     { 
-      return  isValidMove_King( x, y, des_x, des_y, color_piece) ; //can move the king
+      return  isValidMove_King( x, y, des_x, des_y) ; //can move the king
     }
 
   return  0; //movement is not possible
@@ -233,7 +233,7 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 	  return 1; 
 	}
 
-      if((des_y == y-1) && ((des_x == x + 1 )||(des_x == x - 1 )) && (board[des_y*8+des_x].color != color_piece) && (board[des_y*8+des_x].type != NONE))
+      if((des_y == y-1) && ((des_x == x + 1 )||(des_x == x - 1 )) && (board[des_y*8+des_x].color != (enum Color)color_piece) && (board[des_y*8+des_x].type != NONE))
 	{
 	  return 1; 
 	}
@@ -251,7 +251,7 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 	  return 1; 
 	}
 
-      if((des_y == y+1) && ((des_x == x + 1 )||(des_x == x - 1 )) && (board[des_y*8+des_x].color != color_piece) &&  (board[des_y*8+des_x].type != NONE))
+       if((des_y == y+1) && ((des_x == x + 1 )||(des_x == x - 1 )) && (board[des_y*8+des_x].color != (enum Color)color_piece) &&  (board[des_y*8+des_x].type != NONE))
 	{
 	  return 1; 
 	}
@@ -277,7 +277,7 @@ Start the 2021-03-11
 
 */
 
-int isValidMove_Rook(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board)
+int isValidMove_Rook(int x, int y, int des_x, int des_y, struct Piece *board)
 {
   
   
@@ -389,7 +389,7 @@ Start the 2021-03-11
 
 */
 
-int isValidMove_Bishop(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board)
+int isValidMove_Bishop(int x, int y, int des_x, int des_y, struct Piece *board)
 {
 
   
@@ -506,7 +506,7 @@ Start the 2021-03-08
 
 */
 
-int isValidMove_Knight(int x, int y, int des_x, int des_y, int color_piece)
+int isValidMove_Knight(int x, int y, int des_x, int des_y)
 {
   if(((des_x == x - 2)|| (des_x == x + 2 )) && ((des_y == y - 1) || (des_y == y + 1)))
     {
@@ -532,9 +532,9 @@ Start the 2021-03-11
 
 */
 
-int isValidMove_Queen(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board) 
+int isValidMove_Queen(int x, int y, int des_x, int des_y, struct Piece *board) 
 {
-  return isValidMove_Bishop(x,y,des_x,des_y, color_piece, board) || isValidMove_Rook(x,y,des_x,des_y, color_piece, board); //call movement of bishop and rook
+  return isValidMove_Bishop(x,y,des_x,des_y, board) || isValidMove_Rook(x,y,des_x,des_y, board); //call movement of bishop and rook
 }
 
 
@@ -549,7 +549,7 @@ Start the 2021-03-07
 
 */
 
-int isValidMove_King(int x, int y, int des_x, int des_y, int color_piece)
+int isValidMove_King(int x, int y, int des_x, int des_y)
 {
   if(((des_x == x)||(des_x == x - 1) || (des_x == x + 1))&&((des_y == y)||(des_y == y - 1) ||(des_y == y + 1)))
     {
