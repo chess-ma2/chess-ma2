@@ -62,11 +62,7 @@ Start the 2021-03-04
 
 */
 int rules()
-{
-  int res; //ask positions
-  
-  int nulle; //if ask nulle
-  
+{ 
   int answer = 0; // answer oth the nulle proposition
   
   int x = 0; 
@@ -101,7 +97,7 @@ int rules()
   
       printf("Entrez une valeur : \n");
   
-      res = scanf("%d%d%d%d", &x, &y, &des_x, &des_y); //ask positions to the player
+      scanf("%d%d%d%d", &x, &y, &des_x, &des_y); //ask positions to the player
 
 
       //--------------------------abandonment--------------------------------
@@ -134,7 +130,7 @@ int rules()
 	     
 	      printf("\nL'adversaire (blanc) demande la nulle. Tapez 1 si vous accepter sinon tapez 0 \n");
 
-	      nulle = scanf("%d", &answer);
+	      scanf("%d", &answer);
 
 	      if( answer == 1)
 		{
@@ -157,7 +153,7 @@ int rules()
 	    {
 	      printf("\nL'adversaire (noir) demande la nulle. Tapez 1 si vous accepter sinon tapez 0\n");
 
-	      nulle = scanf("%d", &answer);
+	      scanf("%d", &answer);
 
 	      if( answer == 1)
 		{

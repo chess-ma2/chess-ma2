@@ -25,7 +25,6 @@ Start the 2021-03-04
 
 struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
 {
-  int promotion = 0;
   int val = 0; 
 
   struct Piece piece = board[y*8+x];
@@ -51,7 +50,7 @@ struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
   
       printf("Entrez un chiffre : \n");
   
-      promotion = scanf("%d", &val); //choose the new  piece
+      scanf("%d", &val); //choose the new  piece
  
       board[des_y*8 + des_x].type = val; //replace the piece
     }
@@ -66,7 +65,7 @@ struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
   
       printf("Entrez un chiffre : \n");
   
-      promotion = scanf("%d", &val); // choose the new piece
+      scanf("%d", &val); // choose the new piece
  
       board[des_y*8 + des_x].type = val; //replace the piece
     }
