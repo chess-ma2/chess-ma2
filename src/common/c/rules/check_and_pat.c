@@ -9,7 +9,7 @@
 // return 1
 //return 0
 
-int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece *board)
+int checkmat_secondcondition(int x_king, int y_king, int color,  struct Piece *board)
 {
 
   int tmp1 = x_king;
@@ -23,49 +23,44 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
 	    {
 	      for(int des_x = 0; des_x < 8; des_x++)
 		{
-		   
-		  
-		  if (can_rock == 1 && isValidMove_Rock( x, y, des_x, des_y, board[y*8+x].color, board) == 1)
-		    { 
-		      board = pieceMove_Rock(x, y, des_x, des_y, board);
-		      x_king = des_x;
-		      y_king = des_y; 
+		  struct Piece * board2 = calloc(8*8, sizeof(struct Piece));
 
-		      if (piece_to_place( x_king, y_king, board) == 0)
-			{
-			  board = pieceMove(des_x, des_y, x, y, board);
-			  return 1; 
-			}
-			  board = pieceMove(des_x, des_y, x, y, board);
-		    }
-		    
-		  else if(isValidMove(x, y, des_x, des_y, board) == 1)
+		  for( int i = 0; i < 64; i++)
 		    {
-
-		      if(board[y*8+x].type == KING)
-			{ 
-			  x_king = des_x;
-			  y_king = des_y;
-			}
-			  
-			  
-		      board = pieceMove(x, y, des_x, des_y, board);
-
-
-		      if (piece_to_place( x_king, y_king,board)== 0 )
-			{
-
-			  printf("plus d'échec quand la piece %d %d va a %d %d\n", x, y, des_x, des_y);
-			   board = pieceMove(des_x, des_y, x, y, board);
-			  return 1; 
-			}			 
-		      board = pieceMove(des_x, des_y, x, y, board);
-	 
+		      board2[i].type = board[i].type;
+		      board2[i].color = board[i].color;
 		    }
 
-		  x_king = tmp1;
-		  y_king = tmp2;
+		  if( color == board2[y*8+x].color)
+		    { 
+		   
+		      if(isValidMove(x, y, des_x, des_y, board2) == 1)
+			{
+
+			  if(board2[y*8+x].type == KING)
+			    { 
+			      x_king = des_x;
+			      y_king = des_y;
+			    }
+			  
+			  
+			  board2 = pieceMove(x, y, des_x, des_y, board2);
+
+
+			  if (piece_to_place( x_king, y_king,board2)== 0)
+			    {
+			      printf(" piece de type %d qui stop le echec et mat est %d %d allant %d %d\n", board2[des_y*8+des_x].type, x, y, des_x, des_y); 
+			      return 1; 
+			    }			
+	 
+			}
+
+		      x_king = tmp1;
+		      y_king = tmp2;
+
+		      free(board2); 
 	  
+		    }
 		}
 	    }
 	 
@@ -74,7 +69,7 @@ int checkmat_secondcondition(int x_king, int y_king, int can_rock, struct Piece 
     }
       
 
-return 0;
+  return 0;
  
 }
 
@@ -358,9 +353,9 @@ int checkmat_firstcondition(int x_king, int y_king, struct Piece *board)
 }
 
 
-int check_mat(int x_king, int y_king, int can_rock, struct Piece *board)
+int check_mat(int x_king, int y_king, int color, struct Piece *board)
 {
-  if(checkmat_firstcondition(x_king, y_king, board) == 1) // && checkmat_secondcondition(x_king, y_king, can_rock, board) == 0)
+  if(checkmat_firstcondition(x_king, y_king, board) == 1 && checkmat_secondcondition(x_king, y_king, color, board) == 0)
     {
       return 1;
     }

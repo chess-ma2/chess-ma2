@@ -414,29 +414,27 @@ int rules()
 	  if(player_turn == BLACKTURN && kingcheck_place(x_kingb, y_kingb, des_x-1, des_y-1, board) == 0)
 	    {
 	      black_kingstatus = NOTHING;
-	      printf("Echec : il n'y a pas d'échecs sur le roi noir\n"); 
 	    }
 
 	  if(player_turn == WHITETURN && kingcheck_place( x_kingw, y_kingw, des_x-1, des_y-1, board) == 0)
 	    {
-	      white_kingstatus = NOTHING;
-	      printf("Echec : il n'y a pas d'échec sur le roi blanc\n"); 
+	      white_kingstatus = NOTHING; 
 	    }
 
-	  if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb, black_rock, board)== 1) //check if I put the opponent king in checkmat
+	  if(player_turn == WHITETURN && check_mat(x_kingb, y_kingb, BLACK, board)== 1) //check if I put the opponent king in checkmat
 	    {
 	      black_kingstatus = CHECKMATE;
 	      winner = 1 ;
 	      break; 
 	    }
-	  if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw, white_rock, board)== 1)
+	  if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw, WHITE,  board)== 1)
 	    {
 	      white_kingstatus = CHECKMATE;
 	      winner = 0;
 	      break; 
 	    }
 
-	  if(player_turn == WHITETURN && pat(x_kingb, y_kingb, board)) //check if I put the opponent king in checkmat
+	  if(player_turn == WHITETURN && pat(x_kingb, y_kingb, board)) //check if I put the opponent king in pat
 	    {
 	      black_kingstatus = PAT;
 	      winner = 2 ;
