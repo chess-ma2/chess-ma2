@@ -9,6 +9,7 @@
 #define SERVER_NETWORK_HOST_NETWORK_H
 
 #include "host_compatibility.c"
+#include "host_game.c"
 
 /**
  * @author Antoine

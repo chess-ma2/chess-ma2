@@ -36,7 +36,7 @@ void *game_worker(void * arg);
  * @param s2 sub socket use player 2
  * @return 0 in normal, other in case of errors
  */
-int game_tcp(int s1, s2);
+int game_tcp(int s1, int s2);
 
 //End safety loop guard
 #endif

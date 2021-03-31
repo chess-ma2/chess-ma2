@@ -18,6 +18,8 @@ int main(int argc, char ** argv)
 {
     start_host_network();
 
+    while (1)
+        sleep(1);
     return 0;
 }
 

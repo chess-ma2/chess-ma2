@@ -10,6 +10,7 @@
 
 #include "launch/launch.c"
 #include "network/network.c"
+#include "game/game_process.c"
 #include "../../common/c/data/file_io.c"
 /**
  * @author Marine
@@ -23,6 +24,9 @@ int main(int argc, char ** argv)
     printf("Found with code: %s\n", str);
     free(str);*/
     start_network();
+    game_process();
+    while (1)
+        sleep(1);
     return launch_client(argc, argv);
 
 

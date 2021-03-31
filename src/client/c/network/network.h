@@ -12,6 +12,8 @@
 #include "../../../common/c/network/network_info.h"
 
 #include "compatibility.c"
+#include "game.c"
+
 #include <stdio.h>
 
 /**

@@ -17,8 +17,7 @@ int start_network(void)
 
     if (e != 0)
     {
-        printf(
-                "Error in network start with compatibility check, code: %i\n",
+        printf("Error in network start with compatibility check, code: %i\n",
                 e);
         return e;
     }
@@ -27,8 +26,8 @@ int start_network(void)
 
     //Todo add steps with hash ...
     //Here is only a proof of good work of LAYER 4 and 5
-
-
+    pthread_t pid;
+    pthread_create(&pid, NULL, game_network, NULL);
     return 0;
 }
 

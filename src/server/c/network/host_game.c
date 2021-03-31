@@ -36,22 +36,22 @@ void *game_worker(void * arg)
     do {
         printf("Waiting for connections...\n");
 
-        int sub_socket = accept(sfd, NULL, NULL);
+        int sub_socket = accept(*socket, NULL, NULL);
 
         if (sub_socket == -1)
-            return;
+            return NULL;
 
-        int sub_socket2 = accept(sfd, NULL, NULL);
+        int sub_socket2 = accept(*socket, NULL, NULL);
 
         if (sub_socket2 == -1)
-            return;
+            return NULL;
 
         pid_t fid = fork();
         if (fid == -1)
-            return;
+            return NULL;
         if (fid == 0)
         {
-            close(sfd);
+            close(*socket);
             printf("New connection (pid = %i)\n", getpid());
 
             int e = game_tcp(sub_socket, sub_socket2);
@@ -62,7 +62,7 @@ void *game_worker(void * arg)
             printf("Close connection (pid = %i) with output %i\n",
                    getpid(), e);
 
-            return;
+            return NULL;
         }
 
         close(sub_socket);
@@ -80,10 +80,31 @@ void *game_worker(void * arg)
  * @param sub sub socket use
  * @return 0 in normal, other in case of errors
  */
-int game_tcp(int s1, s2)
+int game_tcp(int s1, int s2)
 {
-    //todo
-    sleep(15);
+    char buf1[1024];
+    char buf2[1024];
+    ssize_t r1 = 1;
+    ssize_t r2 = 1;
+
+    //First msg
+    write(s1, "8", 2);
+
+    do
+    {
+        sleep(1);
+        printf("Read for %i&%i\n", s1,s2);
+        r1 = read(s1, buf1, 1024);
+        r2 = read(s2, buf2, 1024);
+        printf("Found:\n%s\n%s\n", buf1, buf2);
+
+        dprintf(s1, "%s", buf2);
+        dprintf(s2, "%s", buf1);
+    }
+    while (r1 > 0 && r2 > 0);
+    printf("End listen %i&%i\n", s1, s2);
+
+    return 0;
 }
 
 //End safety loop guard
