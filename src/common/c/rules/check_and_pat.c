@@ -49,7 +49,6 @@ int checkmat_secondcondition(int x_king, int y_king, int color,  struct Piece *b
 
 			  if (piece_to_place( x_king, y_king,board2)== 0)
 			    {
-			      printf(" piece de type %d qui stop le echec et mat est %d %d allant %d %d\n", board2[des_y*8+des_x].type, x, y, des_x, des_y); 
 			      return 1; 
 			    }			
 	 
