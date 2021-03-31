@@ -42,10 +42,28 @@ void game_process()
     {
         printf("Hear message of display!\n");
         struct Piece* board = char_to_board((buf_output+1));
+        pthread_mutex_unlock(&mutex_output);
 
         display(board);
 
-        //Todo request action and send message
+        //Todo request action and apply move
+        pthread_mutex_lock(&mutex_input);
+        last_side_input = 1;
+        *buf_input = '2';
+        strcpy((buf_input+1), board_to_char(board));
+        *(buf_input+65) = 0;
+        pthread_mutex_unlock(&mutex_input);
+    }
+
+    else if (*buf_output == '2')
+    {
+        printf("Display!\n");
+        struct Piece* board = char_to_board((buf_output+1));
+        pthread_mutex_unlock(&mutex_output);
+
+        display(board);
+
+        return;
     }
 
     game_process();
