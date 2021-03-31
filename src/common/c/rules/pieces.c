@@ -245,7 +245,7 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 {
   if(color_piece)
     {
-      if((y == 6) && (des_y == y-2) && (x == des_x))
+      if((y == 6) && (des_y == y-2) && (x == des_x) && (board[des_y*8+des_x].type == NONE))
 	{
 	  return 1; 
 	}
@@ -255,7 +255,7 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 	  return 1; 
 	}
       
-      if((des_y == y-1) && (x == des_x))
+      if((des_y == y-1) && (x == des_x) && (board[des_y*8+des_x].type == NONE))
 	{
 	  return 1; 
 	}

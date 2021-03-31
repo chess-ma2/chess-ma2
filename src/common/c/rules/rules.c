@@ -62,7 +62,9 @@ Start the 2021-03-04
 
 */
 int rules()
-{ 
+{
+  //-----------------------------------necessary variables-----------------------------------
+  
   int answer = 0; // answer oth the nulle proposition
   
   int x = 0; 
@@ -89,7 +91,11 @@ int rules()
   
   struct Piece *board = init_board();
 
+  //---------------------------------------------------------------------------------------------------------
+
   display(board); //display the first board
+
+  //-------------------------------------START OF THE GAME---------------------------------------------------
   
   while( white_kingstatus != CHECKMATE || black_kingstatus != CHECKMATE ) //continue while not chessmate
     {
@@ -384,21 +390,6 @@ int rules()
 	      continue; 
 	    }
 
-	  if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-	    {
-	      x_kingw = des_x - 1; 
-	      y_kingw = des_y - 1;
-	      white_rock = CANT_ROCK;
-	      
-	    }
-
-	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
-	    {
-	      x_kingb = des_x - 1; 
-	      y_kingb = des_y - 1;
-	      black_rock = CANT_ROCK;
-	    }
-
 	  if(player_turn == BLACKTURN && kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1)
 	    {
 	      white_kingstatus = CHECK;
@@ -425,12 +416,14 @@ int rules()
 	    {
 	      black_kingstatus = CHECKMATE;
 	      winner = 1 ;
+	      display(board); 
 	      break; 
 	    }
 	  if(player_turn == BLACKTURN && check_mat(x_kingw, y_kingw, WHITE,  board)== 1)
 	    {
 	      white_kingstatus = CHECKMATE;
 	      winner = 0;
+	      display(board); 
 	      break; 
 	    }
 
@@ -463,6 +456,8 @@ int rules()
       display(board); //print the board after modifications
 
     }
+
+  //-------------------------------------------------PRINT WHO IS THE WINNER----------------------------------------------------
 
   if(winner == 1)
     {

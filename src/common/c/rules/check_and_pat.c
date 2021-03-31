@@ -140,7 +140,7 @@ int othermove_pat2(int x_place, int y_place,struct Piece *board)
       for(int x = 0; x < 8; x++)
 	{
 	  if(isValidMove(x_place, y_place, x, y, board) == 1)
-	    {
+	    { 
 	      return 1;
 	    }
 	}
@@ -173,7 +173,7 @@ int piece_to_place(int x_place, int y_place,struct Piece *board)
     {
       for(int x = 0; x < 8; x++)
 	{
-	  if(kingcheck_place(x_place, y_place, x, y, board) == 1)
+	  if(board[y*8+x].color != board[y_place*8+x_place].color && kingcheck_place(x_place, y_place, x, y, board) == 1)
 	    {
 	      return 1;
 	    }
@@ -368,16 +368,14 @@ int pat(int x_king, int y_king, struct Piece *board)
   
   int sum = 0;
 
-  //---------------------------------------------------------------------
-
-  if(board[(y_king)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king)*8+(x_king-1)].type != 0 && (x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
+    if(board[(y_king)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king)*8+(x_king-1)].type != 0 && (x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
     {
-      sum += 1;
+      sum += 1; 
     }
 
   else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  y_king >= 0 &&  y_king <= 7)
     {
-      sum += piece_to_place(x_king - 1, y_king, board);
+      sum += checkking_and_aroud(x_king, y_king,x_king - 1, y_king, board); 
     }
 
   else
@@ -387,14 +385,14 @@ int pat(int x_king, int y_king, struct Piece *board)
 
   //---------------------------------------------------------------------
 
-   if(board[(y_king-1)*8+(x_king)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king)].type != 0 && (x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+  if(board[(y_king-1)*8+(x_king)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king)].type != 0 && (x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
       sum += 1;
     }
    
-   else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+  else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
-      sum += piece_to_place(x_king, y_king - 1, board);
+      sum +=checkking_and_aroud(x_king, y_king,x_king , y_king-1, board); 
     }
 
   else
@@ -405,13 +403,13 @@ int pat(int x_king, int y_king, struct Piece *board)
   //---------------------------------------------------------------------
 
 
-   if(board[(y_king-1)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king-1)].type != 0 && (x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
-     {
-       sum += 1;
-     }
-   else if ((x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+  if(board[(y_king-1)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king-1)].type != 0 && (x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
     {
-      sum += piece_to_place(x_king - 1, y_king - 1, board);
+      sum += 1; 
+    }
+  else if ((x_king-1) <= 7 && (x_king-1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king-1) <= 7)
+    {
+      sum += checkking_and_aroud(x_king, y_king,x_king - 1, y_king-1, board); 
     }
 
   else
@@ -422,13 +420,14 @@ int pat(int x_king, int y_king, struct Piece *board)
   //---------------------------------------------------------------------
 
 
-     if(board[(y_king+1)*8+(x_king+1)].color == board[y_king*8+x_king].color && board[(y_king+1)*8+(x_king+1)].type != 0 && (x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+  if(board[(y_king+1)*8+(x_king+1)].color == board[y_king*8+x_king].color && board[(y_king+1)*8+(x_king+1)].type != 0 && (x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
       sum += 1;
     }
-     else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+  else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
-      sum += piece_to_place(x_king + 1, y_king + 1, board);
+      sum += checkking_and_aroud(x_king, y_king,x_king + 1, y_king + 1, board); 
+      
     }
 
   else
@@ -438,21 +437,21 @@ int pat(int x_king, int y_king, struct Piece *board)
    
   //---------------------------------------------------------------------
 
-   if(board[(y_king)*8+(x_king+1)].color == board[y_king*8+x_king].color && board[(y_king)*8+(x_king+1)].type != 0 && (x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
-     {
-       sum += 1;
-     }
+  if(board[(y_king)*8+(x_king+1)].color == board[y_king*8+x_king].color && board[(y_king)*8+(x_king+1)].type != 0 && (x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
+    {
+      sum += 1;
+    }
 
 
-   else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
-     {
-       sum += piece_to_place(x_king + 1, y_king, board);
-     }
+  else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king) >= 0 &&  (y_king) <= 7)
+    {
+      sum += checkking_and_aroud(x_king, y_king,x_king + 1, y_king, board); 
+    }
 
-   else
-     {
-       sum += 1;
-     }
+  else
+    {
+      sum += 1;
+    }
 
   //---------------------------------------------------------------------
 
@@ -463,7 +462,7 @@ int pat(int x_king, int y_king, struct Piece *board)
    
   else if ((x_king) <= 7 && (x_king) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
     {
-      sum += piece_to_place(x_king, y_king+1, board);
+      sum += checkking_and_aroud(x_king, y_king,x_king , y_king+ 1, board); 
     }
 
   else
@@ -477,12 +476,12 @@ int pat(int x_king, int y_king, struct Piece *board)
    
   if(board[(y_king-1)*8+(x_king+1)].color == board[y_king*8+x_king].color && board[(y_king-1)*8+(x_king+1)].type != 0 && (x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
     {
-      sum += 1;
+      sum += 1; 
     }
   
   else if ((x_king + 1) <= 7 && (x_king + 1) >= 0 &&  (y_king - 1) >= 0 &&  (y_king - 1) <= 7)
     {
-      sum += piece_to_place(x_king + 1, y_king - 1, board);
+      sum += checkking_and_aroud(x_king, y_king,x_king + 1, y_king -1, board); 
     }
 
   else
@@ -493,22 +492,19 @@ int pat(int x_king, int y_king, struct Piece *board)
   //---------------------------------------------------------------------
 
 
-   if(board[(y_king+1)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king+1)*8+(x_king-1)].type != 0 && (x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
-     {
-       sum += 1;
-     }
-   else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
-     {
-       sum += piece_to_place(x_king - 1, y_king + 1, board);
-     }
+  if(board[(y_king+1)*8+(x_king-1)].color == board[y_king*8+x_king].color && board[(y_king+1)*8+(x_king-1)].type != 0 && (x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+    {
+      sum += 1; 
+    }
+  else if ((x_king - 1) <= 7 && (x_king - 1) >= 0 &&  (y_king + 1) >= 0 &&  (y_king + 1) <= 7)
+    {
+      sum += checkking_and_aroud(x_king, y_king,x_king - 1, y_king + 1, board); 
+    }
 
-   else
-     {
-       sum += 1;
-     }
-
-  //---------------------------------------------------------------------
-
+  else
+    {
+      sum += 1; 
+    }
   
    if(piece_to_place(x_king, y_king, board) == 0 && sum == 8 &&  othermove_pat1(board) == 0)
      {
