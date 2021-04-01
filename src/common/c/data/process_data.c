@@ -44,7 +44,11 @@ int get_rest(int data, int rank)
 //_____//a-code of info (example 0 for player aborted mission)
 
 //uncodifying data and actualising it in board
-void uncodify_data(int data,  struct Piece *board)
+
+
+//TOCONTINUE
+
+/*void uncodify_data(int data,  struct Piece *board)
 {
     int code= get_number(data,10000);
     data= get_rest(data,10000);
@@ -69,9 +73,9 @@ void uncodify_data(int data,  struct Piece *board)
             send_request(data,board);
             
     }
-}
+}*/
 
-void send_request(int data,struct Piece * board)
+/*void send_request(int data,struct Piece * board)
 {
     
-}
+}*/

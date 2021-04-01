@@ -12,7 +12,8 @@
 #include <math.h>
 #include "pieces.h"
 
-int codify_data(int type, int xbeg, int ybeg, int newx, int newy)
+//TOCONTINUE
+/*int codify_data(int type, int xbeg, int ybeg, int newx, int newy)
 {
     return type*10000+xbeg*1000+ybeg*100+newx*10+newy;
-}
+}*/

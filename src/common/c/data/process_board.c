@@ -1,7 +1,7 @@
 /**
  * @author Marine
  * @date 29/03/2021
- * @details part made to process treat make the board into a char
+ * @details convertions between board and char
  */
 
 #include <string.h>

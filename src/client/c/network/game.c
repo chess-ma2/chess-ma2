@@ -15,7 +15,9 @@
 pthread_mutex_t mutex_input = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_output = PTHREAD_MUTEX_INITIALIZER;
 
-//0 in wait of client edit, 1 in wait of server side edit
+char color = 2;
+
+//0 waiting for the client to edit, 1 waiting for the server to edit
 char last_side_input = 0;
 char last_side_output = 1;
 
