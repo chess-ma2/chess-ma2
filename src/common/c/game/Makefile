@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -lssl
 
 all: game1
 
-game1 : game1.o ../../../database/create_db.o ../../../database/functions_db.o ../rules/pieces.o ../rules/plate.o ../../../database/SHA.o version1.o
+game1 : game1.o ../../../database/create_db.o ../../../database/functions_db.o ../rules/pieces.o ../rules/check_and_pat.o ../rules/plate.o ../../../database/SHA.o version1.o
 
 .PHONY: clean
 

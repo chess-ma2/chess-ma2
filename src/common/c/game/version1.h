@@ -10,6 +10,7 @@
 // Include Section
 #include "../rules/pieces.h"
 #include "../rules/plate.h"
+#include "../rules/check_and_pat.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -76,6 +77,12 @@ int incorrect_char(char x);
 
 // Checking if coordinates are correct
 int incorrect_int(int x);
+
+//White team wins
+int whiteT_Vict(struct Player *pl1, struct Player *pl2);
+
+//Black team wins
+int blackT_Vict(struct Player *pl1, struct Player *pl2);
 
 // Play game -> reused rules function in rules.c but changed quite a lot
 // Print rules
