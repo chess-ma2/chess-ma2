@@ -10,7 +10,7 @@
 
 #include "launch/launch.c"
 #include "network/network.c"
-#include "game/game_process.c"
+#include "game/game_process2.c"
 #include "../../common/c/data/file_io.c"
 /**
  * @author Marine

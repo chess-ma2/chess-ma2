@@ -1,3 +1,10 @@
+/**
+ * @author Antoine
+ * @date 31/03/2021
+ * @details Example for make idea to help,
+ * this file is just an example of a layer of network, is deprecated!
+ */
+
 #include "../network/game.c"
 #include "../../../common/c/data/process_board.c"
 #include "../../../common/c/rules/rules.c"

@@ -1,3 +1,9 @@
+/**
+ * @author Marine
+ * @date NA
+ * @details NA
+ */
+
 #include "../network/game.c"
 #include "../../../common/c/data/process_board.c"
 #include "../../../common/c/rules/rules.c"
