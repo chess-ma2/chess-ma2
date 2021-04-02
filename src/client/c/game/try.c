@@ -1,16 +1,17 @@
+//this is only a text edit made to try to convert marie's idea to the online game, going threw it right now! but will be addes to the game_process2.c hopefully very quick 
+
+
 //____________________________________ Game settings _____________________________________________________________
 //Rock
 //kingstatus to create
-if( (kingstatus == NOTHING && white_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == color && board[(y-1)*8+(x-1)].type == KING))
+if( (kingstatus == NOTHING && rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == color && board[(y-1)*8+(x-1)].type == KING))
 {
 
   if (isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x-1)].color, board) == 1)
   {   board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
 
-      if (player_turn == WHITETURN) {
-        king_x_me = des_x - 1;
-        king_y_me = des_y - 1;
-      }
+      king_x_me = des_x - 1;
+      king_y_me = des_y - 1;
 
 
       if(piece_to_place(king_x_me, king_y_me, board) == 1)
@@ -94,8 +95,7 @@ switch(possible)
                     king_y_me= y - 1; }
 
         //___________________________ Black team's turn
-          if(player_turn == BLACKTURN)
-            {
+                
             if (kingcheck_place(king_x_other, king_y_other, des_x-1, des_y-1, board) == 1) {
                 {kingstatus = CHECK;
                 printf("Checkmate for the white king \n");
@@ -107,14 +107,15 @@ switch(possible)
             if (check_mat(king_x_other, king_y_other, color,  board)== 1) {
                 return
               //return blackT_Vict(player1, player2);
+                //dire que le joueur a gagné
             }
             //lancer le tour de l'autre
-          }
-
+                
           if(pat(king_y_other, king_y_other, board))
             {
             printf(BHGRN "\n It's a draw!! \n" reset);
-                //add victory to both of the players
+                //add victory for both of the players
+                //and message
             //update_victory(player1->email);
             //update_victory(player2->email);
               return 0;

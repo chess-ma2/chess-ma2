@@ -20,10 +20,14 @@ int color = 0;
 int winner =0;
 int looser = 0;
 
-int king_x_me;
-int king_y_me;
-int king_x_other;
-int king_y_other;
+//to handle rules
+int rock=0;
+int kingstatus=0;
+
+int king_x_me=0;
+int king_y_me=0;
+int king_x_other=0;
+int king_y_other=0;
 
 //should i initiate????
 struct Piece *board;
