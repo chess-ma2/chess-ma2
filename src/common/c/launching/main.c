@@ -23,15 +23,93 @@ int main():
     scanf(" %c", type);
     if (type=='4')
     {
-        //todo launching the online game
+        onlinegame();
     }
     else
     {
         localgame();
     }
+    
     free(type);
     
     return 0;
+}
+
+//Create or get information from login for player
+//ANNA's function a bit modified
+//only adapted to the online game
+struct Player *Player()
+{
+    struct Player *player = malloc(sizeof(struct Player));
+    player->name = malloc(100 * sizeof(char));
+    player->email = malloc(100 * sizeof(char));
+    char *err = malloc(sizeof(char));
+    char *firstTime = malloc(sizeof(char));
+    printf("Hi player, is it your first time playing Chess ma²? [Y/N] \n\n");
+    scanf(" %c", firstTime);
+
+    while(!(*firstTime == 'Y' || *firstTime == 'N'))
+    {
+        printf("So sorry but you must put either 'Y'(yes) or 'N'(no), is this your first time? \n");
+        scanf(" %c", firstTime1);
+    }
+
+    int *finished = malloc(sizeof(int));
+    *finished = 0;
+
+    while(*finished == 0)
+    {
+        if(*firstTime1 =='Y')
+        {
+            new_account( player, finished, firstTime);
+        }
+    else
+    {
+        printf("Welcome back, please enter your email so we can log you in \n");
+        scanf("%s", player->email);
+        if(email_in_DB( player->email) != 0)
+        {
+            verify_password(player, finished, firstTime);
+        }
+        else
+        {
+            printf(RED "Email hasn't been found, is it because you are a new player [Y/N]\n" reset);
+            scanf(" %c", err);
+            if(*err != (char)'N')
+            {
+                *firstTime = (char) 'Y';
+            }
+            else
+            {
+                printf("Ok, let's try again.. \n");
+                incorrect_email( player, finished, firstTime);
+            }
+        }
+    }
+  }
+
+    free(firstTime);
+    free(finished);
+    free(err);
+    return player;
+}
+
+void onlinegame()
+{
+    printf("__________________________________________________________________________________________________\n\n");
+    printf("In this version, you can play with a friend (or your sworn chess enemy) on a different.\n");
+    printf("You are going to be connected with someone a person who currently wants to join an online game\n ");
+    printf("be patient, it can take a while\n");
+    //ici mettre un truc de fonction timer qui affiche les fonctions restantes
+    
+    struct Player * playerid =Player();
+    //ici appeler les fonctions necessaires pour lancer la base de données
+    //voir avec antoine
+    
+    
+    //end
+    free(playerid);
+    
 }
 
 //using anna's function to launch the local game
@@ -40,7 +118,7 @@ void localgame()
     //_________________ Welcome message ________________________________
 
     printf("__________________________________________________________________________________________________\n\n");
-    printf("In this version, you can play with a friend (or your sworn chess enemy) on a same computer.\n");
+    printf("In this version, you can play with a friend (or your sworn chess enemy) on the same computer.\n");
     printf(URED "You must both have (or create) an account to play.\n\n" reset);
 
     printf("__________________________________________________________________________________________________\n\n");

@@ -673,7 +673,7 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
 
 
             if(piece_to_place(x_kingw, y_kingw, board) == 1 || piece_to_place(x_kingb, y_kingb, board) == 1)
-          {
+           {
             board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
             printf("Impossible move for chessmate is inevitable\n");
 
