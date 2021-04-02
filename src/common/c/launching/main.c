@@ -1,3 +1,6 @@
+//marine 31/03
+
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -5,8 +8,9 @@
 #include <err.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <../game/game1.c>
-#include <../game/version1.c>
+#include "../game/game1.c"
+#include "../game/version1.c"
+#include "../../client/c/network/compatibility.c"
 
 int main():
 {
@@ -15,8 +19,8 @@ int main():
     
     printf("Now, I am going to ask you, do you want to play with a player online or do you want to play on your computr with a friend ?\n");
     printf("To play on one computer with a friend, click on the 'enter' button of your keyboard\n");
-    printf("To play only with a member of chess(ma)² tap '4' then 'enter' on your keyboard");
-    printf("HAVE A GREAT GAME");
+    printf("To play only with a member of chess(ma)² tap '4' then 'enter' on your keyboard\n");
+    printf("HAVE A GREAT GAME\n");
     
     //if empty then game local game, if 42 then online game
     char *type = malloc(sizeof(char));
@@ -85,8 +89,7 @@ struct Player *Player()
                 incorrect_email( player, finished, firstTime);
             }
         }
-    }
-  }
+    }}
 
     free(firstTime);
     free(finished);
@@ -105,6 +108,23 @@ void onlinegame()
     struct Player * playerid =Player();
     //ici appeler les fonctions necessaires pour lancer la base de données
     //voir avec antoine
+    //essaie
+    //checking compatibility, to be continued....
+    int comp= check_compatibility();
+    switch (comp)
+    {
+        case 9:
+            break;
+        case 10:
+            break;
+        case 0:
+            break;
+        
+        default:
+            errx("THE VERSION OF THE SERVEUR AND THE CLIENT ARE NOTE COMPATIBLE")
+            
+    }
+    //connexion to be done
     
     
     //end

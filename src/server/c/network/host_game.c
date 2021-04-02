@@ -88,7 +88,9 @@ int game_tcp(int s1, int s2)
     ssize_t r2 = 1;
 
     //First msg
-    write(s1, "8", 2);
+    write(s1, "1", 2);
+    //added that don't know
+    write(s2, "0",2);
 
     do
     {
@@ -101,6 +103,8 @@ int game_tcp(int s1, int s2)
         dprintf(s1, "%s", buf2);
         dprintf(s2, "%s", buf1);
     }
+    
+    //q pour antoin pour couper il faut donc renvoyer une negative ?
     while (r1 > 0 && r2 > 0);
     printf("End listen %i&%i\n", s1, s2);
 

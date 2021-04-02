@@ -15,7 +15,8 @@
 pthread_mutex_t mutex_input = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_output = PTHREAD_MUTEX_INITIALIZER;
 
-char color = 2;
+char color = 0;
+//maybe should we create a winner and looser variable to know if finsihes by winning
 
 //0 waiting for the client to edit, 1 waiting for the server to edit
 char last_side_input = 0;
