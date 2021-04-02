@@ -13,6 +13,9 @@
 #include "../rules/pieces.h"
 #include "process_board.h"
 
+//safety loop
+#ifndef PROCESS_BOARD_C
+#define PROCESS_BOARD_C
 
 //get the board and converts it the char
 //the color white is -
@@ -121,3 +124,6 @@ struct Piece *char_to_board(char * board_char)
     
     return board;
 }
+
+//End safety loop guard
+#endif

@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include "check_and_pat.h"
 
+#ifndef CHECK_AND_PAT_C
+#define CHECK_AND_PAT_C
+
 
 /*
 
@@ -414,7 +417,7 @@ int checkmat_firstcondition(int x_king, int y_king, struct Piece *board)
 
 /* 
 
-function : check_mat
+function :
 test if the king is in check and for that test the 2 conditions
 return 1 if king in checkmat
 return 0 else 
@@ -593,4 +596,6 @@ int pat(int x_king, int y_king, struct Piece *board)
   return 0; 
 
 }
+
+#endif
 

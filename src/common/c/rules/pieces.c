@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#ifndef PIECES_C
+#define PIECES_C
 
 /*
 
@@ -635,3 +637,5 @@ int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece,  struc
   
   return 0; 
 }
+
+#endif

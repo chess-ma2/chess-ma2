@@ -19,8 +19,6 @@ int othermove_pat2(int x_place, int y_place,struct Piece *board);
 
 int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Piece *board);
 
-int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Piece *board);
-
 int piece_to_place(int x_place, int y_place, struct Piece *board);
 
 int checkmat_firstcondition(int x_king, int y_king, struct Piece *board); 

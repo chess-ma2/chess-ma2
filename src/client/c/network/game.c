@@ -15,7 +15,18 @@
 pthread_mutex_t mutex_input = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_output = PTHREAD_MUTEX_INITIALIZER;
 
-char color = 0;
+//variable to use
+int color = 0;
+int winner =0;
+int looser = 0;
+
+int king_x_me;
+int king_y_me;
+int king_x_other;
+int king_y_other;
+
+//should i initiate????
+struct Piece *board;
 //maybe should we create a winner and looser variable to know if finsihes by winning
 
 //0 waiting for the client to edit, 1 waiting for the server to edit

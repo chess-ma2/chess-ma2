@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include "version1.h"
 
+#ifndef VERSION1_C
+#define VERSION1_C
+
 /*
  * @author Anna
  * @date started on 17/03/2021
@@ -562,7 +565,7 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
 
   //kings'positions to know if check or checkmat
 
-  int x_kingb = 4 ;
+  int x_kingb = 4;
   int y_kingb = 0;
   int x_kingw = 4;
   int y_kingw = 7;
@@ -832,3 +835,5 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
     }
     return 0;
 }
+
+#endif

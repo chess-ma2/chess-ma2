@@ -1,8 +1,12 @@
 /**
  * @author Marine
- * @date NA
- * @details NA
+ * @date 31/03/21
+ * @details processus to make the online game, encoding things
  */
+
+//Safety loop guard
+#ifndef GAME_PROCESS2_C
+#define GAME_PROCESS2_C
 
 #include "../network/game.c"
 #include "../../../common/c/data/process_board.c"
@@ -10,9 +14,10 @@
 #include "../../../common/c/rules/pieces.c"
 #include "../../../common/c/game/version1.c"
 #include "../../../common/c/rules/check_and_pat.c"
+#include "game_process2.h"
 #include <stdio.h>
 
-//AJOUTER LE LAST SIDE INPUT
+//AJOUTER LE LAST SIDE INPUT??
 
 void wait_game_output()
 {
@@ -31,7 +36,7 @@ void wait_game_output()
 //if incorect 1
 int incorrect_coor(char x,int y)
 {
-    if ((x=='W' || x=='S') & y=0)
+    if ((x=='W' || x=='S') && y==0)
     {
         return 0;
     }
@@ -80,7 +85,12 @@ void game_process()
     {
         case ('0'):
             printf("The connexion was successfull ! You are playing blacks\n");
-            //setting the color parameter in ../../serveur/game.c
+            //setting the parameters in ../../serveur/game.c
+            king_x_me=4;
+            king_y_me=0;
+            king_x_other=4;
+            king_y_other=7;
+            
             color=0;
             pthread_mutex_unlock(&mutex_output);
             //a voir si il faut init un board de base ?
@@ -93,15 +103,20 @@ void game_process()
         case ('1'):
             printf("The connexion was successfull ! You are playing whites\n");
             
-            //the color parameter in ../../serveur/game.c
+            //the parameters in ../../serveur/game.c
+            king_x_me=4;
+            king_y_me=7;
+            king_x_other=4;
+            king_y_other=0;
             color=1;
+            
             pthread_mutex_unlock(&mutex_output);
             
             print_rules();
             printf("Your turn to play !\n");
             
             
-            struct Piece* board = init_board();
+            board = init_board();
             display(board);
             pthread_mutex_lock(&mutex_input);
             
@@ -128,7 +143,7 @@ void game_process()
         case('3'):
             printf("Your turn now!\n");
             
-            struct Piece* board = char_to_board((buf_output+1));
+            board = char_to_board((buf_output+1));
             //or just take the 4 other args if we only want to move pieces
             pthread_mutex_unlock(&mutex_output);
 
@@ -155,17 +170,17 @@ void game_process()
             if (*(buf_output+1)==0)
             {
                 pthread_mutex_unlock(&mutex_input);
-                printf("The player wants to end the game \n"):
+                printf("The player wants to end the game \n");
                 printf("If you agree [y], your game wont be taken into acount\n");
                 printf("If you disagree [n], the player will need to continue or to abort and then, let you win \n");
                 printf("Enter [y] if you want to end the game, Enter [n] otherwise\n");
                 
                 pthread_mutex_lock(&mutex_input);
                 last_side_input = 1;
-                char rep[1];
-                scanf(" %i",rep);
+                char * rep = malloc(sizeof(char));
+                scanf(" %s",rep);
                 *buf_input='5';
-                if (rep=='y')
+                if (*rep=='y')
                 {
                     *(buf_input+1)=1;
                 }
@@ -173,6 +188,7 @@ void game_process()
                 {
                     *(buf_input+1)=0;
                 }
+                free(rep);
                 pthread_mutex_unlock(&mutex_input);
             }
             break;
@@ -196,8 +212,9 @@ void game_process()
                 printf("The player didn't accept to cancel the game\n");
                 printf("Do you want to abort? If you abort you will be considered as the looser\n");
                 printf("enter 'y' to abort, enter 'n' to continue");
-                scanf(" %i",rep);
-                if (rep=='y')
+                char * rep = malloc(sizeof(char));
+                scanf(" %s",rep);
+                if (*rep=='y')
                 {
                     *(buf_input)=6;
                     *(buf_input+1)=1;
@@ -214,13 +231,14 @@ void game_process()
                     strcpy((buf_input+1), board_to_char(board));
                     *(buf_input+65) = 0;
                 }
+                free(rep);
                 pthread_mutex_unlock(&mutex_input);
             }
             
             //if other cases of request they need to be there
             break;
         case ('6'):
-            printf("The game is over")
+            printf("The game is over\n");
             if (*(buf_output+1)==1)
             {
                 if (*(buf_output+2)==1)
@@ -229,7 +247,7 @@ void game_process()
                 }
                 else
                 {
-                        //call the db fonction to say lose
+                    //call the db fonction to say lose
                 }
             }
             //find a way to end the linking going on
@@ -237,28 +255,38 @@ void game_process()
         default:
             errx(1,"notworking");
     }
-    }
 
     game_process();
 }
 
-struct Piece* throw_action(board)
+struct Piece* throw_action(struct Piece * board)
 {
     int ok=1;
+    
+    char x_char=0;
+    int x=0;
+    int y=0;
+    char des_x_char=0;
+    int des_x=0;
+    int des_y=0;
     
     while (ok)
     {
         //begin to read coordinates
-        char coor[4]=coord_entered();
-        char x_char = coor[0];
-        int y = (int)coor[1];
-        char des_x_char = coord[2];
-        int des_y = (int)coor[3];
+        char *coor = malloc(sizeof(char)*4);
+        coord_entered(coor);
+        x_char = coor[0];
+        x= (int)x_char -64;
+        y = (int)coor[1];
+        des_x_char = coor[2];
+        des_x= (int)des_x_char -64;
+        des_y = (int)coor[3];
+        free(coor);
 
         //withdraw
         if ( x_char == 'W' && y == 0 && des_x_char == 'W' && des_y == 0){
             last_side_input = 1;
-            withdraw();
+            withdraw2();
             pthread_mutex_unlock(&mutex_input);
             return NULL;
             }
@@ -266,20 +294,19 @@ struct Piece* throw_action(board)
         //stalemate
         if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0){
             last_side_input = 1;
-            stalemate();
+            stalemate2();
             pthread_mutex_unlock(&mutex_input);
             return NULL;
         }
     
         //analyse basics mistakes
-        int a= valid_interpret(isValidMove(x,y,des_x,des_y));
+        int a= valid_interpret(isValidMove(x,y,des_x,des_y,board));
         if (a)
         {
             ok=0;
         }
         
-        int x = ((int)x_char) - 64;
-        if (errgestion(board,x))
+        if (errgestion(board,x,y))
         {
             ok=1;
         }
@@ -301,7 +328,7 @@ struct Piece* throw_action(board)
 
 //when the party is on, when the player receives an message
 //the player needs to play back so we
-int errgestion(struct Piece* board,int x)
+int errgestion(struct Piece* board,int x,int y)
 {
     
     if((color==1 && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
@@ -315,7 +342,7 @@ int errgestion(struct Piece* board,int x)
 }
 
 //TO DO stalemate
-void stalemate()
+void stalemate2()
 {
     //TODO VERIFY IF PORSSIBLE
     *buf_input = '6';
@@ -324,7 +351,7 @@ void stalemate()
     //+ajouter le fait d'arreter l communication et dire que cette personne perd
 }
 //TO DO withdraw
-void withdraw()
+void withdraw2()
 {
     *buf_input = '6';
     *(buf_output+1) = '1';
@@ -333,16 +360,15 @@ void withdraw()
 }
 
 //asks for the coordonates
-char coord_entered()
+void coord_entered(char * ret)
 {
     //variables
-    char ret[0];
-    int xi=0;
     char x_char = 'A';
+    int x= (int)x_char-64;
     int y = 0;
-    int des_x = 0;
+    int x_dest = 0;
     char des_x_char = 'A';
-    int des_y = 0;
+    int y_dest= 0;
     
     printf(" it's your turn! \n\n");
     //______________________________________________________________________________________________________
@@ -350,8 +376,6 @@ char coord_entered()
     //Get original coordinates
     printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
     scanf(" %c%d", &x_char, &y);
-    //x = ((int)x_char) - 65;
-    xi = ((int)x_char) - 64;
     
     while(incorrect_coor(x_char,y))
     {
@@ -362,11 +386,11 @@ char coord_entered()
 
     //Get new coordinates
     printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
-    scanf(" %c%d", &des_x_char, &des_y);
+    scanf(" %c%d", &des_x_char, &y_dest);
     //des_x = ((int)des_x_char) - 65;
-    des_x = ((int)des_x_char) - 64;
+    x_dest = ((int)des_x_char) - 64;
     
-    while(incorrect_coor(des_x_char,des_y))
+    while(incorrect_coor(des_x_char,y_dest))
     {
       printf(URED "Oops... you haven't entered correct destination coordinates please try again \n" reset);
       printf("Please enter the destination coordinates of the chess piece you want to move to (ex: A3) : \n");
@@ -378,11 +402,11 @@ char coord_entered()
     ret[2]=x_dest;
     ret[3]=(char)y_dest;
     
-    return ret;
+    return;
 }
 
 //interpet is valid move
-
+//TO DO NOT WORKING FOR NOW
 int valid_interpret(int a)
 {
     //Making sure the move is valid
@@ -390,29 +414,28 @@ int valid_interpret(int a)
     {
         case 0:
             printf("the movement is impossible\n");
-            return requestaction(board);
             break;
         case 1:
             printf("coordinates are valid!");
             break;
         case 2:
             printf("coordinates out of range! make sure you enter it well please...\n");
-            return requestaction(board);
             break;
         case 3:
             printf("the destination you've selected already has one of your piece ! \n");
-            return requestaction(board);
             break;
         case 4:
             printf("the piece you've selected is not existing, it is a empty part of the board\n");
-            return requestaction(board);
             break;
         default:
             errx(1,"error while checking args");
             
     }
+    return 1;
 }
 
-//to function that detects every particularity possible promotion rock check mate
+//todo the  function that detects every particularity possible promotion rock check mate
 
 
+//End safety loop guard
+#endif

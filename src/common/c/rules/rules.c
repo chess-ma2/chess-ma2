@@ -5,6 +5,11 @@
 #include <math.h>
 #include <stdlib.h>
 
+
+//Safety loop guard
+#ifndef RULES_C
+#define RULES_C
+
 /*
 
 File rules.c containing all the functions relating the a game.
@@ -20,7 +25,6 @@ Start the 2021-03-04
  * @details Small print of board for debug the game 
  * @param print the board of the game
  */
-
 
 void display(struct Piece *board)
 {
@@ -474,3 +478,5 @@ int rules()
   return 0;
    
 }
+
+#endif

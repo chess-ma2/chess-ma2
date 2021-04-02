@@ -4,7 +4,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-
+#ifndef PLATE_C
+#define PLATE_C
 /*
 
 File .c containing all the functions relating to the chess plate and init this last.
@@ -68,5 +69,7 @@ struct Piece *init_board()
 
     return board;
 }
+
+#endif
 
 
