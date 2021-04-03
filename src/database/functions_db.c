@@ -3,7 +3,7 @@
  * @date 05/03/2021
  * @details Updating the database and selecting data
  */
-#include "create_db.h"
+#include "create_db.c"
 #include "functions_db.h"
 #include <string.h>
 #include <err.h>

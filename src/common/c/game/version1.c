@@ -1,3 +1,5 @@
+#ifndef VERSION1_C
+#define VERSION1_C
 
 #include <stdio.h>
 #include <math.h>
@@ -10,8 +12,7 @@
 #include <stdlib.h>
 #include "version1.h"
 
-#ifndef VERSION1_C
-#define VERSION1_C
+
 
 /*
  * @author Anna

@@ -13,6 +13,6 @@ clean:
 build:
 	@echo "[Chess(ma)² - Client] Start build client sources..."
 	@mkdir -p ../../../target/
-	@gcc -pthread -Wall -O3 main.c \
+	@gcc -pthread -lsqlite3 -Wall -O3 main.c \
     -o "../../../target/client.out"
 	@echo "[Chess(ma)² - Client] End build sources!"

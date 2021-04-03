@@ -3,7 +3,8 @@
  * @date 07/03/2021
  * @details Generating hash table to encode future passwords
  */
-
+#ifndef SHA_C
+#define SHA_C
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
@@ -171,3 +172,4 @@ int main()
   //printf("%hhx,%hhx,%hhx,%hhx,%hhx \n", res[0], res[1], res[2], res[3], res[4]);
   return 0;
 }*/
+#endif

@@ -3,6 +3,8 @@
  * @date 11/03/2021
  * @details Creating the database and its tables
  */
+#ifndef CREATE_DB_C
+#define CREATE_DB_C
 #include "create_db.h"
 #include <string.h>
 #include <err.h>
@@ -10,7 +12,7 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <stdlib.h>
-#include "SHA.h"
+#include "SHA.c"
 
 // Creating the database or opening it
 sqlite3 * createDB()
@@ -140,3 +142,4 @@ void newAI(char *type, size_t nb_won, size_t nb_lost, size_t time)
     free(sql);
     sqlite3_close(db);
 }
+#endif

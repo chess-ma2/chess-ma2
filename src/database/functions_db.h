@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <stdlib.h>
-#include "create_db.h"
-#include "SHA.h"
+#include "create_db.c"
+#include "SHA.c"
 
 // Checking if an email is already in database
 int email_in_DB(char *email);

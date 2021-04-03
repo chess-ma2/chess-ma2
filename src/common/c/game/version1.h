@@ -8,22 +8,22 @@
 */
 
 // Include Section
-#include "../rules/pieces.h"
-#include "../rules/plate.h"
-#include "../rules/check_and_pat.h"
+#include "../rules/pieces.c"
+#include "../rules/plate.c"
+#include "../rules/check_and_pat.c"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include "ANSI-color-codes.h"
-#include "../../../database/create_db.h"
+#include "../../../database/create_db.c"
 #include <string.h>
 #include <err.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <sqlite3.h>
 #include <stdlib.h>
-#include "../../../database/SHA.h"
-#include "../../../database/functions_db.h"
+#include "../../../database/SHA.c"
+#include "../../../database/functions_db.c"
 
 
 // PLAYER STRUCTURE
