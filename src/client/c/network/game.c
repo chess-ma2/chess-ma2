@@ -23,6 +23,7 @@ int looser = 0;
 //to handle rules
 int rock=0;
 int kingstatus=0;
+int kingstatus_other=0;
 
 int king_x_me=0;
 int king_y_me=0;
@@ -53,7 +54,7 @@ void *game_network(void *arg)
         //Keep Alive
         pthread_mutex_lock(&mutex_input);
         if (last_side_input == 0)
-            write(fd, "0", 2);
+            write(fd, "2", 2);
         else
         {
             printf("As message to server: %s\n", buf_input);

@@ -89,8 +89,8 @@ int game_tcp(int s1, int s2)
 
     //First msg
     write(s1, "1", 2);
-    //added that don't know
-    write(s2, "0",2);
+    
+    //write(s2, "0",2);
 
     do
     {

@@ -85,6 +85,7 @@ void game_process()
     {
         case ('0'):
             printf("The connexion was successfull ! You are playing blacks\n");
+            
             //setting the parameters in ../../serveur/game.c
             king_x_me=4;
             king_y_me=0;
@@ -92,16 +93,32 @@ void game_process()
             king_y_other=7;
             
             color=0;
+            
             pthread_mutex_unlock(&mutex_output);
             //a voir si il faut init un board de base ?
             print_rules();
             //struct Piece* board = init_board()
-            printf("Please wait for the other player to play...\n");
+            board = char_to_board((buf_output+1));
+            display_board_special(board);
+            pthread_mutex_lock(&mutex_input);
+            printf("It is now your turn\n");
+            board=throw_action(board);
+            
+            if (board==NULL)
+            {
+                break;
+            }
+            
+            last_side_input = 1;
+            //filling the buffer with the board
+            *buf_input = '3';
+            strcpy((buf_input+1), board_to_char(board));
+            *(buf_input+65) = 0;
+            pthread_mutex_unlock(&mutex_input);
             break;
             
             
         case ('1'):
-            printf("The connexion was successfull ! You are playing whites\n");
             
             //the parameters in ../../serveur/game.c
             king_x_me=4;
@@ -113,23 +130,26 @@ void game_process()
             pthread_mutex_unlock(&mutex_output);
             
             print_rules();
+            
+            printf("The connexion was successfull ! You are playing whites\n");
             printf("Your turn to play !\n");
             
             
             board = init_board();
-            display(board);
+            display_board_special(board);
             pthread_mutex_lock(&mutex_input);
             
+            last_side_input = 1;
             board=throw_action(board);
             
             if (board==NULL)
             {
                 break;
             }
+            display_board_special(board);
             
-            last_side_input = 1;
             //filling the buffer with the board
-            *buf_input = '2';
+            *buf_input = '0';
             strcpy((buf_input+1), board_to_char(board));
             *(buf_input+65) = 0;
             pthread_mutex_unlock(&mutex_input);
@@ -147,18 +167,17 @@ void game_process()
             //or just take the 4 other args if we only want to move pieces
             pthread_mutex_unlock(&mutex_output);
 
-            display(board);
+            display_board_special(board);
 
+            last_side_input = 1;
             board=throw_action(board);
             if (board==NULL)
             {
                 break;
             }
             
-            last_side_input = 1;
             pthread_mutex_lock(&mutex_input);
-            last_side_input = 1;
-            *buf_input = '2';
+            *buf_input = '3';
             strcpy((buf_input+1), board_to_char(board));
             *(buf_input+65) = 0;
             pthread_mutex_unlock(&mutex_input);
@@ -182,11 +201,11 @@ void game_process()
                 *buf_input='5';
                 if (*rep=='y')
                 {
-                    *(buf_input+1)=1;
+                    *(buf_input+1)='1';
                 }
                 else
                 {
-                    *(buf_input+1)=0;
+                    *(buf_input+1)='0';
                 }
                 free(rep);
                 pthread_mutex_unlock(&mutex_input);
@@ -203,9 +222,9 @@ void game_process()
             {
                 printf("The game was cancelled \n");
                 printf("you can try to make another one to be more successfull\n");
-                *buf_input=6;
-                *(buf_input+1)=0;
-                *(buf_input+2)=0;
+                *buf_input='6';
+                *(buf_input+1)='0';
+                *(buf_input+2)='0';
             }
             else
             {
@@ -216,8 +235,9 @@ void game_process()
                 scanf(" %s",rep);
                 if (*rep=='y')
                 {
-                    *(buf_input)=6;
-                    *(buf_input+1)=1;
+                    *(buf_input)='6';
+                    *(buf_input+1)='1';
+                    looser=1;
                 }
                 else
                 {
@@ -227,7 +247,7 @@ void game_process()
                         break;
                     }
                     
-                    *buf_input = '2';
+                    *buf_input = '3';
                     strcpy((buf_input+1), board_to_char(board));
                     *(buf_input+65) = 0;
                 }
@@ -243,98 +263,31 @@ void game_process()
             {
                 if (*(buf_output+2)==1)
                 {
-                    //call the fonctions to say you've won
+                    winner=1;
                 }
                 else
                 {
-                    //call the db fonction to say lose
+                    looser=1;
                 }
             }
-            //find a way to end the linking going on
+            return;
         
         default:
-            errx(1,"notworking");
+            errx(1,"not working");
     }
 
     game_process();
 }
 
-struct Piece* throw_action(struct Piece * board)
-{
-    int ok=1;
-    
-    char x_char=0;
-    int x=0;
-    int y=0;
-    char des_x_char=0;
-    int des_x=0;
-    int des_y=0;
-    
-    while (ok)
-    {
-        //begin to read coordinates
-        char *coor = malloc(sizeof(char)*4);
-        coord_entered(coor);
-        x_char = coor[0];
-        x= (int)x_char -64;
-        y = (int)coor[1];
-        des_x_char = coor[2];
-        des_x= (int)des_x_char -64;
-        des_y = (int)coor[3];
-        free(coor);
-
-        //withdraw
-        if ( x_char == 'W' && y == 0 && des_x_char == 'W' && des_y == 0){
-            last_side_input = 1;
-            withdraw2();
-            pthread_mutex_unlock(&mutex_input);
-            return NULL;
-            }
-
-        //stalemate
-        if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0){
-            last_side_input = 1;
-            stalemate2();
-            pthread_mutex_unlock(&mutex_input);
-            return NULL;
-        }
-    
-        //analyse basics mistakes
-        int a= valid_interpret(isValidMove(x,y,des_x,des_y,board));
-        if (a)
-        {
-            ok=0;
-        }
-        
-        if (errgestion(board,x,y))
-        {
-            ok=1;
-        }
-    }
-    //now coordinates are recievable CHECK
-    
-    //test check mate TODO
-    //test promotion TODO
-    //test rock TODO
-    
-    //usual game
-    board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
-    printf("you move was just approved\n");
-    
-    display(board);
-    
-    return board;
-}
 
 //when the party is on, when the player receives an message
 //the player needs to play back so we
 int errgestion(struct Piece* board,int x,int y)
 {
     
-    if((color==1 && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
-          (color==0 && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE))
+    if(board[(y-1)*8+(x+1)].color != color && board[(y-1)*8+(x+1)].type != NONE)
        {
-         printf(URED "\n That isn't your chess piece to move. \n" reset);
+            printf(URED "\n That isn't your chess piece to move. \n" reset);
            return 1;
        }
     return 0;
@@ -348,6 +301,7 @@ void stalemate2()
     *buf_input = '6';
     *(buf_output+1) = '0';
     *(buf_output+2) = '0';
+    winner=1;
     //+ajouter le fait d'arreter l communication et dire que cette personne perd
 }
 //TO DO withdraw
@@ -356,7 +310,17 @@ void withdraw2()
     *buf_input = '6';
     *(buf_output+1) = '1';
     *(buf_output+2) = '1';
+    looser = 1;
     //+ajouter le fait d'arreter l communication et dire que cette personne perd
+}
+
+//TODO
+void pat2()
+{
+    *buf_input = '6';
+    *(buf_output+1) = '1';
+    *(buf_output+2) = '1';
+    winner=1;
 }
 
 //asks for the coordonates
@@ -406,32 +370,226 @@ void coord_entered(char * ret)
 }
 
 //interpet is valid move
-//TO DO NOT WORKING FOR NOW
 int valid_interpret(int a)
 {
     //Making sure the move is valid
     switch (a)
     {
         case 0:
-            printf("the movement is impossible\n");
-            break;
-        case 1:
-            printf("coordinates are valid!");
+            printf("This move isn't possible for that chess piece, please check the rules.\n\n");
             break;
         case 2:
-            printf("coordinates out of range! make sure you enter it well please...\n");
+            printf("This move isn't possible because one or some coordinates are out of bounds\n\n");
             break;
         case 3:
-            printf("the destination you've selected already has one of your piece ! \n");
+            printf("This move isn't possible because the chess piece on the destination coordinates is already yours!\n\n");
             break;
         case 4:
-            printf("the piece you've selected is not existing, it is a empty part of the board\n");
+            printf("This move isn't possible because there aren't any chess pieces to move!\n\n");
+            break;
+        case 1:
+            //board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
             break;
         default:
-            errx(1,"error while checking args");
+            printf("undifined erro\n");
+            a=-1;
+            break;
             
     }
-    return 1;
+    return a;
+}
+
+struct Piece* throw_action(struct Piece * board)
+{
+    int ok=1;
+    char x_char='A';
+    int x=0;
+    int y=0;
+    char des_x_char='A';
+    int des_x=0;
+    int des_y=0;
+           
+    // this part it checking if the basic coordinates are valid to play
+    while (ok)
+    {
+        //begin to read coordinates
+        char *coor = malloc(sizeof(char)*4);
+        int a=0;
+        coord_entered(coor);
+        x_char = coor[0];
+        x= (int)x_char -64;
+        y = (int)coor[1];
+        des_x_char = coor[2];
+        des_x= (int)des_x_char -64;
+        des_y = (int)coor[3];
+        free(coor);
+
+        //withdraw
+        if ( x_char == 'W' && y == 0 && des_x_char == 'W' && des_y == 0)
+        {
+            last_side_input = 1;
+            withdraw2();
+            pthread_mutex_unlock(&mutex_input);
+            return NULL;
+        }
+
+        //stalemate
+        if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0)
+        {
+            last_side_input = 1;
+            stalemate2();
+            pthread_mutex_unlock(&mutex_input);
+            return NULL;
+        }
+           
+        //analyse basics mistakes
+        a= valid_interpret(isValidMove(x,y,des_x,des_y,board));
+        if (a || board[(y-1)*8+(x+1)].color != color)
+        {
+            ok=0;
+        }
+        
+           // Impossible move
+        if(piece_to_place(king_x_me, king_y_me, board) == 1 )
+        {
+            printf("Impossible to move the king as checkmate would be unavoidable\n");
+            ok=1;
+        }
+               
+        if (errgestion(board,x,y))
+        {
+            ok=1;
+        }
+    }
+           //____________________________________ Game settings _____________________________________________________________
+           //Rock
+           //kingstatus to create
+           //Rock
+           //kingstatus to create
+    if( kingstatus == 0 && rock == 1 && board[(y-1)*8+(x-1)].color == color && board[(y-1)*8+(x-1)].type == KING)
+    {
+
+        if (isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x-1)].color, board))
+        {
+            board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+            king_x_me = des_x - 1;
+            king_y_me = des_y - 1;
+
+
+            if(piece_to_place(king_x_me, king_y_me, board) == 1)
+            {
+                    
+                board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
+                printf("Impossible move for chessmate is inevitable\n");
+                king_x_me = x - 1;
+                king_y_me = y - 1;
+
+                if( x - 1 == 4 && y - 1 == 7)
+                {
+                     
+                    if(des_x - 1 == 6 && des_y - 1 == 7) //little rock
+                   {
+                    board[color*7*8+7].type = ROOK;
+                     board[color*7*8+7].color = color;
+                     board[color*7*8+5].type = NONE;
+                     board[color*7*8+5].color = 0;
+                   }
+                   if (des_x - 1 == 2 && des_y - 1 == 7) //big rock
+                   {
+                     board[color*7*8+0].type = ROOK;
+                     board[color*7*8+0].color = color;
+                     board[color*7*8+3].type = NONE;
+                     board[color*7*8+3].color = 0;
+                   }
+                 }
+                printf("please try another move...\n");
+                return throw_action(board);
+            }
+        }
+    }
+           
+    //Move chess piece
+    pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+
+    //________ King ____________
+    if(board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+    {
+        king_x_me = des_x - 1;
+        king_y_me = des_y - 1;
+        //variable to create
+        rock = 0;
+    }
+
+    //___________________________
+
+
+    // Impossible move
+    if(piece_to_place(king_x_me, king_y_me, board) == 1 )
+    {
+        board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
+        printf("Impossible to move the king as checkmate would be unavoidable\n");
+        printf("please try another move...\n");
+        return throw_action(board);
+            
+
+        if(board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+        {
+                king_x_me = x - 1;
+                king_y_me= y - 1;
+        }
+        return throw_action(board);
+    }
+
+                           
+    if (kingcheck_place(king_x_other, king_y_other, des_x-1, des_y-1, board) == 1)
+    {
+        kingstatus_other = 1;
+        printf("Checkmate for the other king \n");
+        *buf_input = '6';
+        *(buf_input+1)='1';
+        *(buf_input+2) ='0';
+        winner=1;
+        
+    }
+
+    if (kingcheck_place(king_x_me, king_y_me, des_x-1, des_y-1, board) == 0)
+    {
+        kingstatus = 0;
+    }
+    if (check_mat(king_x_other, king_y_other, !color,  board)== 1)
+    {
+            return board;
+            //SHOULD TRANSFORM THE BOARD INTO a 00000000000 board to say the player has woon
+            //this is a pbm 'cause we want to save the board!
+            //return blackT_Vict(player1, player2);
+            //dire que le joueur a gagné
+    }
+                           
+    if(pat(king_x_other, king_y_other, board))
+    {
+            printf(BHGRN "\n It's a draw!! \n" reset);
+            pat2();
+            //send draw function!!!!!
+            return NULL;
+    }
+           
+    printf(reset);
+    display_board_special(board);
+    //now coordinates are recievable CHECK
+           
+    //test check mate TODO
+    //test promotion TODO
+    //test rock TODO
+           
+           
+    //usual game
+    board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+    printf("you move was just approved, now wait for the other player to make a move\n");
+           
+    display_board_special(board);
+    printf("OKTEST\n");
+    return board;
+                           
 }
 
 //todo the  function that detects every particularity possible promotion rock check mate

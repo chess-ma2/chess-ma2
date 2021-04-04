@@ -11,13 +11,24 @@
 #include "../game/game1.c"
 #include "../game/version1.c"
 #include "../../client/c/network/compatibility.c"
+#include "../../client/c/network/game.c"
+#include "../../database/functions_db.c"
 
 int main():
 {
     printf("Welcome to CHESS(MA)² !\n Are you ready to have a successful game?\n");
     printf("Remember, with CHESS(MA)², every checkmate brings mates closer ! \n");
     
-    printf("Now, I am going to ask you, do you want to play with a player online or do you want to play on your computr with a friend ?\n");
+    printf("Now, I am going to ask you, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
+    int begin=1;
+    while (1)
+    {
+        if (begin==0)
+        {
+            pritnf("Now that you've just ended your game do you want to make another one? Type ctrl+c if you want to quit\n");
+            printf("Otherwise, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
+        }
+        begin=0;
     printf("To play on one computer with a friend, click on the 'enter' button of your keyboard\n");
     printf("To play only with a member of chess(ma)² tap '4' then 'enter' on your keyboard\n");
     printf("HAVE A GREAT GAME\n");
@@ -27,7 +38,15 @@ int main():
     scanf(" %c", type);
     if (type=='4')
     {
-        onlinegame();
+        struct Player * id=onlinegame();
+        if (winner==1)
+        {
+            update_victory(id->email);
+        }
+        if (looser==1)
+        {
+            update_loss(id->name);
+        }
     }
     else
     {
@@ -35,6 +54,7 @@ int main():
     }
     
     free(type);
+    }
     
     return 0;
 }
@@ -97,7 +117,7 @@ struct Player *Player()
     return player;
 }
 
-void onlinegame()
+struct Player * onlinegame()
 {
     printf("__________________________________________________________________________________________________\n\n");
     printf("In this version, you can play with a friend (or your sworn chess enemy) on a different.\n");
@@ -125,10 +145,10 @@ void onlinegame()
             
     }
     //connexion to be done
-    
+    //call the fonctions tu make the connexion
     
     //end
-    free(playerid);
+    return playerid
     
 }
 

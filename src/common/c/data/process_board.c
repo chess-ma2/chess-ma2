@@ -48,25 +48,25 @@ char *board_to_char(struct Piece * board)
         switch (board[i].type)
         {
             case NONE:
-                board_char[i]=(7);
+                board_char[i]=(char)(7+48);
                 break;
             case PAWN:
-                board_char[i]=(trans*1);
+                board_char[i]=(char)(trans*1+48);
                 break;
             case ROOK:
-                board_char[i]=(trans*2);
+                board_char[i]=(char)(trans*2+48);
                 break;
             case BISHOP:
-                board_char[i]=(trans*3);
+                board_char[i]=(char)(trans*3+48);
                 break;
             case KNIGHT:
-                board_char[i]=(trans*4);
+                board_char[i]=(char)(trans*4+48);
                 break;
             case QUEEN:
-                board_char[i]=(trans*5);
+                board_char[i]=(char)(trans*5+48);
                 break;
             case KING:
-                board_char[i]=(trans*6);
+                board_char[i]=(char)(trans*6+48);
                 break;
             default:
                 printf("ERROR TYPE DOESN'T EXISTS %i\n",i);
@@ -81,7 +81,8 @@ struct Piece *char_to_board(char * board_char)
     
     for(int i=0;i<64;i++)
     {
-        if (board_char[i]!=7)
+        board_char= board_char - 48;
+        if (board_char[i]!='7')
         {
             if (board_char[i]>0)
             {
@@ -96,25 +97,25 @@ struct Piece *char_to_board(char * board_char)
         
         switch (board_char[i])
         {
-            case 7:
+            case '7':
                 (board+i)->type=NONE;
                 break;
-            case 1:
+            case '1':
                 (board+i)->type=PAWN;
                 break;
-            case 2:
+            case '2':
                 (board+i)->type=ROOK;
                 break;
-            case 3:
+            case '3':
                 (board+i)->type=BISHOP;
                 break;
-            case 4:
+            case '4':
                 (board+i)->type=KNIGHT;
                 break;
-            case 5:
+            case '5':
                 (board+i)->type=QUEEN;
                 break;
-            case 6:
+            case '6':
                 (board+i)->type=KING;
                 break;
             default:
