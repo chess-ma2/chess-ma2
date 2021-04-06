@@ -13,6 +13,6 @@ clean:
 build:
 	@echo "[Chess(ma)² - Common] Start build common sources..."
 	@mkdir -p ../../../target/
-	@gcc -Wall -O3 main.c \
+	@gcc -pthread -lsqlite3 -Wall -O3 main.c \
     -o "../../../target/common.out"
 	@echo "[Chess(ma)² - Common] End build sources!"
