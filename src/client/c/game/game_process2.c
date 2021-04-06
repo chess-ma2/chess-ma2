@@ -431,9 +431,10 @@ struct Piece * throw_action(struct Piece * board)
         }
            
         //analysing basics mistakes with isValidMove
-        a= valid_interpret(isValidMove(x,y,des_x,des_y,board));
-        if (a==1 && board[(y-1)*8+(x+1)].color != color)
+        a= valid_interpret(isValidMove(x-1,y-1,des_x-1,des_y-1,board));
+        if (a==1 || board[(y-1)*8+(x+1)].color != color)
         {
+            printf("your move was validated\n");
             ok=0;
         }
         
