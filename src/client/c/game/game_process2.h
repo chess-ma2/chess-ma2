@@ -19,6 +19,8 @@ void stalemate2();
 
 void withdraw2();
 
+void change_king_other(char * buf);
+
 int valid_interpret(int a);
 
 

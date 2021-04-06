@@ -1,3 +1,4 @@
+
 #include "../rules/pieces.h"
 #include "../rules/plate.h"
 #include <stdio.h>
@@ -8,12 +9,13 @@
 #include <string.h>
 #include <err.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <sqlite3.h>
 #include <stdlib.h>
 #include "../../../database/SHA.h"
 #include "../../../database/functions_db.h"
 #include "version1.h"
+
+#ifndef LAUNCHING_C
 
 int main()
 {
@@ -53,3 +55,5 @@ int main()
 
     return res;
 }
+
+#endif

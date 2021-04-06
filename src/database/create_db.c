@@ -5,6 +5,7 @@
  */
 #ifndef CREATE_DB_C
 #define CREATE_DB_C
+
 #include "create_db.h"
 #include <string.h>
 #include <err.h>

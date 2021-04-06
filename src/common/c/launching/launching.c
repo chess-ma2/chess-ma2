@@ -1,5 +1,7 @@
 //marine 31/03
 
+#ifndef LAUNCHING_C
+#define LAUNCHING_C
 
 #include <stdio.h>
 #include <math.h>
@@ -10,54 +12,10 @@
 #include <stdio.h>
 #include "../game/game1.c"
 #include "../game/version1.c"
-#include "../../client/c/network/compatibility.c"
-#include "../../client/c/network/game.c"
-#include "../../database/functions_db.c"
-
-int main():
-{
-    printf("Welcome to CHESS(MA)² !\n Are you ready to have a successful game?\n");
-    printf("Remember, with CHESS(MA)², every checkmate brings mates closer ! \n");
-    
-    printf("Now, I am going to ask you, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
-    int begin=1;
-    while (1)
-    {
-        if (begin==0)
-        {
-            pritnf("Now that you've just ended your game do you want to make another one? Type ctrl+c if you want to quit\n");
-            printf("Otherwise, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
-        }
-        begin=0;
-    printf("To play on one computer with a friend, click on the 'enter' button of your keyboard\n");
-    printf("To play only with a member of chess(ma)² tap '4' then 'enter' on your keyboard\n");
-    printf("HAVE A GREAT GAME\n");
-    
-    //if empty then game local game, if 42 then online game
-    char *type = malloc(sizeof(char));
-    scanf(" %c", type);
-    if (type=='4')
-    {
-        struct Player * id=onlinegame();
-        if (winner==1)
-        {
-            update_victory(id->email);
-        }
-        if (looser==1)
-        {
-            update_loss(id->name);
-        }
-    }
-    else
-    {
-        localgame();
-    }
-    
-    free(type);
-    }
-    
-    return 0;
-}
+#include "../../../client/c/network/network.c"
+#include "../../../client/c/game/game_process2.c"
+#include "../../../database/functions_db.c"
+#include "../data/file_io.c"
 
 //Create or get information from login for player
 //ANNA's function a bit modified
@@ -75,7 +33,7 @@ struct Player *Player()
     while(!(*firstTime == 'Y' || *firstTime == 'N'))
     {
         printf("So sorry but you must put either 'Y'(yes) or 'N'(no), is this your first time? \n");
-        scanf(" %c", firstTime1);
+        scanf(" %c", firstTime);
     }
 
     int *finished = malloc(sizeof(int));
@@ -83,7 +41,7 @@ struct Player *Player()
 
     while(*finished == 0)
     {
-        if(*firstTime1 =='Y')
+        if(*firstTime =='Y')
         {
             new_account( player, finished, firstTime);
         }
@@ -117,6 +75,7 @@ struct Player *Player()
     return player;
 }
 
+
 struct Player * onlinegame()
 {
     printf("__________________________________________________________________________________________________\n\n");
@@ -130,27 +89,64 @@ struct Player * onlinegame()
     //voir avec antoine
     //essaie
     //checking compatibility, to be continued....
-    int comp= check_compatibility();
-    switch (comp)
-    {
-        case 9:
-            break;
-        case 10:
-            break;
-        case 0:
-            break;
-        
-        default:
-            errx("THE VERSION OF THE SERVEUR AND THE CLIENT ARE NOTE COMPATIBLE")
-            
-    }
+    start_network();
+    game_process();
+    
     //connexion to be done
     //call the fonctions tu make the connexion
     
     //end
-    return playerid
+    return playerid;
     
 }
+
+void localgame();
+
+int launching()
+{
+    printf("Welcome to CHESS(MA)² !\n Are you ready to have a successful game?\n");
+    printf("Remember, with CHESS(MA)², every checkmate brings mates closer ! \n");
+    
+    printf("Now, I am going to ask you, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
+    int begin=1;
+    while (1)
+    {
+        if (begin==0)
+        {
+            printf("Now that you've just ended your game do you want to make another one? Type ctrl+c if you want to quit\n");
+            printf("Otherwise, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
+        }
+        begin=0;
+    printf("To play on one computer with a friend, click on the 'enter' button of your keyboard\n");
+    printf("To play only with a member of chess(ma)² tap '4' then 'enter' on your keyboard\n");
+    printf("HAVE A GREAT GAME\n");
+    
+    //if empty then game local game, if 42 then online game
+    char *type = malloc(sizeof(char));
+    scanf(" %c", type);
+    if (*type=='4')
+    {
+        struct Player * id=onlinegame();
+        if (winner==1)
+        {
+            update_victory(id->email);
+        }
+        if (looser==1)
+        {
+            update_loss(id->name);
+        }
+    }
+    else
+    {
+        localgame();
+    }
+    
+    free(type);
+    }
+    
+    return 0;
+}
+
 
 //using anna's function to launch the local game
 void localgame()
@@ -174,7 +170,8 @@ void localgame()
     //___________________   Start Game   ________________________________
     struct Piece *board = init_board();
     display_board_special(board);
-    int res = play(board, player1, player2);
+    //int res =
+    play(board, player1, player2);
 
     //___________________   Free memory_   ________________________________
 
@@ -186,6 +183,8 @@ void localgame()
     free(player2);
     free(board);
 
-    return res;
+    
+    //return res;
 }
 
+#endif

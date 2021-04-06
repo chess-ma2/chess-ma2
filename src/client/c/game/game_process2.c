@@ -108,7 +108,7 @@ void game_process()
             {
                 break;
             }
-            
+            display_board_special(board);
             last_side_input = 1;
             //filling the buffer with the board
             *buf_input = '3';
@@ -164,10 +164,12 @@ void game_process()
             printf("Your turn now!\n");
             
             board = char_to_board((buf_output+1));
+            
+            //if the king of the other player changed, then we change it there to
+            change_king_other(buf_output+65);
             //or just take the 4 other args if we only want to move pieces
             pthread_mutex_unlock(&mutex_output);
             
-
             display_board_special(board);
             pthread_mutex_lock(&mutex_input);
             last_side_input = 1;
@@ -176,10 +178,20 @@ void game_process()
             {
                 break;
             }
-            
-            *buf_input = '3';
-            strcpy((buf_input+1), board_to_char(board));
-            *(buf_input+65) = 0;
+            display_board_special(board);
+            if (winner==1)
+            {
+                printf("CONGRATS YOU WON!!\n");
+                *buf_input = '6';
+                *(buf_input+1)='1';
+                *(buf_input+2)='0';
+            }
+            else
+            {
+                *buf_input = '3';
+                strcpy((buf_input+1), board_to_char(board));
+                *(buf_input+65) = 0;
+            }
             pthread_mutex_unlock(&mutex_input);
             break;
 
@@ -245,10 +257,18 @@ void game_process()
                     {
                         break;
                     }
-                    
-                    *buf_input = '3';
-                    strcpy((buf_input+1), board_to_char(board));
-                    *(buf_input+65) = 0;
+                    if (winner==1)
+                    {
+                        *buf_input = '6';
+                        *(buf_input+1)='1';
+                        *(buf_input+2)='0';
+                    }
+                    else
+                    {
+                        *buf_input = '3';
+                        strcpy((buf_input+1), board_to_char(board));
+                        *(buf_input+65) = 0;
+                    }
                 }
                 free(rep);
                 pthread_mutex_unlock(&mutex_input);
@@ -264,10 +284,12 @@ void game_process()
             {
                 if (*(buf_output+2)==1)
                 {
+                    printf("YOU ARE THE WINNER!\n");
                     winner=1;
                 }
                 else
                 {
+                    printf("SORRY YOU HAVE LOST\n");
                     looser=1;
                 }
             }
@@ -354,6 +376,16 @@ int valid_interpret(int a)
             
     }
     return a;
+}
+
+void change_king_other(char * buf)
+{
+    if (buf[0]==1)
+    {
+        king_x_other=buf[1];
+        king_y_other=buf[2];
+    }
+    return;
 }
 
 struct Piece * throw_action(struct Piece * board)
@@ -551,11 +583,9 @@ struct Piece * throw_action(struct Piece * board)
     }
     if (check_mat(king_x_other, king_y_other, !color,  board)== 1)
     {
-            return NULL;
-            //SHOULD TRANSFORM THE BOARD INTO a 00000000000 board to say the player has woon
-            //this is a pbm 'cause we want to save the board!
-            //return blackT_Vict(player1, player2);
-            //dire que le joueur a gagné
+        //modifying winner to detect that the check mate happened
+        winner=1;
+        return NULL;
     }
                            
     if(pat(king_x_other, king_y_other, board))
@@ -566,12 +596,7 @@ struct Piece * throw_action(struct Piece * board)
     }
            
     printf(reset);
-    //display_board_special(board);
-    //now coordinates are recievable CHECK
-           
-           
-    //usual game
-    //board =pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+        
     
     printf("you move was just approved, now wait for the other player to make a move\n");
     return board;

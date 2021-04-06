@@ -3,6 +3,9 @@
  * @date 05/03/2021
  * @details Updating the database and selecting data
  */
+#ifndef FUNCTION_DB_C
+#define FUNCTION_DB_C
+
 #include "create_db.c"
 #include "functions_db.h"
 #include <string.h>
@@ -493,3 +496,4 @@ size_t get_rank(char * email)
     err(1, "couldn't get the rank \n");
 
 }*/
+#endif
