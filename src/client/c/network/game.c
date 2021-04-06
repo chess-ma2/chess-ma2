@@ -54,7 +54,7 @@ void *game_network(void *arg)
         //Keep Alive
         pthread_mutex_lock(&mutex_input);
         if (last_side_input == 0)
-            write(fd, "2", 2);
+            write(fd, "2", 1);
         else
         {
             printf("As message to server: %s\n", buf_input);
@@ -65,7 +65,7 @@ void *game_network(void *arg)
 
         read(fd, buf, 1024);
         //Try to set cache
-        if (*buf != '0')
+        if (*buf != '2')
         {
                 pthread_mutex_lock(&mutex_output);
                 if (last_side_output == 0)

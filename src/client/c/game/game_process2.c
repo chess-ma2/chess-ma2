@@ -166,9 +166,10 @@ void game_process()
             board = char_to_board((buf_output+1));
             //or just take the 4 other args if we only want to move pieces
             pthread_mutex_unlock(&mutex_output);
+            
 
             display_board_special(board);
-
+            pthread_mutex_lock(&mutex_input);
             last_side_input = 1;
             board=throw_action(board);
             if (board==NULL)
@@ -176,7 +177,6 @@ void game_process()
                 break;
             }
             
-            pthread_mutex_lock(&mutex_input);
             *buf_input = '3';
             strcpy((buf_input+1), board_to_char(board));
             *(buf_input+65) = 0;
@@ -185,10 +185,9 @@ void game_process()
 
         case ('4'):
             printf("The other player has a request \n");
-            
+            pthread_mutex_unlock(&mutex_output);
             if (*(buf_output+1)==0)
             {
-                pthread_mutex_unlock(&mutex_input);
                 printf("The player wants to end the game \n");
                 printf("If you agree [y], your game wont be taken into acount\n");
                 printf("If you disagree [n], the player will need to continue or to abort and then, let you win \n");
@@ -213,7 +212,7 @@ void game_process()
             break;
             
         case ('5'):
-            pthread_mutex_unlock(&mutex_input);
+            pthread_mutex_unlock(&mutex_output);
             printf("The other player has responded \n");
             
             last_side_input = 1;
@@ -241,7 +240,7 @@ void game_process()
                 }
                 else
                 {
-                    board=throw_action(board);
+                    throw_action(board);
                     if (board==NULL)
                     {
                         break;
@@ -258,7 +257,9 @@ void game_process()
             //if other cases of request they need to be there
             break;
         case ('6'):
+            pthread_mutex_unlock(&mutex_output);
             printf("The game is over\n");
+            
             if (*(buf_output+1)==1)
             {
                 if (*(buf_output+2)==1)
@@ -273,7 +274,8 @@ void game_process()
             return;
         
         default:
-            errx(1,"not working");
+            pthread_mutex_unlock(&mutex_output);
+            break;
     }
 
     game_process();
@@ -399,7 +401,7 @@ int valid_interpret(int a)
     return a;
 }
 
-struct Piece* throw_action(struct Piece * board)
+struct Piece * throw_action(struct Piece * board)
 {
     int ok=1;
     char x_char='A';
@@ -509,7 +511,7 @@ struct Piece* throw_action(struct Piece * board)
     }
            
     //Move chess piece
-    pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+    board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
 
     //________ King ____________
     if(board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
@@ -558,7 +560,7 @@ struct Piece* throw_action(struct Piece * board)
     }
     if (check_mat(king_x_other, king_y_other, !color,  board)== 1)
     {
-            return board;
+            return NULL;
             //SHOULD TRANSFORM THE BOARD INTO a 00000000000 board to say the player has woon
             //this is a pbm 'cause we want to save the board!
             //return blackT_Vict(player1, player2);
@@ -574,7 +576,7 @@ struct Piece* throw_action(struct Piece * board)
     }
            
     printf(reset);
-    display_board_special(board);
+    //display_board_special(board);
     //now coordinates are recievable CHECK
            
     //test check mate TODO
@@ -583,11 +585,9 @@ struct Piece* throw_action(struct Piece * board)
            
            
     //usual game
-    board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+    //board =pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+    
     printf("you move was just approved, now wait for the other player to make a move\n");
-           
-    display_board_special(board);
-    printf("OKTEST\n");
     return board;
                            
 }

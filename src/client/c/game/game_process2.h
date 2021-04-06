@@ -11,7 +11,7 @@ int incorrect_coor(char x,int y);
 
 void game_process();
 
-struct Piece* throw_action(struct Piece* board);
+struct Piece * throw_action(struct Piece* board);
 
 int errgestion(struct Piece* board,int x,int y);
 

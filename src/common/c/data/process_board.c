@@ -39,7 +39,7 @@ char *board_to_char(struct Piece * board)
     {
         if (board[i].color ==WHITE)
         {
-            trans = (-1);
+            trans = -1;
         }
         else
         {
@@ -81,25 +81,22 @@ struct Piece *char_to_board(char * board_char)
     
     for(int i=0;i<64;i++)
     {
-        board_char= board_char - 48;
-        if (board_char[i]!='7')
+        //board_char= board_char - 48;
+        if (board_char[i] !='7')
         {
-            if (board_char[i]>0)
+            if (board_char[i]>'0')
             {
                 (board+i)->color = BLACK;
             }
             else
             {
                 (board+i)->color = WHITE;
-                board_char[i]=-1*board_char[i];
+                board_char[i]=((int)'0'- board_char[i])*(2)+board_char[i];
             }
         }
         
         switch (board_char[i])
         {
-            case '7':
-                (board+i)->type=NONE;
-                break;
             case '1':
                 (board+i)->type=PAWN;
                 break;
@@ -119,7 +116,8 @@ struct Piece *char_to_board(char * board_char)
                 (board+i)->type=KING;
                 break;
             default:
-                printf("char was not encoded right %i\n",i);
+                (board+i)->type=NONE;
+                break;
         }
     }
     
