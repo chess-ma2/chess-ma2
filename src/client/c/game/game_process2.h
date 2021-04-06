@@ -19,8 +19,6 @@ void stalemate2();
 
 void withdraw2();
 
-void coord_entered(char * ret);
-
 int valid_interpret(int a);
 
 

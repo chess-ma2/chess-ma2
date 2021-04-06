@@ -325,51 +325,6 @@ void pat2()
     winner=1;
 }
 
-//asks for the coordonates
-void coord_entered(char * ret)
-{
-    //variables
-    char x_char = 'A';
-    int x= (int)x_char-64;
-    int y = 0;
-    int x_dest = 0;
-    char des_x_char = 'A';
-    int y_dest= 0;
-    
-    printf(" it's your turn! \n\n");
-    //______________________________________________________________________________________________________
-
-    //Get original coordinates
-    printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
-    scanf(" %c%d", &x_char, &y);
-    
-    while(incorrect_coor(x_char,y))
-    {
-      printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
-      printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
-      scanf(" %c%d\n", &x_char, &y);
-    }
-
-    //Get new coordinates
-    printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
-    scanf(" %c%d", &des_x_char, &y_dest);
-    //des_x = ((int)des_x_char) - 65;
-    x_dest = ((int)des_x_char) - 64;
-    
-    while(incorrect_coor(des_x_char,y_dest))
-    {
-      printf(URED "Oops... you haven't entered correct destination coordinates please try again \n" reset);
-      printf("Please enter the destination coordinates of the chess piece you want to move to (ex: A3) : \n");
-      scanf(" %c%d\n", &x_char, &y);
-    }
-    
-    ret[0]=x;
-    ret[1]=(char)y;
-    ret[2]=x_dest;
-    ret[3]=(char)y_dest;
-    
-    return;
-}
 
 //interpet is valid move
 int valid_interpret(int a)
@@ -415,18 +370,49 @@ struct Piece * throw_action(struct Piece * board)
     while (ok)
     {
         //begin to read coordinates
-        char *coor = malloc(sizeof(char)*4);
         int a=0;
-        coord_entered(coor);
-        x_char = coor[0];
-        x= (int)x_char -64;
-        y = (int)coor[1];
-        des_x_char = coor[2];
-        des_x= (int)des_x_char -64;
-        des_y = (int)coor[3];
-        free(coor);
+        
+        
+        //_____________________________________________________________
+        //entering the coordinates_____________________________________
+        //_____________________________________________________________
+        printf(" it's your turn! \n\n");
+        //______________________________________________________________________________________________________
 
-        //withdraw
+        //Get original coordinates
+        printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
+        scanf(" %c%d", &x_char, &y);
+        
+        while(incorrect_coor(x_char,y))
+        {
+          printf(URED "Oops... you haven't entered correct coordinates please try again \n" reset);
+          printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
+          scanf(" %c%d\n", &x_char, &y);
+        }
+
+        //Get new coordinates
+        printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
+        scanf(" %c%d", &des_x_char, &des_y);
+        
+        while(incorrect_coor(des_x_char,des_y))
+        {
+          printf(URED "Oops... you haven't entered correct destination coordinates please try again \n" reset);
+          printf("Please enter the destination coordinates of the chess piece you want to move to (ex: A3) : \n");
+          scanf(" %c%d\n", &des_x_char, &des_y);
+        }
+        //________________________________________________
+        //end of entering the cordinates__________________
+        //________________________________________________
+        
+        //modifying the char coordinates to int
+        x= (int)x_char -64;
+        des_x= (int)des_x_char -64;
+        
+        //________________________________________________
+        //analysing basic possible output_________________
+        //________________________________________________
+        
+        //analysing the withdraw option
         if ( x_char == 'W' && y == 0 && des_x_char == 'W' && des_y == 0)
         {
             last_side_input = 1;
@@ -435,7 +421,7 @@ struct Piece * throw_action(struct Piece * board)
             return NULL;
         }
 
-        //stalemate
+        //analysing the stale mate option
         if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0)
         {
             last_side_input = 1;
@@ -444,14 +430,14 @@ struct Piece * throw_action(struct Piece * board)
             return NULL;
         }
            
-        //analyse basics mistakes
+        //analysing basics mistakes with isValidMove
         a= valid_interpret(isValidMove(x,y,des_x,des_y,board));
-        if (a || board[(y-1)*8+(x+1)].color != color)
+        if (a==1 && board[(y-1)*8+(x+1)].color != color)
         {
             ok=0;
         }
         
-           // Impossible move
+        // Impossible move
         if(piece_to_place(king_x_me, king_y_me, board) == 1 )
         {
             printf("Impossible to move the king as checkmate would be unavoidable\n");
@@ -463,11 +449,10 @@ struct Piece * throw_action(struct Piece * board)
             ok=1;
         }
     }
-           //____________________________________ Game settings _____________________________________________________________
-           //Rock
-           //kingstatus to create
-           //Rock
-           //kingstatus to create
+    //____________________________________ Game settings _____________________________________________________________
+
+    //kingstatus created in other file
+    //Dealling with the Rock
     if( kingstatus == 0 && rock == 1 && board[(y-1)*8+(x-1)].color == color && board[(y-1)*8+(x-1)].type == KING)
     {
 
@@ -512,20 +497,25 @@ struct Piece * throw_action(struct Piece * board)
            
     //Move chess piece
     board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
-
+    
+    //________________________________________________
+    //then check for exeptions________________________
+    //________________________________________________
+    
     //________ King ____________
-    if(board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+    //change position of the king to help check/pat/checkmat
+    if(board[(y-1)*8+(x-1)].type == KING)
     {
         king_x_me = des_x - 1;
         king_y_me = des_y - 1;
         //variable to create
         rock = 0;
     }
-
     //___________________________
 
-
-    // Impossible move
+    //________________________________________________________________________
+    //Dealing with impossible move if check mate is not avoidable_____________
+    //________________________________________________________________________
     if(piece_to_place(king_x_me, king_y_me, board) == 1 )
     {
         board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
@@ -542,7 +532,7 @@ struct Piece * throw_action(struct Piece * board)
         return throw_action(board);
     }
 
-                           
+    //saying if the player created a checkmate
     if (kingcheck_place(king_x_other, king_y_other, des_x-1, des_y-1, board) == 1)
     {
         kingstatus_other = 1;
@@ -571,17 +561,12 @@ struct Piece * throw_action(struct Piece * board)
     {
             printf(BHGRN "\n It's a draw!! \n" reset);
             pat2();
-            //send draw function!!!!!
             return NULL;
     }
            
     printf(reset);
     //display_board_special(board);
     //now coordinates are recievable CHECK
-           
-    //test check mate TODO
-    //test promotion TODO
-    //test rock TODO
            
            
     //usual game
