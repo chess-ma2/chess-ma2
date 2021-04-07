@@ -57,7 +57,7 @@ void *game_network(void *arg)
             write(fd, "2", 1);
         else
         {
-            printf("As message to server: %s\n", buf_input);
+            //printf("As message to server: %s\n", buf_input);
             dprintf(fd, "%s", buf_input);
             last_side_input = 0;
         }
@@ -81,7 +81,7 @@ void *game_network(void *arg)
                 last_side_output = 0;
                 strcpy(buf_output, buf);
                 pthread_mutex_unlock(&mutex_output);
-                printf("Send packet, answer from server: %s\n", buf);
+                //printf("Send packet, answer from server: %s\n", buf);
 
         }
 

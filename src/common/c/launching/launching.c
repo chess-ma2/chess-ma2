@@ -1,4 +1,8 @@
-//marine 31/03
+/**
+ * @author Marine
+ * @date 2/04/2021
+ * @details launches the entire game
+ */
 
 #ifndef LAUNCHING_C
 #define LAUNCHING_C
@@ -10,6 +14,8 @@
 #include <err.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <sqlite3.h>
+#include "launching.h"
 #include "../game/game1.c"
 #include "../game/version1.c"
 #include "../../../client/c/network/network.c"
@@ -78,10 +84,10 @@ struct Player *Player()
 
 struct Player * onlinegame()
 {
-    printf("__________________________________________________________________________________________________\n\n");
+    printf(RED"__________________________________________________________________________________________________\n\n");
     printf("In this version, you can play with a friend (or your sworn chess enemy) on a different.\n");
-    printf("You are going to be connected with someone a person who currently wants to join an online game\n ");
-    printf("be patient, it can take a while\n");
+    printf("You are going to be connected with someone a person who currently wants to join an online game\n "reset);
+    printf(BLU"be patient, it can take a while\n"reset);
     //ici mettre un truc de fonction timer qui affiche les fonctions restantes
     
     struct Player * playerid =Player();
@@ -100,31 +106,29 @@ struct Player * onlinegame()
     
 }
 
-void localgame();
-
 int launching()
 {
-    printf("Welcome to CHESS(MA)² !\n Are you ready to have a successful game?\n");
-    printf("Remember, with CHESS(MA)², every checkmate brings mates closer ! \n");
+    printf(BLU "Welcome to CHESS(MA)² !\n Are you ready to have a successful game?\n");
+    printf("Remember, with CHESS(MA)², every checkmate brings mates closer ! \n"reset);
     
-    printf("Now, I am going to ask you, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
+    printf(MAG"Now, I am going to ask you, do you want to play with a player online or do you want to play on your computer with a friend ?\n"reset);
     int begin=1;
     while (1)
     {
         if (begin==0)
         {
-            printf("Now that you've just ended your game do you want to make another one? Type ctrl+c if you want to quit\n");
-            printf("Otherwise, do you want to play with a player online or do you want to play on your computer with a friend ?\n");
+            printf(GRN"Now that you've just ended your game do you want to make another one? Type ctrl+c if you want to quit\n");
+            printf("Otherwise, do you want to play with a player online or do you want to play on your computer with a friend ?\n"reset);
         }
         begin=0;
-    printf("To play on one computer with a friend, click on the 'enter' button of your keyboard\n");
-    printf("To play only with a member of chess(ma)² tap '4' then 'enter' on your keyboard\n");
-    printf("HAVE A GREAT GAME\n");
+    printf(MAG"To play on one computer with a friend, tap 'p' then 'enter' button of your keyboard\n");
+    printf("To play online with a member of chess(ma)² tap 'o' then 'enter' on your keyboard\n");
+    printf("HAVE A GREAT GAME\n"reset);
     
     //if empty then game local game, if 42 then online game
     char *type = malloc(sizeof(char));
     scanf(" %c", type);
-    if (*type=='4')
+    if (*type=='o')
     {
         struct Player * id=onlinegame();
         if (winner==1)
