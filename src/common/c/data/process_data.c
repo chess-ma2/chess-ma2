@@ -48,7 +48,7 @@ int get_rest(int data, int rank)
 
 //TOCONTINUE
 
-/*void uncodify_data(int data,  struct Piece *board)
+void uncodify_data(int data,  struct Piece *board)
 {
     int code= get_number(data,10000);
     data= get_rest(data,10000);
@@ -73,7 +73,7 @@ int get_rest(int data, int rank)
             send_request(data,board);
             
     }
-}*/
+}
 
 /*void send_request(int data,struct Piece * board)
 {
