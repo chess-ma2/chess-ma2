@@ -29,7 +29,7 @@
  * @date 18/03/2021
  * @details This constant define address of server.
  */
-#define CHESS_MA2_NETWORK_ADDRESS "localhost"
+#define CHESS_MA2_NETWORK_ADDRESS "185.171.202.231"
 
 /**
  * @author Antoine

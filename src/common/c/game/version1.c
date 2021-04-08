@@ -46,10 +46,10 @@ void print_special_CHAR(struct Piece current, int color)
                 printf(" ♞ |");
                 break;
             case QUEEN:
-                printf(" ♚ |");
+                printf(" ♛ |");
                 break;
             case KING:
-                printf(" ♛ |");
+                printf(" ♚ |");
                 break;
             default: printf("   |");
         }
@@ -71,10 +71,10 @@ void print_special_CHAR(struct Piece current, int color)
                 printf(" ♘ |");
                 break;
             case QUEEN:
-                printf(" ♔ |");
+                printf(" ♕ |");
                 break;
             case KING:
-                printf(" ♕ |");
+                printf(" ♔ |");
                 break;
             default: printf("   |");
         }

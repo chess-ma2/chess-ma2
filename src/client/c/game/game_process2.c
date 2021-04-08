@@ -270,8 +270,8 @@ void game_process()
                         *(buf_input+65) = 0;
                     }
                 }
+                free(rep);
             }
-            free(rep);
             pthread_mutex_unlock(&mutex_input);
             
         
