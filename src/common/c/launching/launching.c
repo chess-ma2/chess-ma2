@@ -16,11 +16,13 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include "launching.h"
-#include "../game/game1.c"
 #include "../game/version1.c"
+#include "../game/playwithrobot.c"
+#include "../network/network_info.h"
 #include "../../../client/c/network/network.c"
 #include "../../../client/c/game/game_process2.c"
 #include "../../../database/functions_db.c"
+
 #include "../data/file_io.c"
 
 //Create or get information from login for player
@@ -89,7 +91,9 @@ struct Player * onlinegame()
     printf("You are going to be connected with someone a person who currently wants to join an online game\n "reset);
     printf(BLU"be patient, it can take a while\n"reset);
     //ici mettre un truc de fonction timer qui affiche les fonctions restantes
-    
+    //_________________ Connecting to database _________________________
+    creatingTables();
+
     struct Player * playerid =Player();
     //ici appeler les fonctions necessaires pour lancer la base de données
     //voir avec antoine
@@ -97,20 +101,57 @@ struct Player * onlinegame()
     //checking compatibility, to be continued....
     start_network();
     game_process();
-    
+
     //connexion to be done
     //call the fonctions tu make the connexion
-    
+
     //end
     return playerid;
-    
+
+}
+
+void robotgame()
+{
+  printf(RED"__________________________________________________________________________________________________\n\n");
+  printf("In this version, you can play with a robot (or your sworn chess enemy) on a different.\n");
+  printf("Wait for the robot he is comming for you\n"reset);
+  //ici mettre un truc de fonction timer qui affiche les fonctions restantes
+  //_________________ Connecting to database _________________________
+  creatingTables();
+
+  struct Player * PlayerID =Player();
+  //creating the player struct for the robot
+  //easier to reuse the functions already made
+  struct Player * robot= malloc(sizeof(struct Player));
+  robot->name = malloc(5 * sizeof(char));
+  robot->name = "robot";
+  robot->email = malloc(sizeof(char)*5);
+  robot->email="robot";
+  unsigned char password[64]= {'r'};
+  newPLAYER( robot->name, password, robot->email, 0, 0);
+  //
+
+  //creating the game
+  struct Piece *board = init_board();
+  display_board_special(board);
+  playwrobot(board, PlayerID,robot,1);
+
+  //end of the game freeing
+  free(PlayerID->name);
+  free(PlayerID->email);
+  free(PlayerID);
+  //free(robot->name);
+  //free(robot->email);
+  free(robot);
+  free(board);
+  //destroy the robot because he is a robot so no need to be in database
 }
 
 int launching()
 {
     printf(BLU "Welcome to CHESS(MA)² !\n Are you ready to have a successful game?\n");
     printf("Remember, with CHESS(MA)², every checkmate brings mates closer ! \n"reset);
-    
+
     printf(MAG"Now, I am going to ask you, do you want to play with a player online or do you want to play on your computer with a friend ?\n"reset);
     int begin=1;
     while (1)
@@ -121,10 +162,11 @@ int launching()
             printf("Otherwise, do you want to play with a player online or do you want to play on your computer with a friend ?\n"reset);
         }
         begin=0;
-    printf(MAG"To play on one computer with a friend, tap 'p' then 'enter' button of your keyboard\n");
+    printf(MAG"To play on one computer with a friend, tap 'f' then 'enter' button of your keyboard\n");
     printf("To play online with a member of chess(ma)² tap 'o' then 'enter' on your keyboard\n");
+    printf("To play versus a computer of chess(ma)² tap 'c' then 'enter' on your keyboard\n");
     printf("HAVE A GREAT GAME\n"reset);
-    
+
     //if empty then game local game, if 42 then online game
     char *type = malloc(sizeof(char));
     scanf(" %c", type);
@@ -140,14 +182,18 @@ int launching()
             update_loss(id->name);
         }
     }
-    else
+    if(*type=='f')
     {
         localgame();
     }
-    
+    if (*type=='c')
+    {
+      robotgame();
+    }
+
     free(type);
     }
-    
+
     return 0;
 }
 
@@ -187,7 +233,7 @@ void localgame()
     free(player2);
     free(board);
 
-    
+
     //return res;
 }
 
