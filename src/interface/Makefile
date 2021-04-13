@@ -6,7 +6,7 @@ LDLIBS = `pkg-config --libs gtk+-3.0`
 
 all: mainpage
 
-mainpage : mainpage.o
+mainpage : mainpage.o Local1.o ../database/create_db.o
 
 .PHONY: clean
 
