@@ -11,6 +11,7 @@
 
 //Includes
 #include "game.h"
+#include "../../../common/c/network/network_info.h"
 
 pthread_mutex_t mutex_input = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_output = PTHREAD_MUTEX_INITIALIZER;
