@@ -59,6 +59,19 @@
                     -1, -2, -2, -2, -2, -2, -2, -1, \
                     2, 2, 0, 0, 0, 0, 2, 2, \
                     2, 3, 1, 0, 0, 1, 3, 2 }
+// Structure function ____________________________
+struct node {
+  int isMaxPlayer; //Used for Alpha-Beta?
+  int x;
+  int y;
+  int score;
+  struct node *children;
+};
+
+struct tree{
+  struct node root;
+}
+
 
 // Function section _______________________________
 // Position evaluation function

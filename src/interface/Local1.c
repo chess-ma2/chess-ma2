@@ -80,8 +80,6 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
   // Create New Player
   newPLAYER( name, password, email, 0, 0);
 
-  printf("new player [ok]\n" );
-
   // Set text to delete password (added security)
   gtk_entry_set_text(Password_Entry1, "Your secret password is safe with us");
 

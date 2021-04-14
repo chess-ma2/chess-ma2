@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "Local1.h"
 
 
@@ -7,10 +8,14 @@
 GtkWidget* window1;
 
 //____________________ First Window
-// First version window
+// First version window -> Player 1
 GtkWidget* window1st_v_1;
 // New player n1 first version
 GtkWidget* NewPL1_W1;
+// First version window -> Player 2
+GtkWidget* window1_version_PL2;
+// New player n2 first version
+GtkWidget* NewPL2_W1;
 
 //______ First Player ________
 // Entry for name
@@ -23,6 +28,18 @@ GtkEntry * Password_Entry1;
 GtkLabel * Create_account1_yes;
 // The player structure
 struct Player *pl1;
+
+//______ Second Player ________
+// Entry for name
+GtkEntry * Name_Entry2;
+// Entry for Email
+GtkEntry * Email_Entry2;
+// Entry for password
+GtkEntry * Password_Entry2;
+// Label to say if accound has been created with success
+GtkLabel * Create_account2_yes;
+// The player structure
+struct Player *pl2;
 
 //____________________ Second Window
 // second version window
@@ -84,10 +101,59 @@ void new_player1CB(GtkButton *button, gpointer user_data)
  */
 void save_pl1(GtkButton *button, gpointer user_data)
 {
-  printf("in save\n" );
+  // New Player subfunction into .db
   pl1 = New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes);
-  printf("Email is %s\n", pl1->email);
- }
+
+  //sleep before going to player2's window (so user can see success message)
+  sleep(1);
+
+  // Show general window for Player 2 (login or new)
+  gtk_widget_show(window1_version_PL2);
+  gtk_widget_hide(NewPL1_W1);
+}
+// _____ Player 2 ____________________________________________________________
+/*
+ * @author Anna
+ * @date 14/04/2021
+ * @details Back to main_page from player 2
+*/
+
+void back_to_main(GtkButton *button, gpointer user_data)
+{     gtk_widget_show(window1);
+      gtk_widget_hide(window1_version_PL2); }
+
+/*
+  * @author Anna
+  * @date 14/04/2021
+  * @details Go back to first player of first version's window (new or login)
+*/
+void back_pl2(GtkButton *button, gpointer user_data)
+{   gtk_widget_hide(NewPL2_W1);
+    gtk_widget_show(window1_version_PL2); }
+
+ /*
+  * @author Anna
+  * @date 14/04/2021
+  * @details Show new second player's window
+  */
+    void new_pl2(GtkButton *button, gpointer user_data)
+    {   gtk_widget_hide(window1_version_PL2);
+        gtk_widget_show(NewPL2_W1); }
+
+
+  /*
+   * @author Anna
+   * @date 14/04/2021
+   * @details Create new second player for first version
+   */
+  void save_pl2(GtkButton *button, gpointer user_data)
+  {
+    // New Player subfunction into .db
+    pl2 = New_player_v1(Name_Entry2, Email_Entry2, Password_Entry2, Create_account2_yes);
+    // Start Game
+    //TODO
+  }
+
 //____________________________________________________________________________
 /*
  * @author Anna
@@ -183,7 +249,9 @@ int main (int argc, char *argv[])
     // ButtonImage to go back to mainpage
     GtkWidget* Image_back;
     Image_back = gtk_image_new_from_file ("Images/back.png");
-    gtk_button_set_image(back, Image_back);
+    GtkWidget* Image_back_bis;
+    Image_back_bis = gtk_image_new_from_file ("Images/back.png");
+    gtk_button_set_image(back, Image_back_bis);
 
     // First player is a new player Window
     NewPL1_W1 = GTK_WIDGET(gtk_builder_get_object(builder, "NewPL1_W1"));
@@ -194,18 +262,20 @@ int main (int argc, char *argv[])
     // ButtonImage to go back to first version window
     GtkWidget* Image_back2;
     Image_back2 = gtk_image_new_from_file ("Images/back.png");
-    gtk_button_set_image(back_w1, Image_back2);
+    GtkWidget* Image_back2_bis;
+    Image_back2_bis = gtk_image_new_from_file ("Images/back.png");
+    gtk_button_set_image(back_w1, Image_back2_bis);
 
     // Save new info about player 1
     GtkButton* lock_new1 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new1"));
     GtkWidget* Image_save;
+    GtkWidget* Image_savebis;
     Image_save = gtk_image_new_from_file ("Images/save.png");
-    gtk_button_set_image(lock_new1, Image_save);
+    Image_savebis = gtk_image_new_from_file ("Images/save.png");
+    gtk_button_set_image(lock_new1, Image_savebis);
 
     // Label when info is saved
     Create_account1_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account1_yes"));
-
-
 
 //__________________________________________________________________________________________
     //Exemple for area
@@ -219,6 +289,37 @@ int main (int argc, char *argv[])
     // Entry for password
     Password_Entry1 = GTK_ENTRY(gtk_builder_get_object(builder, "password1"));
 
+    // Player n°2  _______________________________________________________________________
+    // General window (login or new player)
+    window1_version_PL2 = GTK_WIDGET(gtk_builder_get_object(builder, "window1_version_PL2"));
+
+    // Button to go back to main page
+    GtkButton* back2 = GTK_BUTTON(gtk_builder_get_object(builder, "back2"));
+
+    // New Player n2 ___________________________________________________________________
+    // New Player n°2 button
+    GtkButton* new_player2 = GTK_BUTTON(gtk_builder_get_object(builder, "new_player2"));
+
+    // ButtonImage to go back to mainpage
+    gtk_button_set_image(back2, Image_back);
+
+    // First player is a new player Window
+    NewPL2_W1 = GTK_WIDGET(gtk_builder_get_object(builder, "NewPL2_W1"));
+
+    // Back to first version
+    GtkButton* back_w2 = GTK_BUTTON(gtk_builder_get_object(builder, "back_w2"));
+
+    // Button to go back to first version window
+    gtk_button_set_image(back_w2, Image_back2);
+
+    // Save new info about player 2
+    GtkButton* lock_new2 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new2"));
+    gtk_button_set_image(lock_new2, Image_save);
+
+    // Label when info is saved
+    Create_account2_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account2_yes"));
+
+
     // __________________________________________________________________________________
 
     //_______ Version 2 _______
@@ -230,8 +331,11 @@ int main (int argc, char *argv[])
     // Button to get to third version
     GtkButton* third_version = GTK_BUTTON(gtk_builder_get_object(builder, "3rdVersion"));
 
-
+    //________________________________________________________________________________
     // Connects signal handlers.
+    //________________________________________________________________________________
+
+
     // Destroy window (main page)
     g_signal_connect(window1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
@@ -252,6 +356,20 @@ int main (int argc, char *argv[])
     g_signal_connect(back_w1, "clicked", G_CALLBACK(back_from_first_double), NULL);
     // Click on New Player 1 -> Save info and create player in db
     g_signal_connect(lock_new1, "clicked", G_CALLBACK(save_pl1), NULL);
+
+    // Player 2
+    // Destroys .exe when first version window is closed for player 2 (new or login)
+    g_signal_connect(window1_version_PL2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Destroys .exe when new first player first version window is closed
+    g_signal_connect(NewPL2_W1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Go back to mainpage
+    g_signal_connect(back2, "clicked", G_CALLBACK(back_to_main), NULL);
+    // Second Player is New player -> go to said page
+    g_signal_connect(new_player2, "clicked", G_CALLBACK(new_pl2), NULL);
+    // Back to second player of first window (new or login)
+    g_signal_connect(back_w2, "clicked", G_CALLBACK(back_pl2), NULL);
+    // Click on New Player 2 -> Save info and create player in db
+    g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), NULL);
 
 // Example for area
     //g_signal_connect(area, "draw", G_CALLBACK(on_draw), NULL);
