@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <stdio.h>
 #include "Local1.h"
 
 
@@ -20,6 +21,8 @@ GtkEntry * Email_Entry1;
 GtkEntry * Password_Entry1;
 // Label to say if accound has been created with success
 GtkLabel * Create_account1_yes;
+// The player structure
+struct Player *pl1;
 
 //____________________ Second Window
 // second version window
@@ -81,7 +84,9 @@ void new_player1CB(GtkButton *button, gpointer user_data)
  */
 void save_pl1(GtkButton *button, gpointer user_data)
 {
-  New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes);
+  printf("in save\n" );
+  pl1 = New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes);
+  printf("Email is %s\n", pl1->email);
  }
 //____________________________________________________________________________
 /*
@@ -267,6 +272,9 @@ int main (int argc, char *argv[])
 
     // Runs the main loop.
     gtk_main();
+
+    //Free what needs to be freed
+    free(pl1);
 
     // Exits
     return 0;

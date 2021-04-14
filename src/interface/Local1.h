@@ -14,8 +14,6 @@
 
 //@struct Player
 struct Player {
-    char *name;
-    unsigned char password[64];
     char *email;
     size_t nb_won;
     size_t nb_lost;
@@ -25,8 +23,8 @@ struct Player {
 
 // Player 1 _________________________________________________________
 
-// Create New Player in database
-void New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes);
+// Create New Player in database and return the new player
+struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes);
 
 
 // Game _________________________________________________________

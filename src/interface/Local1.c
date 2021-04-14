@@ -62,7 +62,7 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 }
 
 // Create New Player in database
-void New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes)
+struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes )
 {
   // Get name from Entry
   char * name = (char *) gtk_entry_get_text(Name_Entry1);
@@ -80,10 +80,22 @@ void New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Pass
   // Create New Player
   newPLAYER( name, password, email, 0, 0);
 
+  printf("new player [ok]\n" );
+
   // Set text to delete password (added security)
   gtk_entry_set_text(Password_Entry1, "Your secret password is safe with us");
 
   // Tell user that account has been created
   gtk_label_set_text (Create_account1_yes, "Account created with success");
+
+  // Define Player structure
+  struct Player *pl = malloc(sizeof(struct Player));
+  pl->email = email;
+
+  return pl;
+
+  //TODO for final presentation?:
+    //   1) Get the nb of games won
+    //   2) Get the nb of games lost
 
 }
