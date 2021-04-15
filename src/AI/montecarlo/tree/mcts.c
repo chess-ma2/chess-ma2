@@ -5,12 +5,12 @@
  */
 
 //Safety guard
-#ifndef MONTECARLO_TREE_MCTS_C
-#define MONTECARLO_TREE_MCTS_C
+#ifndef AI_MONTECARLO_TREE_MCTS_C
+#define AI_MONTECARLO_TREE_MCTS_C
 
 #include "mcts.h"
 
-void print_mcts_node(char *pref, unsigned char height, MCTS_NODE * node)
+void print_mcts_node(char *pref, unsigned char height, MCTS_Node * node)
 {
     if (height == 0)
         return;
@@ -31,12 +31,12 @@ void print_mcts_node(char *pref, unsigned char height, MCTS_NODE * node)
     printf("%s\n", pref);
 }
 
-unsigned long clear_mcts_child(MCTS_NODE * node)
+unsigned long clear_mcts_child(MCTS_Node * node)
 {
     unsigned long clear = node->child_explore;
 
     //Recursively call theirs child.
-    for (unsigned char count = 0; i < node->child_explore; count++)
+    for (unsigned char count = 0; count < node->child_explore; count++)
     {
         clear += clear_mcts_child((node->child + count));
         free((node->child + count));
@@ -48,16 +48,16 @@ unsigned long clear_mcts_child(MCTS_NODE * node)
     return clear;
 }
 
-unsigned long clear_mcts_brothers(MCTS_NODE * node)
+unsigned long clear_mcts_brothers(MCTS_Node * node)
 {
     if (node->father == NULL)
         return 0;
 
-    MCTS_NODE * father = node->father;
+    MCTS_Node * father = node->father;
     unsigned long clear = father->child_explore;//-1+1;-Child+Father.
 
     //Clear child of father (<=> brothers) except node.
-    for (unsigned char count = 0; i < father->child_explore; count++)
+    for (unsigned char count = 0; count < father->child_explore; count++)
     {
         //Not clean own node
         if ((father->child + count) == node)

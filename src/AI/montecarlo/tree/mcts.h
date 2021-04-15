@@ -5,8 +5,8 @@
  */
 
 //Safety guard
-#ifndef MONTECARLO_TREE_MCTS_H
-#define MONTECARLO_TREE_MCTS_H
+#ifndef AI_MONTECARLO_TREE_MCTS_H
+#define AI_MONTECARLO_TREE_MCTS_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,16 +15,16 @@
 /**
  * @author Antoine
  * @date 15/04/2021
- * @details Alias of MCTS_STATUS
+ * @details Alias of MCTS_Status
  */
-typedef enum MCTS_STATUS MCTS_STATUS;
+typedef enum MCTS_Status MCTS_Status;
 
 /**
  * @author Antoine
  * @date 14/04/2021
- * @details Alias of MCTS_NODE
+ * @details Alias of MCTS_Node
  */
-typedef struct MCTS_NODE MCTS_NODE;
+typedef struct MCTS_Node MCTS_Node;
 
 /**
  * @author Antoine
@@ -40,7 +40,7 @@ typedef struct MCTS_NODE MCTS_NODE;
  * @enum MCTS_STATUS_LEAF_Draw - Leaf of a game with Draw.
  * @enum MCTS_STATUS_LEAF_Loose - Leaf of a game with Loose.
  */
-enum MCTS_STATUS
+enum MCTS_Status
 {
     MCTS_STATUS_NONE,
     MCTS_STATUS_FULL_EXPLORE,
@@ -75,10 +75,10 @@ enum MCTS_STATUS
  *      Please note:
  *             Generated is at the start, after first null each are null.
  */
-struct MCTS_NODE
+struct MCTS_Node
 {
-    MCTS_STATUS status;
-    MCTS_NODE * father;
+    MCTS_Status status;
+    MCTS_Node * father;
 
     unsigned long win;
     unsigned long draw;
@@ -89,9 +89,8 @@ struct MCTS_NODE
     unsigned char child_explore;
 
     char * child_move;
-    MCTS_NODE * child;
+    MCTS_Node * child;
 };
-
 
 /**
  * @author Antoine
@@ -105,7 +104,7 @@ struct MCTS_NODE
  *
  * @return NOTHING, but print in default terminal.
  */
-void print_mcts_node(char *pref, unsigned char height, MCTS_NODE * node);
+void print_mcts_node(char *pref, unsigned char height, MCTS_Node * node);
 
 /**
  * @author Antoine
@@ -117,7 +116,7 @@ void print_mcts_node(char *pref, unsigned char height, MCTS_NODE * node);
  *
  * @return count of node clear.
  */
-unsigned long clear_mcts_child(MCTS_NODE * node);
+unsigned long clear_mcts_child(MCTS_Node * node);
 
 /**
  * @author Antoine
@@ -128,7 +127,7 @@ unsigned long clear_mcts_child(MCTS_NODE * node);
  *
  * @return count of node clear.
  */
-unsigned long clear_mcts_brothers(MCTS_NODE * node);
+unsigned long clear_mcts_brothers(MCTS_Node * node);
 
 //End safety guard
 #endif

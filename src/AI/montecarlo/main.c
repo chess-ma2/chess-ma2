@@ -5,8 +5,8 @@
  */
 
 //Safety loop guard
-#ifndef MONTECARLO_MAIN_C
-#define MONTECARLO_MAIN_C
+#ifndef AI_MONTECARLO_MAIN_C
+#define AI_MONTECARLO_MAIN_C
 
 #include "tree/mcts.c"
 

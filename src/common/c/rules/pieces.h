@@ -25,6 +25,13 @@ enum Type
     KING,
 };
 
+/**
+ * @author Antoine
+ * @date 15/04/2021
+ * @details Alias of Color
+ */
+typedef enum Color Color;
+
 
 //Possibility of the colour of the Piece
 enum Color 
@@ -33,6 +40,12 @@ enum Color
 	    WHITE = 1,
 };
 
+/**
+ * @author Antoine
+ * @date 15/04/2021
+ * @details Alias of Piece
+ */
+typedef struct Piece Piece;
 
 /**
  * @author Antoine
