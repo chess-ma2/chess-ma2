@@ -10,6 +10,9 @@
 #include <gtk/gtk.h>
 #include "Local1.h"
 
+#ifndef LOCAL1_C
+#define LOCAL1_C
+
 /*
  * @author Anna
  * @date 10/04/2021
@@ -97,3 +100,5 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
     //   2) Get the nb of games lost
 
 }
+
+#endif

@@ -10,7 +10,8 @@
  * @details all the functions needed for the first version of the game on gtk
 */
 // Include Section
-#include "../database/create_db.h"
+#include "../database/create_db.c"
+#include "../database/functions_db.c"
 
 //@struct Player
 struct Player {

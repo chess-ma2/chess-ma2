@@ -1,8 +1,9 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "Local1.h"
-
+#include "Local1.c"
+#ifndef MAINPAGE_C
+#define MAINPAGE_C
 
 //__________ variables
 GtkWidget* window1;
@@ -30,6 +31,10 @@ GtkEntry * Password_Entry1;
 GtkLabel * Create_account1_yes;
 // The player structure
 struct Player *pl1;
+
+//_________ Transition ___________________________
+// Transition Window
+GtkWidget* transition1;
 
 //______ Second Player ________
 // Entry for name
@@ -106,12 +111,22 @@ void save_pl1(GtkButton *button, gpointer user_data)
   // New Player subfunction into .db
   pl1 = New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes);
 
-  //sleep before going to player2's window (so user can see success message)
-  sleep(1);
+  // Show transition window
+  gtk_widget_show(transition1);
+  gtk_widget_hide(NewPL1_W1);
+}
 
+// _____ TRANSITION ____________________________________________________________
+/*
+ * @author Anna
+ * @date 15/04/2021
+ * @details From transition window to player n2's window
+*/
+void go_2_player2(GtkButton *button, gpointer user_data)
+{
   // Show general window for Player 2 (login or new)
   gtk_widget_show(window1_version_PL2);
-  gtk_widget_hide(NewPL1_W1);
+  gtk_widget_hide(transition1);
 }
 // _____ Player 2 ____________________________________________________________
 /*
@@ -286,6 +301,14 @@ int main (int argc, char *argv[])
     // Entry for password
     Password_Entry1 = GTK_ENTRY(gtk_builder_get_object(builder, "password1"));
 
+    // Transition ______________________________________________________________________
+    // Window
+    transition1 = GTK_WIDGET(gtk_builder_get_object(builder, "transition1"));
+    // Button to go 2nd player's page
+    GtkButton* go22 = GTK_BUTTON(gtk_builder_get_object(builder, "go22"));
+
+
+
     // Player n°2  _______________________________________________________________________
     // General window (login or new player)
     window1_version_PL2 = GTK_WIDGET(gtk_builder_get_object(builder, "window1_version_PL2"));
@@ -356,6 +379,12 @@ int main (int argc, char *argv[])
     // Click on New Player 1 -> Save info and create player in db
     g_signal_connect(lock_new1, "clicked", G_CALLBACK(save_pl1), NULL);
 
+    // Transition _________________________
+    // Destroys .exe when transition window is closed
+    g_signal_connect(transition1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // When ok clicked go to player n°2 page
+    g_signal_connect(go22, "clicked", G_CALLBACK(go_2_player2), NULL);
+
     // Player 2_________________________
 
     // Destroys .exe when first version window is closed for player 2 (new or login)
@@ -396,3 +425,5 @@ int main (int argc, char *argv[])
     // Exits
     return 0;
 }
+
+#endif

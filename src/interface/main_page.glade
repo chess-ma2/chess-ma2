@@ -2,7 +2,6 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <!--      NEW PLAYER N1 LOCAL VERSION -->
   <object class="GtkWindow" id="NewPL1_W1">
     <property name="width-request">600</property>
     <property name="height-request">1000</property>
@@ -126,7 +125,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">60</property>
             <property name="y">548</property>
           </packing>
         </child>
@@ -136,6 +135,7 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
           </object>
           <packing>
             <property name="x">456</property>
@@ -157,239 +157,6 @@
       </object>
     </child>
   </object>
-
-  <!--           Main page         -->
-  <object class="GtkWindow" id="window1">
-    <property name="width-request">400</property>
-    <property name="height-request">700</property>
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Chess ma²</property>
-    <child>
-      <object class="GtkFixed">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkLabel" id="WelcomeLabel">
-            <property name="width-request">144</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Welcome to</property>
-            <attributes>
-              <attribute name="size" value="27708"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="x">56</property>
-            <property name="y">71</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkImage" id="chessmalogo">
-            <property name="width-request">120</property>
-            <property name="height-request">120</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="pixbuf">Images/chessma2-2.jpg</property>
-          </object>
-          <packing>
-            <property name="x">214</property>
-            <property name="y">43</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="first_version">
-            <property name="label" translatable="yes">1 vs 1 on same computer</property>
-            <property name="name">first_version</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">68</property>
-            <property name="y">243</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="2ndVersion">
-            <property name="label" translatable="yes">1 vs 1 on different computers</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">70</property>
-            <property name="y">332</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="3rdVersion">
-            <property name="label" translatable="yes">You vs Artificial Intelligence</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">70</property>
-            <property name="y">422</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-
-  <!--     PLAYER 1 (LOGIN OR NEW PLAYER) LOCAL VERSION -->
-  <object class="GtkWindow" id="window_1st_Version">
-    <property name="width-request">400</property>
-    <property name="height-request">700</property>
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Player 1</property>
-    <child>
-      <object class="GtkFixed">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="width-request">144</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Welcome Player n°1</property>
-            <attributes>
-              <attribute name="size" value="27708"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="x">56</property>
-            <property name="y">71</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="new_player1">
-            <property name="label" translatable="yes">New Player</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">92</property>
-            <property name="y">254</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="back">
-            <property name="width-request">50</property>
-            <property name="height-request">50</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="relief">half</property>
-          </object>
-          <packing>
-            <property name="x">17</property>
-            <property name="y">17</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="login_1">
-            <property name="label" translatable="yes">Log in</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">91</property>
-            <property name="y">348</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-
-<!--     PLAYER 2 (LOGIN OR NEW PLAYER) LOCAL VERSION -->
-  <object class="GtkWindow" id="window1_version_PL2">
-    <property name="width-request">400</property>
-    <property name="height-request">700</property>
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Player 2</property>
-    <child>
-      <object class="GtkFixed">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="width-request">144</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Welcome Player n°2</property>
-            <attributes>
-              <attribute name="size" value="27708"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="x">56</property>
-            <property name="y">71</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="new_player2">
-            <property name="label" translatable="yes">New Player</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">92</property>
-            <property name="y">254</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="back2">
-            <property name="width-request">50</property>
-            <property name="height-request">50</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="relief">half</property>
-          </object>
-          <packing>
-            <property name="x">17</property>
-            <property name="y">17</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="login_2">
-            <property name="label" translatable="yes">Log in</property>
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">91</property>
-            <property name="y">348</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-
-  <!--     NEW PLAYER N2 LOCAL VERSION -->
   <object class="GtkWindow" id="NewPL1_W2">
     <property name="width-request">600</property>
     <property name="height-request">1000</property>
@@ -523,6 +290,7 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
           </object>
           <packing>
             <property name="x">456</property>
@@ -544,8 +312,312 @@
       </object>
     </child>
   </object>
-
-<!--      Main page for server version      -->
+  <object class="GtkWindow" id="game_v1">
+    <property name="width-request">800</property>
+    <property name="height-request">500</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkDrawingArea" id="area">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="x">56</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="transition1">
+    <property name="width-request">600</property>
+    <property name="height-request">1000</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes"> On to player n°2 </property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Player n°1 is all up and done!</property>
+            <attributes>
+              <attribute name="foreground" value="#2626a2a26969"/>
+              <attribute name="size" value="20000"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">100</property>
+            <property name="y">200</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Please now give the device
+	      to player n°2!</property>
+        <attributes>
+          <attribute name="size" value="20000"/>
+        </attributes>
+          </object>
+          <packing>
+            <property name="x">100</property>
+            <property name="y">400</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="go22">
+            <property name="label" translatable="yes">Ok got it!</property>
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">225</property>
+            <property name="y">500</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="window1">
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Chess ma²</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel" id="WelcomeLabel">
+            <property name="width-request">144</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Welcome to</property>
+            <attributes>
+              <attribute name="size" value="27708"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">56</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage" id="chessmalogo">
+            <property name="width-request">120</property>
+            <property name="height-request">120</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="pixbuf">Images/chessma2-2.jpg</property>
+          </object>
+          <packing>
+            <property name="x">214</property>
+            <property name="y">43</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="first_version">
+            <property name="label" translatable="yes">1 vs 1 on same computer</property>
+            <property name="name">first_version</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">68</property>
+            <property name="y">243</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="2ndVersion">
+            <property name="label" translatable="yes">1 vs 1 on different computers</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">70</property>
+            <property name="y">332</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="3rdVersion">
+            <property name="label" translatable="yes">You vs Artificial Intelligence</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">70</property>
+            <property name="y">422</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="window1_version_PL2">
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Player 2</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">144</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Welcome Player n°2</property>
+            <attributes>
+              <attribute name="size" value="27708"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">56</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="new_player2">
+            <property name="label" translatable="yes">New Player</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">92</property>
+            <property name="y">254</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="back2">
+            <property name="width-request">50</property>
+            <property name="height-request">50</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">half</property>
+          </object>
+          <packing>
+            <property name="x">17</property>
+            <property name="y">17</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="login_2">
+            <property name="label" translatable="yes">Log in</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">91</property>
+            <property name="y">348</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="window_1st_Version">
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Player 1</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">144</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Welcome Player n°1</property>
+            <attributes>
+              <attribute name="size" value="27708"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">56</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="new_player1">
+            <property name="label" translatable="yes">New Player</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">92</property>
+            <property name="y">254</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="back">
+            <property name="width-request">50</property>
+            <property name="height-request">50</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">half</property>
+          </object>
+          <packing>
+            <property name="x">17</property>
+            <property name="y">17</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="login_1">
+            <property name="label" translatable="yes">Log in</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">91</property>
+            <property name="y">348</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkWindow" id="window_2nd_Version">
     <property name="width-request">400</property>
     <property name="height-request">700</property>
@@ -593,31 +665,6 @@
             <attributes>
               <attribute name="size" value="27708"/>
             </attributes>
-          </object>
-          <packing>
-            <property name="x">56</property>
-            <property name="y">71</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-
-
-  <!--      GAME LOCAL VERSION -->
-  <object class="GtkWindow" id="game_v1">
-    <property name="width_request">800</property>
-    <property name="height_request">500</property>
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkFixed">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkDrawingArea" id="area">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
           </object>
           <packing>
             <property name="x">56</property>
