@@ -8,7 +8,16 @@
 #ifndef MONTECARLO_TREE_MCTS_H
 #define MONTECARLO_TREE_MCTS_H
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
+/**
+ * @author Antoine
+ * @date 15/04/2021
+ * @details Alias of MCTS_STATUS
+ */
+typedef enum MCTS_STATUS MCTS_STATUS;
 
 /**
  * @author Antoine
@@ -19,10 +28,37 @@ typedef struct MCTS_NODE MCTS_NODE;
 
 /**
  * @author Antoine
+ * @date Start 15/04/2021
+ * @details Represent the current state of node
+ * @enum MCTS_STATUS_NONE - Final status not currently assigned
+ * @enum MCTS_STATUS_FULL_EXPLORE - Each child are fully explored
+ *      (<=> status != MCTS_STATUS_NONE)
+ * @enum MCTS_STATUS_FORCED_WIN - Each child are full explore and go to a win.
+ * @enum MCTS_STATUS_FORCED_DRAW -Each child are full explore and go draw.
+ * @enum MCTS_STATUS_FORCED_LOOSE -Each child are full explore and go loose.
+ * @enum MCTS_STATUS_LEAF_WIN - Leaf of a game with Win.
+ * @enum MCTS_STATUS_LEAF_Draw - Leaf of a game with Draw.
+ * @enum MCTS_STATUS_LEAF_Loose - Leaf of a game with Loose.
+ */
+enum MCTS_STATUS
+{
+    MCTS_STATUS_NONE,
+    MCTS_STATUS_FULL_EXPLORE,
+    MCTS_STATUS_FORCED_WIN,
+    MCTS_STATUS_FORCED_DRAW,
+    MCTS_STATUS_FORCED_LOOSE,
+    MCTS_STATUS_LEAF_WIN,
+    MCTS_STATUS_LEAF_PAT,
+    MCTS_STATUS_LEAF_LOOSE
+};
+
+/**
+ * @author Antoine
  * @date Start 13/04/2021
  * @details Represent a node of tree.
  * @struct MCTS_NODE - Monte Carlo Search Tree
  *
+ * @param status represent the current state of the node
  * @param father Father of node, NULL if root.
  *
  * @param win count of win found.
@@ -36,9 +72,12 @@ typedef struct MCTS_NODE MCTS_NODE;
  * @param child_move represent the move in question,
  *      each move in 4char, "A1A2" and at the end '0'.
  * @param child child node of move generate, NULL if not generated.
+ *      Please note:
+ *             Generated is at the start, after first null each are null.
  */
 struct MCTS_NODE
 {
+    MCTS_STATUS status;
     MCTS_NODE * father;
 
     unsigned long win;
@@ -74,11 +113,11 @@ void print_mcts_node(char *pref, unsigned char height, MCTS_NODE * node);
  * @details The goal is to free every child of node recursively.
  *      But the node give is not clear!
  *
- * @param node the node of question where childs are clear
+ * @param node the node of question where child are clear
  *
- * @return NOTHING.
+ * @return count of node clear.
  */
-void clear_mcts_childs(MCTS_NODE * node);
+unsigned long clear_mcts_child(MCTS_NODE * node);
 
 /**
  * @author Antoine
@@ -87,9 +126,9 @@ void clear_mcts_childs(MCTS_NODE * node);
  *
  * @param node the node of question where parent and brothers need to be free.
  *
- * @return NOTHING.
+ * @return count of node clear.
  */
-void clear_mcts_brothers(MCTS_NODE * node);
+unsigned long clear_mcts_brothers(MCTS_NODE * node);
 
 //End safety guard
 #endif

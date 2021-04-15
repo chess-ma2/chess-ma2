@@ -14,6 +14,7 @@ clean:
 	make -s -C src/common/c/ -f Makefile clean
 	make -s -C src/server/c/ -f Makefile clean
 	make -s -C src/client/c/ -f Makefile clean
+	make -s -C src/AI/montecarlo/ -f Makefile clean
 	@rm -rf "target/"
 	@echo "[Chess(ma)² - Global] Make clean of sources DONE!"
 
@@ -23,4 +24,5 @@ build: clean
 	make -s -C src/common/c/ -f Makefile build
 	make -s -C src/server/c/ -f Makefile build
 	make -s -C src/client/c/ -f Makefile build
+	make -s -C src/AI/montecarlo/ -f Makefile build
 	@echo "[Chess(ma)² - Global] Final build is in target directory!"

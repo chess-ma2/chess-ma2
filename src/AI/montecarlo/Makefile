@@ -11,7 +11,7 @@ clean:
 	@echo "[Chess(ma)² - MonteCarlo] End to clean!"
 
 build:
-	@echo "[Chess(ma)² - MonteCarlo] Start build common sources..."
+	@echo "[Chess(ma)² - MonteCarlo] Start build MonteCarlo sources..."
 	@mkdir -p ../../../target/
 	@gcc -pthread -lsqlite3 -Wall -O3 main.c \
     -o "../../../target/MonteCarlo.out"
