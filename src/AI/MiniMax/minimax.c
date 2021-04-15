@@ -31,7 +31,7 @@ int getVal(struct Piece current)
               break;
           default: res = 0;
       } }
-  else
+  else // Piece is white 
   {   switch(current.type)
       {
         case PAWN:

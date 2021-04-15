@@ -43,6 +43,24 @@ struct res_stalemate{
     enum turn player_turn;
 };
 
+// Structure needed for Rock subfunction
+struct res_rock{
+  enum turn player_turn;
+  int x_kingb;
+  int y_kingb;
+  int x_kingw;
+  int y_kingw;
+  int continuee;
+};
+
+// Structure needed for Check for checkmate subfunction
+struct checking{
+  enum turn player_turn;
+  enum king_status white_kingstatus;
+  enum king_status black_kingstatus;
+  int returned;
+};
+
 //________________ Printing the chess board and chess pieces __________________
 //Prints chess pieces
 void print_special_CHAR(struct Piece current, int color);
@@ -72,6 +90,18 @@ struct res_stalemate stalemate(enum turn player_turn, struct Player *player1, st
 // Withdraw subfunction
 int withdraw(enum turn player_turn, struct Player *pl1, struct Player *pl2);
 
+// Subfunction if chess piece is Rock
+struct res_rock rock_sub(enum turn player_turn, struct Piece *board,
+  enum king_status white_kingstatus, enum king_status black_kingstatus,
+  enum rock white_rock, enum rock black_rock, int x_kingb, int y_kingb,
+  int x_kingw, int y_kingw, int x, int y, int des_x, int des_y);
+
+// Subfunction check for checkmates
+struct checking check4checkmates(enum turn player_turn, struct Piece *board,
+  enum king_status white_kingstatus, enum king_status black_kingstatus,
+  int x_kingb, int y_kingb, int x_kingw, int y_kingw, int des_x, int des_y, struct Player *pl1, struct Player *pl2);
+
+
 // Checking if coordinates are correct
 int incorrect_char(char x);
 
@@ -79,10 +109,10 @@ int incorrect_char(char x);
 int incorrect_int(int x);
 
 //White team wins
-int whiteT_Vict(struct Player *pl1, struct Player *pl2);
+void whiteT_Vict(struct Player *pl1, struct Player *pl2);
 
 //Black team wins
-int blackT_Vict(struct Player *pl1, struct Player *pl2);
+void blackT_Vict(struct Player *pl1, struct Player *pl2);
 
 // Play game -> reused rules function in rules.c but changed quite a lot
 // Print rules

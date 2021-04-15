@@ -1,18 +1,14 @@
-CC = gcc -lsqlite3 -std=c99
-CFLAGS = -Wall -Wextra -lssl
-
-all: game1
-
-game1 : game1.o ../../../database/create_db.o ../../../database/functions_db.o ../rules/pieces.o ../rules/check_and_pat.o ../rules/plate.o ../../../database/SHA.o version1.o
-
-.PHONY: clean
+all: clean build
+		@echo "[Chess(ma)² - game] All sources game version 1 tasks DONE!"
 
 clean:
-	${RM} game1 game1.o
-	${RM} *.o
-	${RM} *.d
-	${RM} ../../../database/*.d
-	${RM} ../../../database/*.o
-	${RM} ../rules/*.d
-	${RM} ../rules/*.o
-	${RM} chess.db
+		@echo "[Chess(ma)² - game] Start to clean..."
+		@rm -f "game.out" "chess.db"
+		@echo "[Chess(ma)² - game] End to clean!"
+
+build:
+		@echo "[Chess(ma)² - game] Start build common sources..."
+		@mkdir -p ../../../target/
+		@gcc -pthread -lsqlite3 -Wall -O3 game1.c \
+	    -o "game.out"
+		@echo "[Chess(ma)² - game] End build sources!"

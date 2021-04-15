@@ -40,7 +40,7 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
         }
         else{
           // Draws the rectangle in black.
-          cairo_set_source_rgb(cr, 1, 0, 0);
+          cairo_set_source_rgb(cr, 0, 0, 0);
         }
         //cairo_paint(cr);
         cairo_rectangle(cr, x, y, width, height);

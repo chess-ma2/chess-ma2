@@ -1,21 +1,21 @@
 
-#include "../rules/pieces.h"
-#include "../rules/plate.h"
+#include "../rules/pieces.c"
+#include "../rules/plate.c"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include "ANSI-color-codes.h"
-#include "../../../database/create_db.h"
+#include "../../../database/create_db.c"
 #include <string.h>
 #include <err.h>
 #include <unistd.h>
 #include <sqlite3.h>
 #include <stdlib.h>
-#include "../../../database/SHA.h"
-#include "../../../database/functions_db.h"
-#include "version1.h"
+#include "../../../database/functions_db.c"
+#include "version1.c"
 
-#ifndef LAUNCHING_C
+#ifndef GAME1_C
+#define GAME1_C
 
 int main()
 {

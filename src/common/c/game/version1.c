@@ -489,7 +489,7 @@ int incorrect_int(int x)
 
 
 //White team wins
-int whiteT_Vict(struct Player *pl1, struct Player *pl2)
+void whiteT_Vict(struct Player *pl1, struct Player *pl2)
 {
   printf(BGRN);
   if(pl1->team_color == 0)
@@ -506,12 +506,11 @@ int whiteT_Vict(struct Player *pl1, struct Player *pl2)
   }
 
   printf(" (White) won this game well done! \n" reset);
-  return 0;
 }
 
 
 //Black team wins
-int blackT_Vict(struct Player *pl1, struct Player *pl2)
+void blackT_Vict(struct Player *pl1, struct Player *pl2)
 {
   printf(BGRN);
   if(pl1->team_color == 1)
@@ -528,8 +527,142 @@ int blackT_Vict(struct Player *pl1, struct Player *pl2)
   }
 
   printf(" (Black) won this game well done! \n" reset);
-  return 0;
 }
+
+// Subfunction if chess piece is Rock
+struct res_rock rock_sub(enum turn player_turn, struct Piece *board,
+  enum king_status white_kingstatus, enum king_status black_kingstatus,
+  enum rock white_rock, enum rock black_rock, int x_kingb, int y_kingb,
+  int x_kingw, int y_kingw, int x, int y, int des_x, int des_y)
+{
+    int continuee = 0;
+    if( (player_turn == WHITETURN && white_kingstatus == NOTHING && white_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) ||
+    (player_turn == BLACKTURN && black_kingstatus == NOTHING && black_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING))
+    {
+
+      if (isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x-1)].color, board) == 1)
+      {   board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+
+          if (player_turn == WHITETURN) {
+            x_kingw = des_x - 1;
+            y_kingw = des_y - 1;
+          }
+          else
+          {
+            x_kingb = des_x - 1;
+            y_kingb = des_y - 1;
+          }
+
+
+          if(piece_to_place(x_kingw, y_kingw, board) == 1 || piece_to_place(x_kingb, y_kingb, board) == 1)
+         {
+          board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
+          printf("Impossible move for chessmate is inevitable\n");
+
+          if (player_turn == WHITETURN) {
+            x_kingw = x - 1;
+            y_kingw = y - 1;
+
+            if( x - 1 == 4 && y - 1 == 7)
+            {
+              if(des_x - 1 == 6 && des_y - 1 == 7) //little rock
+            {
+              board[7*8+7].type = ROOK;
+              board[7*8+7].color = WHITE;
+              board[7*8+5].type = NONE;
+              board[7*8+5].color = 0;
+            }
+            if (des_x - 1 == 2 && des_y - 1 == 7) //big rock
+            {
+              board[7*8+0].type = ROOK;
+              board[7*8+0].color = WHITE;
+              board[7*8+3].type = NONE;
+              board[7*8+3].color = 0;
+            }
+          }
+          player_turn = BLACKTURN;
+        }
+          else
+          {
+            x_kingb = x - 1;
+            y_kingb = y - 1;
+
+            if( x - 1 == 4 && y - 1 == 0)
+            { if(des_x - 1 == 6 && des_y - 1 == 0) //litte rock
+              {
+                board[0*8+7].type = ROOK;
+                board[0*8+7].color = BLACK;
+                board[0*8+5].type = NONE;
+                board[0*8+5].color = 0; }
+
+              if (des_x - 1 == 2 && des_y - 1 == 0) //big rock
+              {
+                board[0*8+0].type = ROOK;
+                board[0*8+0].color = BLACK;
+                board[0*8+3].type = NONE;
+                board[0*8+3].color = 0; }
+          }
+          player_turn = WHITETURN;
+        }
+      }
+    }
+    continuee = 1;
+  }
+    struct res_rock res = { player_turn, x_kingb, y_kingb, x_kingw, y_kingw, continuee};
+    return res;
+  }
+
+// Subfunction check for checkmates
+struct checking check4checkmates(enum turn player_turn, struct Piece *board,
+  enum king_status white_kingstatus, enum king_status black_kingstatus,
+  int x_kingb, int y_kingb, int x_kingw, int y_kingw, int des_x, int des_y, struct Player *player1, struct Player *player2)
+  {
+    int returned = 0;
+    //___________________________ Black team's turn
+    if(player_turn == BLACKTURN)
+      {
+        if (kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1) {
+          white_kingstatus = CHECK;
+          printf("Checkmate for the white king \n");
+        }
+
+        if (kingcheck_place(x_kingb, y_kingb, des_x-1, des_y-1, board) == 0)
+          black_kingstatus = NOTHING;
+
+        if (check_mat(x_kingw, y_kingw, WHITE,  board)== 1) {
+          blackT_Vict(player1, player2);
+          returned = 1;
+        }
+        player_turn = WHITETURN;
+      }
+      else//___________________________ White team's turn
+      {
+        if (kingcheck_place( x_kingb, y_kingb, des_x-1, des_y-1, board) == 1) {
+          black_kingstatus = CHECK;
+          printf("Checkmate for the black king \n");
+        }
+
+        if (kingcheck_place( x_kingw, y_kingw, des_x-1, des_y-1, board) == 0)
+          white_kingstatus = NOTHING;
+
+        if (check_mat(x_kingb, y_kingb, BLACK, board)== 1) {
+          whiteT_Vict(player1, player2);
+          returned = 1;
+        }
+        player_turn = BLACKTURN;
+      }
+
+    if((player_turn == WHITETURN && pat(x_kingb, y_kingb, board)) || (player_turn == BLACKTURN && pat(x_kingw, y_kingw, board)))
+      {
+        printf(BHGRN "\n It's a draw!! \n" reset);
+        update_victory(player1->email);
+        update_victory(player2->email);
+        returned = 1;
+      }
+
+  struct checking res = { player_turn, white_kingstatus, black_kingstatus, returned };
+  return res;
+  }
 
 void print_rules()
 {
@@ -628,14 +761,9 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
       //__________________ If Stalemate ______________________________________________________________________________________________
 
       if(x_char == 'S' && y == 0 && des_x_char == 'S' && des_y == 0)
-	    {
-           struct res_stalemate res = stalemate(player_turn, player1, player2);
-
-           if (res.answer == 0)
-            {return 0;}
-          else
-            {player_turn = res.player_turn;}
-	     }
+	    {    struct res_stalemate res = stalemate(player_turn, player1, player2);
+           if (res.answer == 0) {return 0;}
+           else {player_turn = res.player_turn;} }
 
       //--------------------------------------------------------------------------------------
       // Make sure the coordonates are correct
@@ -645,97 +773,30 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
         printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
         scanf(" %c%d\n", &x_char, &y);
       }
-      //x = ((int)x_char) - 65;
       x = ((int)x_char) - 64;
 
       // It's not your piece to move
       if((player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
             (player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE))
-	    {
-	       printf(URED "\n That isn't your chess piece to move. \n" reset);
-         continue;
-	     }
+	    { printf(URED "\n That isn't your chess piece to move. \n" reset);
+        continue; }
 
       //____________________________________ Game settings _____________________________________________________________
       //Rock
-      if( (player_turn == WHITETURN && white_kingstatus == NOTHING && white_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) ||
-      (player_turn == BLACKTURN && black_kingstatus == NOTHING && black_rock == CAN_ROCK && board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING))
-      {
+      struct res_rock res = rock_sub( player_turn, board, white_kingstatus, black_kingstatus, white_rock, black_rock, x_kingb, y_kingb, x_kingw, y_kingw, x, y, des_x, des_y);
+      player_turn = res.player_turn;
+      x_kingb = res.x_kingb;
+      y_kingb = res.y_kingb;
+      x_kingw = res.x_kingw;
+      y_kingw = res.y_kingw;
 
-        if (isValidMove_Rock( x - 1, y-1, des_x-1, des_y-1, board[(y-1)*8+(x-1)].color, board) == 1)
-        {   board = pieceMove_Rock(x-1, y-1, des_x-1, des_y-1, board);
+      if (res.continuee == 1) {
+        continue;
+      }
 
-            if (player_turn == WHITETURN) {
-              x_kingw = des_x - 1;
-              y_kingw = des_y - 1;
-            }
-            else
-            {
-              x_kingb = des_x - 1;
-              y_kingb = des_y - 1;
-            }
-
-
-            if(piece_to_place(x_kingw, y_kingw, board) == 1 || piece_to_place(x_kingb, y_kingb, board) == 1)
-           {
-            board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
-            printf("Impossible move for chessmate is inevitable\n");
-
-            if (player_turn == WHITETURN) {
-              x_kingw = x - 1;
-              y_kingw = y - 1;
-
-              if( x - 1 == 4 && y - 1 == 7)
-              {
-                if(des_x - 1 == 6 && des_y - 1 == 7) //little rock
-              {
-                board[7*8+7].type = ROOK;
-                board[7*8+7].color = WHITE;
-                board[7*8+5].type = NONE;
-                board[7*8+5].color = 0;
-              }
-              if (des_x - 1 == 2 && des_y - 1 == 7) //big rock
-              {
-                board[7*8+0].type = ROOK;
-                board[7*8+0].color = WHITE;
-                board[7*8+3].type = NONE;
-                board[7*8+3].color = 0;
-              }
-            }
-            player_turn = BLACKTURN;
-          }
-            else
-            {
-              x_kingb = x - 1;
-              y_kingb = y - 1;
-
-              if( x - 1 == 4 && y - 1 == 0)
-              { if(des_x - 1 == 6 && des_y - 1 == 0) //litte rock
-                {
-                  board[0*8+7].type = ROOK;
-                  board[0*8+7].color = BLACK;
-                  board[0*8+5].type = NONE;
-                  board[0*8+5].color = 0; }
-
-                if (des_x - 1 == 2 && des_y - 1 == 0) //big rock
-                {
-                  board[0*8+0].type = ROOK;
-                  board[0*8+0].color = BLACK;
-                  board[0*8+3].type = NONE;
-                  board[0*8+3].color = 0; }
-            }
-            player_turn = WHITETURN;
-          }
-        }
-      //display_board_special(board);
-      continue;
-    }
-  }
       //Other chess piece movements
       int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
-      //int possible = isValidMove(x, y-1, des_x, des_y-1, board); //movement is possible
 
-      //printf("%d", possible);
       printf(RED);
       switch(possible)
       {
@@ -790,45 +851,13 @@ int play(struct Piece *board, struct Player *player1, struct Player *player2)
           	      continue;
           	    }
 
-              //___________________________ Black team's turn
-          	  if(player_turn == BLACKTURN)
-          	    {
-                  if (kingcheck_place(x_kingw, y_kingw, des_x-1, des_y-1, board) == 1) {
-                    white_kingstatus = CHECK;
-            	      printf("Checkmate for the white king \n");
-                  }
-
-                  if (kingcheck_place(x_kingb, y_kingb, des_x-1, des_y-1, board) == 0)
-                    black_kingstatus = NOTHING;
-
-                  if (check_mat(x_kingw, y_kingw, WHITE,  board)== 1) {
-                    return blackT_Vict(player1, player2);
-                  }
-                  player_turn = WHITETURN;
-                }
-                else//___________________________ White team's turn
-          	    {
-                  if (kingcheck_place( x_kingb, y_kingb, des_x-1, des_y-1, board) == 1) {
-                    black_kingstatus = CHECK;
-            	      printf("Checkmate for the black king \n");
-                  }
-
-                  if (kingcheck_place( x_kingw, y_kingw, des_x-1, des_y-1, board) == 0)
-                    white_kingstatus = NOTHING;
-
-                  if (check_mat(x_kingb, y_kingb, BLACK, board)== 1) {
-                    return whiteT_Vict(player1, player2);
-                  }
-                  player_turn = BLACKTURN;
-          	    }
-
-          	  if((player_turn == WHITETURN && pat(x_kingb, y_kingb, board)) || (player_turn == BLACKTURN && pat(x_kingw, y_kingw, board)))
-          	    {
-                  printf(BHGRN "\n It's a draw!! \n" reset);
-                  update_victory(player1->email);
-                  update_victory(player2->email);
-          	      return 0;
-          	    }
+              // Check for checkmates _________________________________________
+              struct checking res = check4checkmates( player_turn, board, white_kingstatus, black_kingstatus, x_kingb, y_kingb, x_kingw, y_kingw, des_x, des_y,  player1, player2);
+              player_turn = res.player_turn;
+              white_kingstatus = res.white_kingstatus;
+              black_kingstatus = res.black_kingstatus;
+              if (res.returned == 1)
+              { return 0;}
       }
       printf(reset);
       display_board_special(board); //print the board after modifications
