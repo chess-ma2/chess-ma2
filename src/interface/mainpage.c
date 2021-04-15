@@ -16,6 +16,8 @@ GtkWidget* NewPL1_W1;
 GtkWidget* window1_version_PL2;
 // New player n2 first version
 GtkWidget* NewPL2_W1;
+// Main Page for GAME
+GtkWidget* game_v1;
 
 //______ First Player ________
 // Entry for name
@@ -277,11 +279,6 @@ int main (int argc, char *argv[])
     // Label when info is saved
     Create_account1_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account1_yes"));
 
-//__________________________________________________________________________________________
-    //Exemple for area
-    //GtkDrawingArea* area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "area"));
-//__________________________________________________________________________________________
-
     // Entry for name
     Name_Entry1 = GTK_ENTRY(gtk_builder_get_object(builder, "name1"));
     // Entry for email
@@ -319,6 +316,8 @@ int main (int argc, char *argv[])
     // Label when info is saved
     Create_account2_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account2_yes"));
 
+    //  Game  _______________________________________________________________________
+    GtkDrawingArea* area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "area"));
 
     // __________________________________________________________________________________
 
@@ -357,7 +356,8 @@ int main (int argc, char *argv[])
     // Click on New Player 1 -> Save info and create player in db
     g_signal_connect(lock_new1, "clicked", G_CALLBACK(save_pl1), NULL);
 
-    // Player 2
+    // Player 2_________________________
+
     // Destroys .exe when first version window is closed for player 2 (new or login)
     g_signal_connect(window1_version_PL2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Destroys .exe when new first player first version window is closed
@@ -371,9 +371,8 @@ int main (int argc, char *argv[])
     // Click on New Player 2 -> Save info and create player in db
     g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), NULL);
 
-// Example for area
-    //g_signal_connect(area, "draw", G_CALLBACK(on_draw), NULL);
-//
+    // Game ___________________________________________________________
+    g_signal_connect(area, "draw", G_CALLBACK(on_draw), NULL);
 
 
     //___________ Version 2 _________________________________________________________

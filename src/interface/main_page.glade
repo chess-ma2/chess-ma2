@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <!--      NEW PLAYER N1 LOCAL VERSION -->
   <object class="GtkWindow" id="NewPL1_W1">
     <property name="width-request">600</property>
     <property name="height-request">1000</property>
@@ -156,6 +157,8 @@
       </object>
     </child>
   </object>
+
+  <!--           Main page         -->
   <object class="GtkWindow" id="window1">
     <property name="width-request">400</property>
     <property name="height-request">700</property>
@@ -241,6 +244,8 @@
       </object>
     </child>
   </object>
+
+  <!--     PLAYER 1 (LOGIN OR NEW PLAYER) LOCAL VERSION -->
   <object class="GtkWindow" id="window_1st_Version">
     <property name="width-request">400</property>
     <property name="height-request">700</property>
@@ -311,6 +316,8 @@
       </object>
     </child>
   </object>
+
+<!--     PLAYER 2 (LOGIN OR NEW PLAYER) LOCAL VERSION -->
   <object class="GtkWindow" id="window1_version_PL2">
     <property name="width-request">400</property>
     <property name="height-request">700</property>
@@ -381,6 +388,8 @@
       </object>
     </child>
   </object>
+
+  <!--     NEW PLAYER N2 LOCAL VERSION -->
   <object class="GtkWindow" id="NewPL1_W2">
     <property name="width-request">600</property>
     <property name="height-request">1000</property>
@@ -535,6 +544,8 @@
       </object>
     </child>
   </object>
+
+<!--      Main page for server version      -->
   <object class="GtkWindow" id="window_2nd_Version">
     <property name="width-request">400</property>
     <property name="height-request">700</property>
@@ -582,6 +593,31 @@
             <attributes>
               <attribute name="size" value="27708"/>
             </attributes>
+          </object>
+          <packing>
+            <property name="x">56</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+
+
+  <!--      GAME LOCAL VERSION -->
+  <object class="GtkWindow" id="game_v1">
+    <property name="width_request">800</property>
+    <property name="height_request">500</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkDrawingArea" id="area">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
           </object>
           <packing>
             <property name="x">56</property>
