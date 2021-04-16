@@ -92,8 +92,53 @@ Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned char y,
  *
  * @return Moves array of size of param counter.
  */
-Moves* find_chess_moves_king(Piece* board, unsigned char x, unsigned char y,
+Moves* find_chess_moves_king(Piece* board, unsigned char x, unsigned char y, unsigned char* count);
+
+
+/**
+ * @author Marine
+ * @date Start 15/04/2021
+ * @details Function called to find every move possible for the bishop
+ *
+ * @param board The board of the game.
+ * @param x X pos of pawn.
+ * @param y Y pos of pawn.
+ * @param count Counter of moves find.
+ *
+ * @return Moves array of size of param counter.
+ */
+Moves* find_chess_moves_bishop(Piece* board, unsigned char x, unsigned char y,
+                               unsigned char* count);
+
+/**
+ * @author Marine
+ * @date Start 15/04/2021
+ * @details Function called to find every move possible for the rook
+ *
+ * @param board The board of the game.
+ * @param x X pos of pawn.
+ * @param y Y pos of pawn.
+ * @param count Counter of moves find.
+ *
+ * @return Moves array of size of param counter.
+ */
+Moves* find_chess_moves_rook(Piece* board, unsigned char x, unsigned char y,
                              unsigned char* count);
+
+/**
+ * @author Marine
+ * @date Start 15/04/2021
+ * @details Function called to find every move possible for the queen
+ *
+ * @param board The board of the game.
+ * @param x X pos of pawn.
+ * @param y Y pos of pawn.
+ * @param count Counter of moves find.
+ *
+ * @return Moves array of size of param counter.
+ */
+Moves* find_chess_moves_queen(Piece* board, unsigned char x, unsigned char y,
+                              unsigned char* count);
 
 //End safety Guard
 #endif

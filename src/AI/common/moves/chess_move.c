@@ -33,5 +33,25 @@ Moves* find_chess_moves_king(Piece* board, unsigned char x, unsigned char y,
     return NULL;
 }
 
+//tour
+Moves* find_chess_moves_rook(Piece* board, unsigned char x, unsigned char y,
+                             unsigned char* count)
+{
+    return NULL;
+}
+
+//fou
+Moves* find_chess_moves_bishop(Piece* board, unsigned char x, unsigned char y,
+                             unsigned char* count)
+{
+    return NULL;
+}
+
+Moves* find_chess_moves_queen(Piece* board, unsigned char x, unsigned char y,
+                             unsigned char* count)
+{s
+    return NULL;
+}
+
 //End safety Guard
 #endif
