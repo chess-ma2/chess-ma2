@@ -61,10 +61,10 @@
                     2, 3, 1, 0, 0, 1, 3, 2 }
 // Structure function ____________________________
 struct node {
-  int isMaxPlayer; //Used for Alpha-Beta?
   int x;
   int y;
   int score;
+  int nb_children;
   struct node *children;
 };
 
@@ -77,5 +77,31 @@ struct tree{
 // Position evaluation function
 int getVal(struct Piece current);
 
+// Enqueue
+void enqueue(struct node *to_insert);
+
+// Dequeue
+struct node * dequeue();
+
+// Subfunction: prints a node -dfs
+void __print(struct node *Node);
+
+// Function: prints a tree structure
+void print_tree(struct tree *Tree);
+
+//Gets score for a chess piece on board (with coef)
+int getScore(struct currentpiece current);
+
+// Creates node - bfs
+struct node * create_node(struct currentpiece *current_List, int i, int depth);
+
+// Creates Tree for MiniMax
+struct tree * create_tree(struct Piece *board, enum turn player_turn, struct currentpiece *current_List, int nb_List, int depth);
+
+// Frees node -dfs
+void free_node(struct node *Node);
+
+// Frees Tree
+void free_tree(struct tree *Tree);
 
 #endif
