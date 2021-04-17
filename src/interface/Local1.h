@@ -12,8 +12,11 @@
 // Include Section
 #include "../database/create_db.c"
 #include "../database/functions_db.c"
+#include "../common/c/rules/check_and_pat.c"
+#include "../common/c/rules/pieces.c"
+#include "../common/c/rules/plate.c"
 
-//@struct Player
+// @struct Player
 struct Player {
     char *email;
     size_t nb_won;
@@ -22,6 +25,23 @@ struct Player {
 
 };
 
+// @struct Needed to create chessboard
+struct construction{
+  struct Piece *board;
+  GtkWidget **Bboard;
+  GtkFixed *fixed;
+  GtkWidget **ImageBoard;
+};
+
+// @enum Game Type (normal by default)
+enum GAME_TYPE
+{
+    NORMAL,
+    EPITA,
+    INVERSE,
+};
+
+
 // Player 1 _________________________________________________________
 
 // Create New Player in database and return the new player
@@ -29,5 +49,6 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
 
 
 // Game _________________________________________________________
+// Draw chessboard
 gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data);
 #endif

@@ -17,6 +17,8 @@ GtkWidget* NewPL1_W1;
 GtkWidget* window1_version_PL2;
 // New player n2 first version
 GtkWidget* NewPL2_W1;
+
+//____ GAME ____________
 // Main Page for GAME
 GtkWidget* game_v1;
 
@@ -153,23 +155,24 @@ void back_pl2(GtkButton *button, gpointer user_data)
   * @date 14/04/2021
   * @details Show new second player's window
   */
-    void new_pl2(GtkButton *button, gpointer user_data)
-    {   gtk_widget_hide(window1_version_PL2);
-        gtk_widget_show(NewPL2_W1); }
+void new_pl2(GtkButton *button, gpointer user_data)
+{   gtk_widget_hide(window1_version_PL2);
+    gtk_widget_show(NewPL2_W1); }
 
 
-  /*
-   * @author Anna
-   * @date 14/04/2021
-   * @details Create new second player for first version
-   */
-  void save_pl2(GtkButton *button, gpointer user_data)
-  {
-    // New Player subfunction into .db
-    pl2 = New_player_v1(Name_Entry2, Email_Entry2, Password_Entry2, Create_account2_yes);
-    // Start Game
-    //TODO
-  }
+/*
+ * @author Anna
+ * @date 14/04/2021
+ * @details Create new second player for first version
+ */
+void save_pl2(GtkButton *button, gpointer user_data)
+{
+  // New Player subfunction into .db
+  pl2 = New_player_v1(Name_Entry2, Email_Entry2, Password_Entry2, Create_account2_yes);
+  // Start Game
+  gtk_widget_hide(NewPL2_W1);
+  gtk_widget_show(game_v1);
+}
 
 //____________________________________________________________________________
 /*
@@ -339,8 +342,29 @@ int main (int argc, char *argv[])
     // Label when info is saved
     Create_account2_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account2_yes"));
 
+    // Entry for name
+    Name_Entry2 = GTK_ENTRY(gtk_builder_get_object(builder, "name2"));
+    // Entry for email
+    Email_Entry2 = GTK_ENTRY(gtk_builder_get_object(builder, "email2"));
+    // Entry for password
+    Password_Entry2 = GTK_ENTRY(gtk_builder_get_object(builder, "password2"));
+
     //  Game  _______________________________________________________________________
     GtkDrawingArea* area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "area"));
+    game_v1 = GTK_WIDGET(gtk_builder_get_object(builder, "game_v1"));
+    GtkFixed *fixed = GTK_FIXED(gtk_builder_get_object(builder, "paned1"));
+
+    // Create widgets -> button board
+    struct construction constr;
+    constr.board = init_board();
+    constr.Bboard = malloc(64 * sizeof(GtkWidget));
+    constr.ImageBoard = malloc(64 * sizeof(GtkWidget));
+    constr.fixed = fixed;
+
+    for (size_t i = 0; i < 64; i++) {
+      constr.Bboard[i] = gtk_button_new();
+      constr.ImageBoard[i] = gtk_image_new();
+    }
 
     // __________________________________________________________________________________
 
@@ -401,7 +425,10 @@ int main (int argc, char *argv[])
     g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), NULL);
 
     // Game ___________________________________________________________
-    g_signal_connect(area, "draw", G_CALLBACK(on_draw), NULL);
+    // Destroys .exe when game first version window is closed
+    g_signal_connect(game_v1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Draw Chessboard
+    g_signal_connect(area, "draw", G_CALLBACK(on_draw), &constr);
 
 
     //___________ Version 2 _________________________________________________________

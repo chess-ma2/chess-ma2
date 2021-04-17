@@ -61,6 +61,7 @@ struct checking{
   int returned;
 };
 
+
 //________________ Printing the chess board and chess pieces __________________
 //Prints chess pieces
 void print_special_CHAR(struct Piece current, int color);

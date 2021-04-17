@@ -15,35 +15,77 @@
 
 /*
  * @author Anna
- * @date 10/04/2021
+ * @date 10/04/2021 - 16/04/2021
  * @details draw chessboard without chess pieces
 */
 
 // Signal handler for the "draw" signal of the drawing area.
 gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
-    // Gets the rectangle.
-    //GdkRectangle *r = user_data;
+    // All Images
+    char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
+    struct construction *res = user_data;
+    printf("%s\n", normal_images_cha[0]);
+
     int c = 0; //white
     int x = 56; //original coordinates
     int y = 90; //original coordinates
-    int width = 30;
-    int height = 30;
-
-    // Sets the background to white.
-    cairo_set_source_rgb(cr, 1, 1, 1);
-    cairo_paint(cr);
+    int width = 60;
+    int height = 60;
 
     //Iterate through chessboard
     for (size_t i = 0; i < 8; i++) {
       for (size_t j = 0; j < 8; j++) {
+
+        // Current piece of Board
+        struct Piece current = res->board[i*8+j];
+        // Current button
+        GtkWidget *current_button = res->Bboard[i*8+j];
+
+        // Get correct index for image from list in .h
+        int i = -1;
+
+        if(current.color == BLACK){
+        switch(current.type){
+            case PAWN: i = 6; break;
+            case ROOK: i = 7; break;
+            case BISHOP: i = 8; break;
+            case KNIGHT: i = 9; break;
+            case QUEEN: i = 10; break;
+            case KING: i = 11; break;
+            default: i = -1; }}
+        else {
+        switch(current.type)
+        {   case PAWN: i = 0; break;
+            case ROOK: i = 1; break;
+            case BISHOP: i = 2; break;
+            case KNIGHT: i = 3; break;
+            case QUEEN: i = 4; break;
+            case KING: i = 5; break;
+            default: i = -1;} }
+
+
+        gtk_widget_set_size_request (current_button,60,60);
+        gtk_widget_set_opacity(current_button , 0.01);
+        gtk_fixed_put (res->fixed, current_button, x + 15, y + 15);
+        gtk_widget_show(current_button);
+
+        if (i != -1) {
+          res->ImageBoard[i] = gtk_image_new_from_file(normal_images_cha[i]);
+          gtk_widget_set_size_request (res->ImageBoard[i],60,60);
+        //  gtk_widget_set_opacity(res->ImageBoard[i] , 0.2);
+          gtk_fixed_put (res->fixed, res->ImageBoard[i], x + 15, y + 15);
+          gtk_widget_show(res->ImageBoard[i]);
+        }
+
+
         if (c == 0) {
-          // Draws the rectangle in white.
-          cairo_set_source_rgb(cr, 1, 1, 1);
+          // Draws the rectangle in bright-ish color.
+          cairo_set_source_rgb(cr, 0.9, 0.7, 0.5);
         }
         else{
-          // Draws the rectangle in black.
-          cairo_set_source_rgb(cr, 0, 0, 0);
+          // Draws the rectangle in dark-ish color
+          cairo_set_source_rgb(cr, 0.8, 0, 0.2);
         }
         //cairo_paint(cr);
         cairo_rectangle(cr, x, y, width, height);

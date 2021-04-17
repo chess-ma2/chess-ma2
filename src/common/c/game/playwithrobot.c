@@ -9,11 +9,14 @@
 #include "../rules/pieces.c"
 #include "version1.c"
 #include "../rules/check_and_pat.c"
+#include "added_functions.c"
 
 
 //using nearly anna and marie 's function but a little adaptation
 int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot,int type)
 {
+
+
   print_rules();
   //_______________ Variables
   int x = 0;
@@ -22,6 +25,14 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
   int des_x = 0;
   char des_x_char = 'A';
   int des_y = 0;
+
+  // Current white chess pieces on chessboard
+  struct currentpiece *currentW = create_whiteList();
+  int nbWhite = 16;
+
+  // Current black chess pieces on chessboard
+  struct currentpiece *currentB = create_blackList();
+  int nbBlack = 16;
 
   //kings'positions to know if check or checkmat
 
@@ -76,13 +87,11 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
       //Get original coordinates
       printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
       scanf(" %c%d", &x_char, &y);
-      //x = ((int)x_char) - 65;
       x = ((int)x_char) - 64;
 
       //Get new coordinates
       printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
       scanf(" %c%d", &des_x_char, &des_y);
-      //des_x = ((int)des_x_char) - 65;
       des_x = ((int)des_x_char) - 64;
 
     }
@@ -140,7 +149,6 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
         printf("Please enter the original coordinates of the chess piece you want to move (ex: A3) : \n");
         scanf(" %c%d\n", &x_char, &y);
       }
-      //x = ((int)x_char) - 65;
       x = ((int)x_char) - 64;
 
       // It's not your piece to move
@@ -170,46 +178,39 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
       printf(RED);
       switch(possible)
       {
-          case 0:
-              printf("This move isn't possible for that chess piece, please check the rules.\n\n");
-              break;
-          case 2:
-              printf("This move isn't possible because one or some coordinates are out of bounds\n\n");
-              break;
-          case 3:
-              printf("This move isn't possible because the chess piece on the destination coordinates is already yours!\n\n");
-              break;
-          case 4:
-              printf("This move isn't possible because there aren't any chess pieces to move!\n\n");
-              break;
+          case 0: printf("This move isn't possible for that chess piece, please check the rules.\n\n"); break;
+          case 2: printf("This move isn't possible because one or some coordinates are out of bounds\n\n"); break;
+          case 3: printf("This move isn't possible because the chess piece on the destination coordinates is already yours!\n\n"); break;
+          case 4: printf("This move isn't possible because there aren't any chess pieces to move!\n\n"); break;
           case 1:
+          // Check if there are any chess pieces on destination coordinates and if so remove them from list
+          // AND modifies in List coordinates of the chess piece that's moved
 
-              //Move chess piece
-              board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
+          if (player_turn == WHITETURN) {
+            nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentW, nbWhite); }
+          else { nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentB, nbBlack); }
+
+          board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board); // Move piece
+
 
             //________ King ____________
               if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-          	    {
-          	      x_kingw = des_x - 1;
+          	    { x_kingw = des_x - 1;
           	      y_kingw = des_y - 1;
-          	      white_rock = CANT_ROCK;
-          	    }
+          	      white_rock = CANT_ROCK;}
 
           	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
-          	    {
-          	      x_kingb = des_x - 1;
+          	    { x_kingb = des_x - 1;
           	      y_kingb = des_y - 1;
-          	      black_rock = CANT_ROCK;
-          	    }
+          	      black_rock = CANT_ROCK;}
 
               //___________________________
 
 
               // Impossible move
           	  if((player_turn == BLACKTURN && piece_to_place(x_kingb, y_kingb, board) == 1 ) || (player_turn == WHITETURN && piece_to_place(x_kingw, y_kingw, board) == 1))
-          	    {
-                  board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
-          	      printf("Impossible to move the king as checkmate would be unavoidable\n");
+          	    {  board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
+          	       printf("Impossible to move the king as checkmate would be unavoidable\n");
 
           	      if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
           		    {   x_kingb = x - 1;
@@ -227,12 +228,16 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
                 white_kingstatus = res.white_kingstatus;
                 black_kingstatus = res.black_kingstatus;
                 if (res.returned == 1)
-                { return 0;}
+                {
+                  free(currentW);
+                  free(currentB);
+                  return 0;}
       }
       printf(reset);
       display_board_special(board); //print the board after modifications
 
     }
-
+    free(currentW);
+    free(currentB);
     return 0;
 }

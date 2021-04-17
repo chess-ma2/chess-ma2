@@ -157,7 +157,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkWindow" id="NewPL1_W2">
+  <object class="GtkWindow" id="NewPL2_W1">
     <property name="width-request">600</property>
     <property name="height-request">1000</property>
     <property name="can-focus">False</property>
@@ -314,20 +314,24 @@
   </object>
   <object class="GtkWindow" id="game_v1">
     <property name="width-request">800</property>
-    <property name="height-request">500</property>
+    <property name="height-request">800</property>
     <property name="can-focus">False</property>
+    <!-- <property name="visible">True</property> -->
+    <property name="title" translatable="yes">Game</property>
     <child>
-      <object class="GtkFixed">
+      <object class="GtkFixed" id="paned1">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can_focus">True</property>
         <child>
           <object class="GtkDrawingArea" id="area">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can_focus">False</property>
+            <property name="width-request">600</property>
+            <property name="height-request">600</property>
           </object>
           <packing>
-            <property name="x">56</property>
-            <property name="y">71</property>
+            <property name="x">17</property>
+            <property name="y">17</property>
           </packing>
         </child>
       </object>

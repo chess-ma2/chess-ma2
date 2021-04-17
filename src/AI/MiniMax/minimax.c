@@ -31,7 +31,7 @@ int getVal(struct Piece current)
               break;
           default: res = 0;
       } }
-  else // Piece is white 
+  else // Piece is white
   {   switch(current.type)
       {
         case PAWN:
@@ -56,4 +56,20 @@ int getVal(struct Piece current)
       }
   }
   return res;
+}
+
+
+
+struct tree * create_tree(struct Piece *board, enum turn player_turn, struct Piece *current_player)
+{
+    //  1) Get all current chess piece for said color
+
+    //  2) For each go through its children and create a new node
+    struct tree *Tree = malloc(sizeof(struct tree));
+    struct node root = malloc(sizeof(struct node));
+    Tree->root = root;
+
+    
+
+
 }
