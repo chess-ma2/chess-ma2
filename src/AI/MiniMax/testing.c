@@ -1,13 +1,18 @@
-#include "minimax.h"
+#include "minimax.c"
 #include "MINImove.c"
 #include "../../common/c/rules/plate.c"
+
+
+#ifndef TESTING_C
+#define TESTING_C
+
 
 int main()
 {
     struct Piece* board = init_board();
     int x='A';
     int y=1;
-    
+
     //juste pour tester compilation
     find_chess_moves_pawn( board, x, y, color);
 
@@ -23,3 +28,5 @@ int main()
 
   return 0;
 }
+
+#endif

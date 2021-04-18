@@ -3,8 +3,11 @@
 #include <math.h>
 #include <stdlib.h>
 
+#ifndef MINIMAX_C
+#define MINIMAX_C
+
 // ___ Variables for queue ____________________________
-struct node **queue = malloc(sizeof(struct node));
+struct node **queue;
 int front = 0; // 1st element
 int rear = -1; // Last element
 int nb_queue = 0; // nb of elements in queue
@@ -76,8 +79,8 @@ int getVal(struct Piece current)
 void __print(struct node *Node)
 {
   printf("|%i|", Node->score);
-  for (size_t i = 0; i < nb_children; i++) {
-    __print(Node->children[i]);
+  for (int i = 0; i < Node->nb_children; i++) {
+    __print(&Node->children[i]);
   }
   printf("\n | \n");
 
@@ -90,9 +93,9 @@ void __print(struct node *Node)
 */
 void print_tree(struct tree *Tree)
 {
-  struct node *Root = Tree->node;
-  for (size_t i = 0; i < Root->nb_children; i++) {
-    __print(Root->children[i]);
+  struct node *Root = Tree->root;
+  for (int i = 0; i < Root->nb_children; i++) {
+    __print(&Root->children[i]);
   }
 }
 
@@ -104,15 +107,70 @@ void print_tree(struct tree *Tree)
 
 int getScore(struct currentpiece current)
 {
-  int piece_val = getVal(current->piece);
+
+double pawn_table[64]={0, 0, 0, 0, 0, 0, 0, 0, \
+                      5, 5, 5, 5, 5, 5, 5, 5, \
+                      1, 1, 2, 3, 3, 2, 1, 1, \
+                      0.5, 0.5, 1, 2.5, 2.5, 1, 0.5, 0.5, \
+                      0, 0, 0, 2, 2, 0, 0, 0, \
+                      0.5, -0.5, -1, 0, 0, -1, -0.5, 0.5, \
+                      0.5, 1, 1, -2, -2, 1, 1, 0.5, \
+                      0, 0, 0, 0, 0, 0, 0, 0};
+
+double rook_table[64]={0, 0, 0, 0, 0, 0, 0, 0, \
+                      0.5, 1, 1, 1, 1, 1, 1, 0.5, \
+                      -0.5, 0, 0, 0, 0, 0, 0, -0.5, \
+                      -0.5, 0, 0, 0, 0, 0, 0, -0.5, \
+                      -0.5, 0, 0, 0, 0, 0, 0, -0.5, \
+                      -0.5, 0, 0, 0, 0, 0, 0, -0.5, \
+                      -0.5, 0, 0, 0, 0, 0, 0, -0.5, \
+                      0, 0, 0, 0.5, 0.5, 0, 0, 0};
+
+double bishop_table[64]={-2, -1, -1, -1, -1, -1, -1, -2, \
+                      -1, 0, 0, 0, 0, 0, 0, -1, \
+                      -1, 0, 0.5, 1, 1, 0.5, 0, -1, \
+                      -1, 0.5, 0.5, 1, 1, 0.5, 0.5, -1, \
+                      -1, 0, 1, 1, 1, 1, 0, -1, \
+                      -1, 1, 1, 1, 1, 1, 1, -1, \
+                      -1, 0.5, 0, 0, 0, 0, 0.5, -1, \
+                      -2, -1, -1, -1, -1, -1, -1, -2};
+
+double knight_table[64]={ -5, -4, -3, -3, -3, -3, -4, -5  \
+                      -4, -2, 0, 0, 0, 0, -2, -4, \
+                      -3, 0, 1, 1.5, 1.5, 1, 0, -3, \
+                      -3, 0.5, 1.5, 2, 2, 1.5, 0.5, -3, \
+                      -3, 0, 1.5, 2, 2, 1.5, 0, -3, \
+                      -4, -2, 0, 0.5, 0.5, 0, -2, -4, \
+                      -5, -4, -3, -3, -3, -3, -4, -5 };
+
+double queen_table[64]={ -2, -1, -1, -0.5, -0.5, -1, -1, -2, \
+                     -1, 0, 0, 0, 0, 0, 0, -1, \
+                     -1, 0, 0.5, 0.5, 0.5, 0.5, 0, -1, \
+                     -0.5, 0, 0.5, 0.5, 0.5, 0.5, 0, -0.5, \
+                     0, 0, 0.5, 0.5, 0.5, 0.5, 0, -0.5, \
+                     -1, 0.5, 0.5, 0.5, 0.5, 0.5, 0, -1, \
+                     -1, 0, 0.5, 0, 0, 0, 0, -1, \
+                     -2, -1, -1, -0.5, -0.5, -1, -1, -2 };
+
+double king_table[64]={ -3, -4, -4, -5, -5, -4, -4, -3, \
+                    -3, -4, -4, -5, -5, -4, -4, -3, \
+                    -3, -4, -4, -5, -5, -4, -4, -3, \
+                    -3, -4, -4, -5, -5, -4, -4, -3, \
+                    -2, -3, -3, -4, -4, -3, -3, -2, \
+                    -1, -2, -2, -2, -2, -2, -2, -1, \
+                    2, 2, 0, 0, 0, 0, 2, 2, \
+                    2, 3, 1, 0, 0, 1, 3, 2 };
+
+
+  int piece_val = getVal(current.piece);
   int res;
-  switch (current->piece->type) {
-    case PAWN: res = piece_val * pawn_table[current->y*8+current->x]; break;
-    case ROOK: res = piece_val * rook_table[current->y*8+current->x]; break;
-    case BISHOP: res = piece_val * bishop_table[current->y*8+current->x]; break;
-    case KNIGHT: res = piece_val * knight_table[current->y*8+current->x]; break;
-    case QUEEN: res = piece_val * queen_table[current->y*8+current->x]; break;
-    case KING: res = piece_val * king_table[current->y*8+current->x]; break;
+  switch (current.piece.type) {
+    case PAWN: res = (int) piece_val * pawn_table[current.y*8+current.x]; break;
+    case ROOK: res = (int) piece_val * rook_table[current.y*8+current.x]; break;
+    case BISHOP: res = (int) piece_val * bishop_table[current.y*8+current.x]; break;
+    case KNIGHT: res = (int) piece_val * knight_table[current.y*8+current.x]; break;
+    case QUEEN: res = (int) piece_val * queen_table[current.y*8+current.x]; break;
+    case KING: res = (int) piece_val * king_table[current.y*8+current.x]; break;
     default: res = 0;
   }
   return res;
@@ -127,9 +185,9 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth)
 {
   // Define parent
   struct node *parent = malloc(sizeof(struct node));
-  parent.x = current_List[i].x;
-  parent.x = current_List[i].y;
-  parent.score = getScore(struct currentpiece current);
+  parent->x = current_List[i].x;
+  parent->y = current_List[i].y;
+  parent->score = getScore(current_List[i]);
   int current_depth = -1;
 
   // enqueue parent
@@ -154,7 +212,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth)
     index->children = children;
   }
 
-  free(queue);
+  //free(queue);
   return parent;
 }
 
@@ -171,9 +229,12 @@ struct tree * create_tree(struct Piece *board, enum turn player_turn, struct cur
     struct tree *Tree = malloc(sizeof(struct tree));
     struct node *root = malloc(sizeof(struct node));
     Tree->root = root;
-    for (size_t i = 0; i < nb_List; i++) {
-      children[i] = create_node(current_List, i, depth);
+    struct node *children;
+    for (int i = 0; i < nb_List; i++) {
+      children[i] = *create_node(current_List, i, depth);
     }
+    root->children = children;
+
     return Tree;
 }
 
@@ -210,3 +271,5 @@ void free_tree(struct tree *Tree)
   free(Tree);
   Tree = NULL;
 }
+
+#endif
