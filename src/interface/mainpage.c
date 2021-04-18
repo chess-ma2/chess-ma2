@@ -218,6 +218,21 @@ void login1_start(GtkButton *button, gpointer user_data)
     gtk_widget_hide(window1);
 }
 
+/*
+ * @author Marine
+ * @date 18/04/2021
+ * @details connects player 1 to database
+ */
+void connect1(GtkButton *button, gpointer user_data)
+{
+    pl1 =findplayer(Email_Log1,Password_Log1);
+    if (pl1!=NULL)
+    {
+        gtk_widget_show(transition1);
+        gtk_widget_hide(LoginAccount);
+    }
+}
+
  /*
   * @author Marine
   * @date 16/04/2021
@@ -239,6 +254,21 @@ void login2_start(GtkButton *button, gpointer user_data)
 {
     gtk_widget_show(LoginAccount2);
     gtk_widget_hide(window1);
+}
+/*
+ * @author Marine
+ * @date 18/04/2021
+ * @details connects player 2 to database
+ */
+void connect2(GtkButton *button, gpointer user_data)
+{
+    pl2 =findplayer(Email_Log2,Password_Log2);
+    if (pl2!=NULL)
+    {
+        gtk_widget_show(game_v1);
+        gtk_widget_hide(LoginAccount2);
+        
+    }
 }
 
  /*
@@ -434,6 +464,7 @@ int main (int argc, char *argv[])
 
     // Back to first version
     GtkButton* back_w2 = GTK_BUTTON(gtk_builder_get_object(builder, "back_w2"));
+    GtkButton* back_w4 = GTK_BUTTON(gtk_builder_get_object(builder, "back_w4"));
     //Second player is not new
     LoginAccount2=GTK_WIDGET(gtk_builder_get_object(builder, "LoginAccount2"));
 
@@ -517,6 +548,15 @@ int main (int argc, char *argv[])
     // Click on New Player 1 -> Save info and create player in db
     g_signal_connect(lock_new1, "clicked", G_CALLBACK(save_pl1), NULL);
     
+    //LOGIN PLAYER 1
+    // Back to second player of first window (new or login)
+    g_signal_connect(back_w2, "clicked", G_CALLBACK(back_from_login1), NULL);
+    //goes to login n1
+    g_signal_connect(login1, "clicked", G_CALLBACK(login1_start), NULL);
+    // Destroys .exe when first player (new) of first version window is closed
+    g_signal_connect(login1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    //g_signal_connect(lock_new2, "clicked", G_CALLBACK(), NULL);
+    
     //ajouter interactions mais jsp comment faire pour m'y reetoruver je vais donc faire une liste d'abord ecrite cause i'm lost
 
     // Transition _________________________
@@ -531,6 +571,8 @@ int main (int argc, char *argv[])
     g_signal_connect(window1_version_PL2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Destroys .exe when new first player first version window is closed
     g_signal_connect(NewPL2_W1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Destroys .exe when new first player login account is closed
+    g_signal_connect(LoginAccount, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Go back to mainpage
     g_signal_connect(back2, "clicked", G_CALLBACK(back_to_main), NULL);
     // Second Player is New player -> go to said page
@@ -539,7 +581,24 @@ int main (int argc, char *argv[])
     g_signal_connect(back_w2, "clicked", G_CALLBACK(back_pl2), NULL);
     // Click on New Player 2 -> Save info and create player in db
     g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), NULL);
+    
+    //LOGIN player 2
+    // Back to second player of first window (new or login)
+    g_signal_connect(back_w4, "clicked", G_CALLBACK(back_from_login2), NULL);
+    //goes to login n2
+    g_signal_connect(login_2, "clicked", G_CALLBACK(login2_start), NULL);
+    // Destroys .exe when first player (new) of first version window is closed
+    g_signal_connect(login_2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Click on New Player 2 -> Save info and create player in db
+    //g_signal_connect(lock_new4, "clicked", G_CALLBACK(), NULL);
+    //TODO function that connects to db and check if player
 
+    
+    // Destroys .exe when new first player login account is closed
+    g_signal_connect(LoginAccount, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Destroys .exe when new first player login account 2 is closed
+    g_signal_connect(LoginAccount2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    
     // Game ___________________________________________________________
     // Destroys .exe when game first version window is closed
     g_signal_connect(game_v1, "destroy", G_CALLBACK(gtk_main_quit), NULL);

@@ -8,6 +8,7 @@ int main()
     int x='A';
     int y=1;
     
+    //juste pour tester compilation
     find_chess_moves_pawn( board, x, y, color);
 
     find_chess_moves_knight(board, x, y, color);

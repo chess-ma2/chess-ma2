@@ -134,6 +134,7 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
   // Define Player structure
   struct Player *pl = malloc(sizeof(struct Player));
   pl->email = email;
+  pl->name=name;
 
   return pl;
 
@@ -141,6 +142,33 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
     //   1) Get the nb of games won
     //   2) Get the nb of games lost
 
+}
+
+struct Player * findplayer(GtkEntry* mail, GtkEntry* pass)
+{
+    // Connect to Database
+    creatingTables();
+    
+    struct Player *p = malloc(sizeof(struct Player));
+    
+    char * email = (char *)gtk_entry_get_text(mail);
+    char * password1 = (char *) gtk_entry_get_text(pass);
+    unsigned char password[64];
+    // Copy to array to get password
+    strcpy(&password, password1);
+    //testing if email is in database
+    if (email_in_DB(email) && rightPassword(email, password))
+    {
+        p->email=email;
+        //p->name=printNAME(email);
+        p->nb_won=getWINS(email);
+        p->nb_lost=getLOST(email);
+    }
+    else
+    {
+        return NULL;
+    }
+    
 }
 
 #endif
