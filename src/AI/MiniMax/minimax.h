@@ -70,7 +70,7 @@ struct node {
 
 struct tree{
   struct node root;
-}
+};
 
 
 // Function section _______________________________

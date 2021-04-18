@@ -13,9 +13,9 @@
 
 #include "MINImove.h"
 
-int out_of_bounds(unsigned char x, unsigned char y)
+int out_of_bounds( int x,  int y)
 {
-    if (x<A || x>H || y<1 || y>8)
+    if (x<( int)A || x>( int)H || y<1 || y>8)
     {
         return 0;
     }
@@ -32,29 +32,49 @@ int is_obstacle(int x, int y, Piece* board,int color)
     return 1;
 }
 
-struct Moves* find_chess_moves_pawn(Piece* board, unsigned char x, unsigned char y,int color)
+int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board)
+{
+    //changes coordinates to make the test
+    board[xtest+ytest*8].type=board[xinit+yinit*8].type;
+    board[xtest+ytest*8].color=board[xinit+yinit*8].color;
+    board[xinit+yinit*8].type=NONE;
+    
+    if (check_mat(xtest, ytest+1, color,board))
+    {
+        //resset the orignal values
+        board[xinit+yinit*8].type=board[xtest+ytest*8].type;
+        board[xtest+ytest*8].type=NONE;
+        return 1;
+    }
+    //resset the orignal values
+    board[xinit+yinit*8].type=board[xtest+ytest*8].type;
+    board[xtest+ytest*8].type=NONE;
+    return 0;
+}
+
+struct Moves* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
 {
     struct Moves* moves=malloc(sizeof(struct Moves));
-    int xtest= (int) x - 64;
-    int ytest = (int) y - 64;
     
     //CHECK INTIAL PLACE +2
-    if ((color==0 && ytest==2)|| (color==1 && ytest==7))
+    if ((color==0 && y==2)|| (color==1 && y==7))
     {
-        if (is_obstacle(x,y+2*(-1)*color,color) && out_of_bounds(xtest,ytest+2*(-1)*color))
+        if (is_obstacle(x,y+2*(-1)*color,color) && out_of_bounds(xtest,y+2*(-1)*color))
         {
-            //check if king is in danger
-            moves++;
-            moves=malloc(sizeof(struct Moves));
-            moves.x_pos = x;
-            moves.y_pos = y+2*(-1)*color;
+            if (!testCHECK(x, y, x, y+2*(-1)*color, Piece* board))
+            {
+                moves++;
+                moves=malloc(sizeof(struct Moves));
+                moves.x_pos = x;
+                moves.y_pos = y+2*(-1)*color;
+                
+            }
         }
     }
     
     //CHECK +1 FRONT MOVE
-    if (is_obstacle(x,y+1*(-1)*color,color) && out_of_bounds(xtest,ytest+1*(-1)*color))
+    if (is_obstacle(x,y+1*(-1)*color,color) && out_of_bounds(x,y+1*(-1)*color) && !testCHECK(x, y, x, y+1*(-1)*color, Piece* board))
     {
-        //check if king is in danger
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x;
@@ -62,9 +82,8 @@ struct Moves* find_chess_moves_pawn(Piece* board, unsigned char x, unsigned char
     }
     
     //CHECK EAT MOVE right diag
-    if (is_obstacle(x+1,y+1*(-1)*color,color) && out_of_bounds(xtest+1,ytest+1*(-1)*color))
+    if (is_obstacle(x+1,y+1*(-1)*color,color) && out_of_bounds(x+1,y+1*(-1)*color) && !testCHECK(x, y, x+1, y+1*(-1)*color, Piece* board))
     {
-        //check if king is in danger
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x+1;
@@ -72,9 +91,8 @@ struct Moves* find_chess_moves_pawn(Piece* board, unsigned char x, unsigned char
     }
     
     //CHECK EAT MOVE left diag
-    if (is_obstacle(x-1,y+1*(-1)*color,color) && out_of_bounds(xtest-1,ytest+1*(-1)*color))
+    if (is_obstacle(x-1,y+1*(-1)*color,color) && out_of_bounds(x-1,y+1*(-1)*color) && !testCHECK(x, y, x-1, y+1*(-1)*color, Piece* board))
     {
-        //check if king is in danger
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-1;
@@ -85,17 +103,15 @@ struct Moves* find_chess_moves_pawn(Piece* board, unsigned char x, unsigned char
     return moves;
 }
 
-struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned char y)
+struct Moves* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 {
     struct Moves* moves;
-    int xtest= (int) x - 64;
-    int ytest = (int) y - 64;
     
     //shape * dest
     //      *
     //      x
     
-    if (is_obstacle(x+1,y+2,color) && out_of_bounds(xtest+1,ytest+2))
+    if (is_obstacle(x+1,y+2,color) && out_of_bounds(x+1,y+2) && !testCHECK(x, y, x+1, y+2, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -108,7 +124,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     //           *
     //           x
     
-    if (is_obstacle(x-1,y+2,color) && out_of_bounds(xtest-1,ytest+2))
+    if (is_obstacle(x-1,y+2,color) && out_of_bounds(x-1,y+2) && !testCHECK(x, y, x-1, y+2, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -120,7 +136,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     
     //shape   dest  *  *
     //                 x
-    if (is_obstacle(x-2,y+2,color) && out_of_bounds(xtest-2,ytest+2))
+    if (is_obstacle(x-2,y+2,color) && out_of_bounds(x-2,y+2) && !testCHECK(x, y, x-2, y+2, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -132,7 +148,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     
     //shape *  *  dest
     //      x
-    if (is_obstacle(x+2,y+2,color) && out_of_bounds(xtest+2,ytest+2))
+    if (is_obstacle(x+2,y+2,color) && out_of_bounds(x+2,y+2) && !testCHECK(x, y, x+2, y+2, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -145,7 +161,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     //shape x
     //      *
     //      * dest
-    if (is_obstacle(x+1,y-2,color) && out_of_bounds(xtest+1,ytest-2))
+    if (is_obstacle(x+1,y-2,color) && out_of_bounds(x+1,y-2) && !testCHECK(x, y, x+1, y-2, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -158,7 +174,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     //shape     x
     //          *
     //      dest
-    if (is_obstacle(x-1,y-2,color) && out_of_bounds(xtest-1,ytest-2))
+    if (is_obstacle(x-1,y-2,color) && out_of_bounds(x-1,y-2) && !testCHECK(x, y, x-1, y-2, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -170,7 +186,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     
     //shape      x
     //           *  *   dest
-    if (is_obstacle(x+2,y-1,color) && out_of_bounds(xtest+2,ytest-1))
+    if (is_obstacle(x+2,y-1,color) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y-1, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -182,7 +198,7 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     
     //shape          x
     //        dest * *
-    if (is_obstacle(x-2,y-1,color) && out_of_bounds(xtest-2,ytest-1))
+    if (is_obstacle(x-2,y-1,color) && out_of_bounds(x-2,y-1) && !testCHECK(x, y, x-2, y-1, Piece* board))
     {
         //check if king is in danger
         moves++;
@@ -194,341 +210,340 @@ struct Moves* find_chess_moves_knight(Piece* board, unsigned char x, unsigned ch
     return moves;
 }
 
-struct Moves* find_chess_moves_king(Piece* board, unsigned char x, unsigned char y)
+struct Moves* find_chess_moves_king(Piece* board, int x, int y,int color)
 {
     
     struct Moves* moves;
-    int xtest= (int) x - 64;
-    int ytest = (int) y - 64;
     //to do check 9 moves possible
     //^
-    if (is_obstacle(x,y+1,color) && out_of_bounds(xtest,ytest+1))
+    if (is_obstacle(x,y+1,color) && out_of_bounds(x,y+1) && !testCHECK(x, y, x, y+1, Piece* board))
     {
-        //check if king is in danger
-        if (!check_mat(xtest, ytest+1, color,board))
-        {
-            moves++;
-            moves=malloc(sizeof(struct Moves));
-            moves.x_pos = x;
-            moves.y_pos = y+1;
-            
-        }
+        moves++;
+        moves=malloc(sizeof(struct Moves));
+        moves.x_pos = x;
+        moves.y_pos = y+1;
     }
     //v
-    if (is_obstacle(x,y-1,color) && out_of_bounds(xtest,ytest-1))
+    if (is_obstacle(x,y-1,color) && out_of_bounds(x,y-1) && !testCHECK(x, y, x, y-1, Piece* board))
     {
-        if (!check_mat(xtest, ytest-1, color,board))
-        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x;
         moves.y_pos = y-1;
-        }
     }
     //>
-    if (is_obstacle(x+1,y,color) && out_of_bounds(xtest+1,ytest))
+    if (is_obstacle(x+1,y,color) && out_of_bounds(x+1,y) && !testCHECK(x, y, x+1, y, Piece* board))
     {
-        if (!check_mat(xtest+1, ytest, color,board))
-        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x+1;
         moves.y_pos = y;
-        }
     }
     //<
-    if (is_obstacle(x-1,y,color) && out_of_bounds(xtest-1,ytest))
+    if (is_obstacle(x-1,y,color) && out_of_bounds(x-1,y) && !testCHECK(x, y, x-1, y, Piece* board))
     {
-        if (!check_mat(xtest-1, ytest, color,board))
-        {
-            moves++;
-            moves=malloc(sizeof(struct Moves));
-            moves.x_pos = x-1;
-            moves.y_pos = y;
-        }
+        moves++;
+        moves=malloc(sizeof(struct Moves));
+        moves.x_pos = x-1;
+        moves.y_pos = y;
     }
     //^>
-    if (is_obstacle(x+1,y+1,color) && out_of_bounds(xtest+1,ytest+1))
+    if (is_obstacle(x+1,y+1,color) && out_of_bounds(x+1,y+1) && !testCHECK(x, y, x+1, y+1, Piece* board))
     {
-        if (!check_mat(xtest+1, ytest+1, color,board))
-        {
-            moves++;
-            moves=malloc(sizeof(struct Moves));
-            moves.x_pos = x+1;
-            moves.y_pos = y+1;
-        }
+        moves++;
+        moves=malloc(sizeof(struct Moves));
+        moves.x_pos = x+1;
+        moves.y_pos = y+1;
     }
     //v>
-    if (is_obstacle(x+1,y-1,color) && out_of_bounds(xtest+1,ytest-1))
+    if (is_obstacle(x+1,y-1,color) && out_of_bounds(x+1,y-1) && !testCHECK(x, y, x+1, y-1, Piece* board))
     {
-        if (!check_mat(xtest+1, ytest-1, color,board))
-        {
-            moves++;
-            moves=malloc(sizeof(struct Moves));
-            moves.x_pos = x+1;
-            moves.y_pos = y-1;
-        }
+        moves++;
+        moves=malloc(sizeof(struct Moves));
+        moves.x_pos = x+1;
+        moves.y_pos = y-1;
     }
     //^<
-    if (is_obstacle(x-1,y+1,color) && out_of_bounds(xtest-1,ytest+1))
+    if (is_obstacle(x-1,y+1,color) && out_of_bounds(x-1,y+1) && !testCHECK(x, y, x-1, y+1, Piece* board))
     {
-        if (!check_mat(xtest-1, ytest+1, color,board))
-        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-1;
         moves.y_pos = y+1;
-        }
     }
     //v<
-    if (is_obstacle(x-1,y-1,color) && out_of_bounds(xtest-1,ytest-1))
+    if (is_obstacle(x-1,y-1,color) && out_of_bounds(x-1,y-1) && !testCHECK(x, y, x-1, y-1, Piece* board))
     {
-        if (!check_mat(xtest-1, ytest-1, color,board))
-        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-1;
         moves.y_pos = y-1;
-        }
     }
     
     return NULL;
 }
 
 
-struct Moves* find_chess_moves_rook(Piece* board, unsigned char x, unsigned char y)
+struct Moves* find_chess_moves_rook(Piece* board, int x, int y,int color)
 {
     
     struct Moves* moves;
-    int xtest= (int) x - 64;
-    int ytest = (int) y - 64;
     int xmv=1; //x movement
     int ymv=1; //y movement
     
     //>>>>>move
-    while ((is_obstacle(x+xmv,y,color) && out_of_bounds(xtest+xmv,ytest))
+    while ((is_obstacle(x+xmv,y,color) && out_of_bounds(x+xmv,y) && board[8*y+x+xmv-1].color!=color)
     {
-        //check for check for the king
-        //check for check for the king
+        if (!testCHECK(x, y, x+xmv, y, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x+xmv;
         moves.y_pos = y;
         xmv++;
+        }
     }
     //<<<<<move
     xmv=1;
-    while ((is_obstacle(x-xmv,y,color) && out_of_bounds(xtest-xmv,ytest))
+    while ((is_obstacle(x-xmv,y,color) && out_of_bounds(x-xmv,y) && board[8*y+x-xmv+1].color!=color)
     {
-        //check for check for the king
-        //check for check for the king
+        if (!testCHECK(x, y, x-xmv, y, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-xmv;
         moves.y_pos = y;
         xmv++;
+        }
     }
            
     //^^^^^move
-    while ((is_obstacle(x,y+ymv,color) && out_of_bounds(xtest,ytest+ymv))
+    while ((is_obstacle(x,y+ymv,color) && out_of_bounds(x,y+ymv) && board[8*(y+ymv-1)+x].color!=color)
     {
-        //check for check for the king
-        //check for check for the king
+        if (!testCHECK(x, y, x, y+ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x;
         moves.y_pos = y+ymv;
         ymv++;
+        }
     }
            
     //vvvvvmove
     ymv=1;
-    while ((is_obstacle(x,y-ymv,color) && out_of_bounds(xtest,ytest-ymv))
+    while ((is_obstacle(x,y-ymv,color) && out_of_bounds(x,y-ymv) && board[8*(y+ymv+1)+x].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x, y-ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x;
         moves.y_pos = y-ymv;
         ymv++;
+        }
     }
     
     return moves;
 }
 
 
-struct Moves* find_chess_moves_bishop(Piece* board, unsigned char x, unsigned char y)
+struct Moves* find_chess_moves_bishop(Piece* board, int x, int y,int color)
 {
     struct Moves* moves;
-    int xtest= (int) x - 64;
-    int ytest = (int) y - 64;
     int xmv=1; //x movement
     int ymv=1; //y movement
     //^>
-    while ((is_obstacle(x+xmv,y+ymv,color) && out_of_bounds(xtest+xmv,ytest+ymv))
+    while ((is_obstacle(x+xmv,y+ymv,color) && out_of_bounds(x+xmv,y+ymv) && board[8*(y+ymv-1)+x+xmv-1].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x+xmv, y+ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x+xmv;
         moves.y_pos = y+ymv;
         xmv++;
         ymv++;
+        }
     }
     //^<
     xmv=1;
     ymv=1;
            
-    while ((is_obstacle(x-xmv,y+ymv,color) && out_of_bounds(xtest-xmv,ytest+ymv))
+    while ((is_obstacle(x-xmv,y+ymv,color) && out_of_bounds(x-xmv,y+ymv) && board[8*(y+ymv-1)+x+xmv+1].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x-xmv, y+ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-xmv;
         moves.y_pos = y+ymv;
         xmv++;
         ymv++;
+        }
     }
     
     //v>
     xmv=1;
     ymv=1;
-    while ((is_obstacle(x+xmv,y-ymv,color) && out_of_bounds(xtest+xmv,ytest-ymv))
+    while ((is_obstacle(x+xmv,y-ymv,color) && out_of_bounds(x+xmv,y-ymv) && board[8*(y+ymv+1)+x+xmv-1].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x+xmv, y-ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x+xmv;
         moves.y_pos = y-ymv;
         xmv++;
         ymv++;
+        }
     }
     //v<
     xmv=1;
     ymv=1;
-    while ((is_obstacle(x-xmv,y-ymv,color) && out_of_bounds(xtest-xmv,ytest-ymv))
+    while ((is_obstacle(x-xmv,y-ymv,color) && out_of_bounds(x-xmv,y-ymv) && board[8*(y+ymv+1)+x+xmv+1].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x-xmv, y-ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-xmv;
         moves.y_pos = y-ymv;
         xmv++;
         ymv++;
+        }
     }
            
     return moves;
 }
 
-struct Moves* find_chess_moves_queen(Piece* board, unsigned char x, unsigned char y)
+struct Moves* find_chess_moves_queen(Piece* board, int x, int y,int color)
 {
     struct Moves* moves;
-    int xtest= (int) x - 64;
-    int ytest = (int) y - 64;
     int xmv=1; //x movement
     int ymv=1; //y movement
     
     //ROOK's moves
     //>>>>>move
-    while ((is_obstacle(x+xmv,y,color) && out_of_bounds(xtest+xmv,ytest))
+    
+    //>>>>>move
+    while ((is_obstacle(x+xmv,y,color) && out_of_bounds(x+xmv,y) && board[8*y+x+xmv-1].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x+xmv, y, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x+xmv;
         moves.y_pos = y;
         xmv++;
+        }
     }
     //<<<<<move
     xmv=1;
-    while ((is_obstacle(x-xmv,y,color) && out_of_bounds(xtest-xmv,ytest))
+    while ((is_obstacle(x-xmv,y,color) && out_of_bounds(x-xmv,y) && board[8*y+x-xmv+1].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x-xmv, y, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x-xmv;
         moves.y_pos = y;
         xmv++;
+        }
     }
            
     //^^^^^move
-    while ((is_obstacle(x,y+ymv,color) && out_of_bounds(xtest,ytest+ymv))
+    while ((is_obstacle(x,y+ymv,color) && out_of_bounds(x,y+ymv) && board[8*(y+ymv-1)+x].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x, y+ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x;
         moves.y_pos = y+ymv;
         ymv++;
+        }
     }
            
     //vvvvvmove
     ymv=1;
-    while ((is_obstacle(x,y-ymv,color) && out_of_bounds(xtest,ytest-ymv))
+    while ((is_obstacle(x,y-ymv,color) && out_of_bounds(x,y-ymv) && board[8*(y+ymv+1)+x].color!=color)
     {
-        //check for check for the king
+        if (!testCHECK(x, y, x, y-ymv, Piece* board))
+        {
         moves++;
         moves=malloc(sizeof(struct Moves));
         moves.x_pos = x;
         moves.y_pos = y-ymv;
         ymv++;
+        }
     }
     
            
     //BISHOP's moves
     xmv=1;
     ymv=1;
+    
+           
     //^>
-    while ((is_obstacle(x+xmv,y+ymv,color) && out_of_bounds(xtest+xmv,ytest+ymv))
+    while ((is_obstacle(x+xmv,y+ymv,color) && out_of_bounds(x+xmv,y+ymv) && board[8*(y+ymv-1)+x+xmv-1].color!=color)
     {
-        //check for check for the king
-        moves++;
-        moves=malloc(sizeof(struct Moves));
-        moves.x_pos = x+xmv;
-        moves.y_pos = y+ymv;
-        xmv++;
-        ymv++;
+        if (!testCHECK(x, y, x+xmv, y+ymv, Piece* board))
+        {
+            moves++;
+            moves=malloc(sizeof(struct Moves));
+            moves.x_pos = x+xmv;
+            moves.y_pos = y+ymv;
+            xmv++;
+            ymv++;
+            }
     }
     //^<
     xmv=1;
     ymv=1;
-           
-    while ((is_obstacle(x-xmv,y+ymv,color) && out_of_bounds(xtest-xmv,ytest+ymv))
+                  
+    while ((is_obstacle(x-xmv,y+ymv,color) && out_of_bounds(x-xmv,y+ymv) && board[8*(y+ymv-1)+x+xmv+1].color!=color)
     {
-        //check for check for the king
-        moves++;
-        moves=malloc(sizeof(struct Moves));
-        moves.x_pos = x-xmv;
-        moves.y_pos = y+ymv;
-        xmv++;
-        ymv++;
+        if (!testCHECK(x, y, x-xmv, y+ymv, Piece* board))
+        {
+            moves++;
+            moves=malloc(sizeof(struct Moves));
+            moves.x_pos = x-xmv;
+            moves.y_pos = y+ymv;
+            xmv++;
+            ymv++;
+        }
     }
-    
+           
     //v>
     xmv=1;
     ymv=1;
-    while ((is_obstacle(x+xmv,y-ymv,color) && out_of_bounds(xtest+xmv,ytest-ymv))
+    while ((is_obstacle(x+xmv,y-ymv,color) && out_of_bounds(x+xmv,y-ymv) && board[8*(y+ymv+1)+x+xmv-1].color!=color)
     {
-        //check for check for the king
-        moves++;
-        moves=malloc(sizeof(struct Moves));
-        moves.x_pos = x+xmv;
-        moves.y_pos = y-ymv;
-        xmv++;
-        ymv++;
+        if (!testCHECK(x, y, x+xmv, y-ymv, Piece* board))
+        {
+            moves++;
+            moves=malloc(sizeof(struct Moves));
+            moves.x_pos = x+xmv;
+            moves.y_pos = y-ymv;
+            xmv++;
+            ymv++;
+        }
     }
     //v<
     xmv=1;
     ymv=1;
-    while ((is_obstacle(x-xmv,y-ymv,color) && out_of_bounds(xtest-xmv,ytest-ymv))
+    while ((is_obstacle(x-xmv,y-ymv,color) && out_of_bounds(x-xmv,y-ymv) && board[8*(y+ymv+1)+x+xmv+1].color!=color)
     {
-        //check for check for the king
-        moves++;
-        moves=malloc(sizeof(struct Moves));
-        moves.x_pos = x-xmv;
-        moves.y_pos = y-ymv;
-        xmv++;
-        ymv++;
+        if (!testCHECK(x, y, x-xmv, y-ymv, Piece* board))
+        {
+            moves++;
+            moves=malloc(sizeof(struct Moves));
+            moves.x_pos = x-xmv;
+            moves.y_pos = y-ymv;
+            xmv++;
+            ymv++;
+        }
     }
            
     return moves;

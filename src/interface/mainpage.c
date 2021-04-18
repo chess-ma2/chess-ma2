@@ -516,6 +516,8 @@ int main (int argc, char *argv[])
     g_signal_connect(back_w1, "clicked", G_CALLBACK(back_from_first_double), NULL);
     // Click on New Player 1 -> Save info and create player in db
     g_signal_connect(lock_new1, "clicked", G_CALLBACK(save_pl1), NULL);
+    
+    //ajouter interactions mais jsp comment faire pour m'y reetoruver je vais donc faire une liste d'abord ecrite cause i'm lost
 
     // Transition _________________________
     // Destroys .exe when transition window is closed
