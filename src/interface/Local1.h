@@ -42,11 +42,25 @@ enum GAME_TYPE
     INVERSE,
 };
 
+// @struct windows Needed
+struct windows{
+  GtkWidget *New_pl;
+  GtkWidget * Login;
+  GtkLabel* label;
+  GtkEntry * Name;
+  GtkEntry * Email;
+  GtkEntry * Password;
+};
 
-// Player 1 _________________________________________________________
+
+// Players___________________________________________________________________
+// Subfunction when email already in db
+void on_response (GtkDialog *dialog,
+             gint       response_id,
+             gpointer   user_data);
 
 // Create New Player in database and return the new player
-struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes);
+struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes, GtkWidget *parentwindow, GtkWidget *login_window);
 
 struct Player * findplayer(GtkEntry* mail, GtkEntry* pass);
 

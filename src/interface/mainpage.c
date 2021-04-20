@@ -143,11 +143,15 @@ void new_player1CB(GtkButton *button, gpointer user_data)
 void save_pl1(GtkButton *button, gpointer user_data)
 {
   // New Player subfunction into .db
-  pl1 = New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes);
+  struct Player *res = New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes, NewPL1_W1, LoginAccount);
 
-  // Show transition window
-  gtk_widget_show(transition1);
-  gtk_widget_hide(NewPL1_W1);
+  if (res != NULL) {
+    pl1 = res;
+
+    // Show transition window
+    gtk_widget_show(transition1);
+    gtk_widget_hide(NewPL1_W1);
+  }
 }
 
 // _____ TRANSITION ____________________________________________________________
@@ -200,10 +204,15 @@ void new_pl2(GtkButton *button, gpointer user_data)
 void save_pl2(GtkButton *button, gpointer user_data)
 {
   // New Player subfunction into .db
-  pl2 = New_player_v1(Name_Entry2, Email_Entry2, Password_Entry2, Create_account2_yes);
-  // Start Game
-  gtk_widget_hide(NewPL2_W1);
-  gtk_widget_show(game_v1);
+  struct Player *res = New_player_v1(Name_Entry2, Email_Entry2, Password_Entry2, Create_account2_yes, NewPL2_W1, LoginAccount2);
+
+  if (res != NULL) {
+    pl2 = res;
+
+    // Start Game
+    gtk_widget_hide(NewPL2_W1);
+    gtk_widget_show(game_v1);
+  }
 }
 
 //____________________________________________________________________________
@@ -267,7 +276,7 @@ void connect2(GtkButton *button, gpointer user_data)
     {
         gtk_widget_show(game_v1);
         gtk_widget_hide(LoginAccount2);
-        
+
     }
 }
 
@@ -381,11 +390,9 @@ int main (int argc, char *argv[])
     GtkButton* login1 = GTK_BUTTON(gtk_builder_get_object(builder,"login_1"));
 
     // ButtonImage to go back to mainpage
-    GtkWidget* Image_back;
-    Image_back = gtk_image_new_from_file ("Images/back.png");
-    GtkWidget* Image_back_bis;
-    Image_back_bis = gtk_image_new_from_file ("Images/back.png");
-    gtk_button_set_image(back, Image_back_bis);
+  //  GtkWidget* Image_back;
+  //  Image_back = gtk_image_new_from_file ("Images/back.png");
+    gtk_button_set_image(back, gtk_image_new_from_file ("Images/back.png"));
 
     // First player is a new player Window
     NewPL1_W1 = GTK_WIDGET(gtk_builder_get_object(builder, "NewPL1_W1"));
@@ -397,26 +404,18 @@ int main (int argc, char *argv[])
     GtkButton* back_w3 = GTK_BUTTON(gtk_builder_get_object(builder,"back_w3"));
 
     // ButtonImage to go back to first version window
-    GtkWidget* Image_back2;
-    Image_back2 = gtk_image_new_from_file ("Images/back.png");
-    GtkWidget* Image_back2_bis;
-    Image_back2_bis = gtk_image_new_from_file ("Images/back.png");
-    
-    gtk_button_set_image(back_w1, Image_back2_bis);
-    gtk_button_set_image(back_w3,Image_back2_bis);
+    gtk_button_set_image(back_w1, gtk_image_new_from_file ("Images/back.png"));
+    gtk_button_set_image(back_w3, gtk_image_new_from_file ("Images/back.png"));
 
     // Save new info about player 1
     GtkButton* lock_new1 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new1"));
     GtkButton* lock_new3 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new3"));
-    
+
     GtkWidget* Image_save;
     GtkWidget* Image_savebis;
-    
-    Image_save = gtk_image_new_from_file ("Images/save.png");
-    Image_savebis = gtk_image_new_from_file ("Images/save.png");
-    
-    gtk_button_set_image(lock_new1, Image_savebis);
-    gtk_button_set_image(lock_new3, Image_savebis); //tochange
+
+    gtk_button_set_image(lock_new1, gtk_image_new_from_file ("Images/save.png"));
+    gtk_button_set_image(lock_new3, gtk_image_new_from_file ("Images/save.png"));
 
     // Label when info is saved
     Create_account1_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account1_yes"));
@@ -433,7 +432,7 @@ int main (int argc, char *argv[])
     Email_Log1 = GTK_ENTRY(gtk_builder_get_object(builder,"email3"));
     //entry for password
     Password_Log1= GTK_ENTRY(gtk_builder_get_object(builder,"password3"));
-    
+
     // Transition ______________________________________________________________________
     // Window
     transition1 = GTK_WIDGET(gtk_builder_get_object(builder, "transition1"));
@@ -455,7 +454,7 @@ int main (int argc, char *argv[])
     GtkButton* login_2 = GTK_BUTTON(gtk_builder_get_object(builder, "login_2"));
 
     // ButtonImage to go back to mainpage
-    gtk_button_set_image(back2, Image_back);
+    gtk_button_set_image(back2, gtk_image_new_from_file ("Images/back.png"));
 
     // First player is a new player Window
     NewPL2_W1 = GTK_WIDGET(gtk_builder_get_object(builder, "NewPL2_W1"));
@@ -469,14 +468,14 @@ int main (int argc, char *argv[])
     LoginAccount2=GTK_WIDGET(gtk_builder_get_object(builder, "LoginAccount2"));
 
     // Button to go back to first version window
-    gtk_button_set_image(back_w2, Image_back2);
-    gtk_button_set_image(back_w4, Image_back2);
+    gtk_button_set_image(back_w2, gtk_image_new_from_file ("Images/back.png"));
+    gtk_button_set_image(back_w4, gtk_image_new_from_file ("Images/back.png"));
 
     // Save new info about player 2
     GtkButton* lock_new2 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new2"));
-    gtk_button_set_image(lock_new2, Image_save);
+    gtk_button_set_image(lock_new2, gtk_image_new_from_file ("Images/save.png"));
     GtkButton* lock_new4 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new4"));
-    gtk_button_set_image(lock_new4,Image_save); //tochange
+    gtk_button_set_image(lock_new4,gtk_image_new_from_file ("Images/save.png"));
 
     // Label when info is saved
     Create_account2_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account2_yes"));
@@ -487,7 +486,7 @@ int main (int argc, char *argv[])
     Email_Entry2 = GTK_ENTRY(gtk_builder_get_object(builder, "email2"));
     // Entry for password
     Password_Entry2 = GTK_ENTRY(gtk_builder_get_object(builder, "password2"));
-    
+
     //LOGIN ACCOUNT
    //entry for mail
    Email_Log2 = GTK_ENTRY(gtk_builder_get_object(builder,"email4"));
@@ -547,7 +546,7 @@ int main (int argc, char *argv[])
     g_signal_connect(back_w1, "clicked", G_CALLBACK(back_from_first_double), NULL);
     // Click on New Player 1 -> Save info and create player in db
     g_signal_connect(lock_new1, "clicked", G_CALLBACK(save_pl1), NULL);
-    
+
     //LOGIN PLAYER 1
     // Back to second player of first window (new or login)
     g_signal_connect(back_w2, "clicked", G_CALLBACK(back_from_login1), NULL);
@@ -556,7 +555,7 @@ int main (int argc, char *argv[])
     // Destroys .exe when first player (new) of first version window is closed
     g_signal_connect(login1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     //g_signal_connect(lock_new2, "clicked", G_CALLBACK(), NULL);
-    
+
     //ajouter interactions mais jsp comment faire pour m'y reetoruver je vais donc faire une liste d'abord ecrite cause i'm lost
 
     // Transition _________________________
@@ -581,7 +580,7 @@ int main (int argc, char *argv[])
     g_signal_connect(back_w2, "clicked", G_CALLBACK(back_pl2), NULL);
     // Click on New Player 2 -> Save info and create player in db
     g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), NULL);
-    
+
     //LOGIN player 2
     // Back to second player of first window (new or login)
     g_signal_connect(back_w4, "clicked", G_CALLBACK(back_from_login2), NULL);
@@ -593,12 +592,12 @@ int main (int argc, char *argv[])
     //g_signal_connect(lock_new4, "clicked", G_CALLBACK(), NULL);
     //TODO function that connects to db and check if player
 
-    
+
     // Destroys .exe when new first player login account is closed
     g_signal_connect(LoginAccount, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Destroys .exe when new first player login account 2 is closed
     g_signal_connect(LoginAccount2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    
+
     // Game ___________________________________________________________
     // Destroys .exe when game first version window is closed
     g_signal_connect(game_v1, "destroy", G_CALLBACK(gtk_main_quit), NULL);

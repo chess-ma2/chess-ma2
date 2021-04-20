@@ -13,6 +13,9 @@
 #ifndef LOCAL1_C
 #define LOCAL1_C
 
+
+
+
 /*
  * @author Anna
  * @date 10/04/2021 - 16/04/2021
@@ -106,8 +109,51 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
     return FALSE;
 }
 
-// Create New Player in database
-struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes )
+/*
+ * @author Anna
+ * @date 20/04/2021
+ * @details Subfunction when email already in db
+*/
+
+void on_response (GtkDialog *dialog,
+             gint       response_id,
+             gpointer   user_data)
+{
+  // Get parent window and login window
+  struct windows *res = user_data;
+
+  /* If the button clicked gives response "Login" == OK (response_id being -5) */
+  if (response_id == GTK_RESPONSE_OK)
+  { // Go to login page
+    gtk_widget_show(res->Login);
+    gtk_widget_hide(res->New_pl);
+  }
+
+  /* If the button clicked gives response "Create New Account" == CANCEL (response_id being -6) */
+  else if (response_id == GTK_RESPONSE_CANCEL)
+  {
+    gtk_label_set_text (res->label, "Please create a new account with a new email.");
+    gtk_entry_set_text(res->Name, "");
+    gtk_entry_set_text(res->Email, "");
+    gtk_entry_set_text(res->Password, "");
+  }
+
+  /* If the message dialog is destroyed (for example by pressing escape) */
+  else if (response_id == GTK_RESPONSE_DELETE_EVENT)
+     g_print ("dialog closed or cancelled\n");
+
+  /* Destroy the dialog after one of the above actions have taken place */
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+
+}
+
+/*
+ * @author Anna
+ * @date 1/04/2021 - 20/04/2021
+ * @details Create New Player in database
+*/
+
+struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, GtkEntry* Password_Entry1, GtkLabel* Create_account1_yes, GtkWidget *parentwindow, GtkWidget *login_window)
 {
   // Get name from Entry
   char * name = (char *) gtk_entry_get_text(Name_Entry1);
@@ -121,6 +167,41 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
 
   // Connect to Database
   creatingTables();
+
+  // If email is already in Database
+  if(email_in_DB(email) == 1)
+  {
+    // Create dialog if email in db
+    GtkWidget *dialog;
+    dialog = GTK_WIDGET (gtk_message_dialog_new (parentwindow,
+                                               GTK_DIALOG_MODAL|
+                                               GTK_DIALOG_DESTROY_WITH_PARENT|
+                                               GTK_DIALOG_USE_HEADER_BAR,
+                                               GTK_MESSAGE_INFO,
+                                               GTK_BUTTONS_NONE,
+                                               "Email already affiliated to an account"));
+  gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "Do you wish to login? \n Otherwise you must create an account with another email.");
+
+  // Buttons for dialog
+  gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                          "Create New Account", GTK_RESPONSE_CANCEL,
+                          "Login", GTK_RESPONSE_OK,
+                          NULL);
+
+  struct windows for_rees;
+  for_rees.New_pl = parentwindow;
+  for_rees.Login = login_window;
+  for_rees.label = Create_account1_yes;
+  for_rees.Name = Name_Entry1;
+  for_rees.Email = Email_Entry1;
+  for_rees.Password = Password_Entry1;
+
+  // Link to subfunction
+  g_signal_connect(GTK_DIALOG (dialog), "response", G_CALLBACK (on_response), &for_rees);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  return NULL;
+}
+else{
 
   // Create New Player
   newPLAYER( name, password, email, 0, 0);
@@ -137,6 +218,7 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
   pl->name=name;
 
   return pl;
+  }
 
   //TODO for final presentation?:
     //   1) Get the nb of games won
@@ -148,9 +230,9 @@ struct Player * findplayer(GtkEntry* mail, GtkEntry* pass)
 {
     // Connect to Database
     creatingTables();
-    
+
     struct Player *p = malloc(sizeof(struct Player));
-    
+
     char * email = (char *)gtk_entry_get_text(mail);
     char * password1 = (char *) gtk_entry_get_text(pass);
     unsigned char password[64];
@@ -168,7 +250,7 @@ struct Player * findplayer(GtkEntry* mail, GtkEntry* pass)
     {
         return NULL;
     }
-    
+
 }
 
 #endif

@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="LoginAccount">
   <property name="title" translatable="yes">Login to your account</property>
   <child>
     <object class="GtkFixed">
@@ -367,10 +368,14 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <attributes>
+              <attribute name="foreground" value="#2626a2a26969"/>
+              <attribute name="size" value="20000"/>
+            </attributes>
           </object>
           <packing>
             <property name="x">200</property>
-            <property name="y">800</property>
+            <property name="y">700</property>
           </packing>
         </child>
       </object>
@@ -522,10 +527,14 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <attributes>
+              <attribute name="foreground" value="#2626a2a26969"/>
+              <attribute name="size" value="20000"/>
+            </attributes>
           </object>
           <packing>
             <property name="x">200</property>
-            <property name="y">800</property>
+            <property name="y">700</property>
           </packing>
         </child>
       </object>
