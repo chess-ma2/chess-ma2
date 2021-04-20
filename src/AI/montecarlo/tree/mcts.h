@@ -55,7 +55,7 @@ struct MCTS_Node
   King_status AKing_status; 
 };
 
-
+void expand_sons(MCTS_Node node); 
 
 
 #endif
