@@ -1,14 +1,15 @@
 /**
  * @author Marie
  * @date Start 15/04/2021
- * @details Contain bases, informations and structures for MCTS
+ * @details Contain functions for the AI
  */
 
-#ifndef MCTS_H
-#define MCTS_H
+#ifndef SEARCH_AND_PLAY_H
+#define SEARCH_AND_PLAY_H
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.c>
 #include <string.h>
 #include "../tree/mcts.h"
 
@@ -18,6 +19,6 @@ MCTS_Node select(MCTS_Node node);
 
 void roll_out(MCTS_Node node);
 
-void update_value(int value); 
+void update_value(MCTS_Node node, float value); 
 
 #endif

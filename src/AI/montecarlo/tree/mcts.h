@@ -42,11 +42,13 @@ struct MCTS_Node
   
   int AI;
 
+  int nb_child; 
+
   MCTS_Node * child;
   
   unsigned long nb_visit;
   
-  int sum;
+  float value;
   
   MCTS_Node *father;
 
