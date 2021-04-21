@@ -1,19 +1,19 @@
 /**
  * @author Marie
  * @date Start 15/04/2021
- * @details optimate functions to create list of son
+ * @details optimate functions to create list of childs
  */
 
 
-#ifndef CREATE_SONS_H
-#define CREATE_SONS_H
+#ifndef CREATE_CHILDS_H
+#define CREATE_CHILDS_H
 
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../common/c/rules/pieces.h"
-#include "../../../common/c/rules/check_and_plate.h"
+#include "../../../common/c/rules/pieces.c"
+
 
 /**
  * @author Marie
@@ -39,7 +39,7 @@ struct coordonates_moves
 struct tab
 {
   int index;
-  coordonates_moves list_of_moves[];
+  struct coordonates_moves *list_of_moves;
 };
 
 
@@ -49,7 +49,7 @@ struct tab
  * @details find all the possible moves
  */
 
-struct coordonates_moves *possible_moves(Piece *board, int color_team);
+struct tab *possible_moves(Piece *board, int color_team);
 
 /**
  * @author Marie
@@ -57,7 +57,7 @@ struct coordonates_moves *possible_moves(Piece *board, int color_team);
  * @details find all the possible moves for a pawn
  */
 
-struct tab *possible_moves_pawn(Piece *board, int color_team,int x, int y, struct tab tab_struct);
+struct tab *possible_moves_pawn(Piece *board, int color_team,int x, int y, struct tab *tab_struct);
 
 /**
  * @author Marie
@@ -65,7 +65,7 @@ struct tab *possible_moves_pawn(Piece *board, int color_team,int x, int y, struc
  * @details find all the possible moves for a queen
  */
 
-struct tab *possible_moves_queen(Piece *board, int color_team,int x, int y struct tab tab_struct);
+struct tab *possible_moves_queen(Piece *board, int color_team,int x, int y ,struct tab *tab_struct);
 
 /**
  * @author Marie
@@ -73,7 +73,7 @@ struct tab *possible_moves_queen(Piece *board, int color_team,int x, int y struc
  * @details find all the possible moves for a king
  */
 
-struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struct tab tab_struct);
+struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struct tab *tab_struct);
 
 /**
  * @author Marie
@@ -81,7 +81,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
  * @details find all the possible moves for a knight
  */
 
-struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, struct tab tab_struct);
+struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, struct tab *tab_struct);
 
 /**
  * @author Marie
@@ -89,7 +89,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
  * @details find all the possible moves for a rook
  */
 
-struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struct tab tab_struct);
+struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struct tab *tab_struct);
 
 /**
  * @author Marie
@@ -97,7 +97,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
  * @details find all the possible moves for a bishop
  */
 
-struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, struct tab tab_struct);
+struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, struct tab *tab_struct);
 
 
 #endif

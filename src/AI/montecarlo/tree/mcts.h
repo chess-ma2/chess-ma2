@@ -54,7 +54,12 @@ struct MCTS_Node
 
   Piece board;
 
-  King_status AKing_status; 
+  King_status AKing_status;
+
+  int x;
+  int y;
+  int x_des;
+  int y_des; 
 };
 
 void expand_sons(MCTS_Node node); 
