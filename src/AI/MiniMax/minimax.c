@@ -7,9 +7,6 @@
 #define MINIMAX_C
 
 // ___ Variables for queue ____________________________
-struct node **queue;
-int front = 0; // 1st element
-int rear = -1; // Last element
 int nb_queue = 0; // nb of elements in queue
 
 /*
@@ -17,10 +14,21 @@ int nb_queue = 0; // nb of elements in queue
  * @date 17/04/2021
  * @details Enqueue
 */
-void enqueue(struct node *to_insert) {
-  realloc(queue, (nb_queue + 1) * sizeof(struct node));
-  queue[++rear] = to_insert;
+struct queue * enqueue(struct node *to_insert, struct queue *Q) {
+  if (Q->Node == NULL) {
+    //printf("first in queue \n");
+    Q->Node = to_insert;
+    Q->next = NULL;
+    nb_queue++;
+    return Q;
+  }
+  else{
+  struct queue *new = malloc(sizeof(struct queue));
+  new->Node = to_insert;
+  new->next = Q;
   nb_queue++;
+  return new;
+  }
 }
 
 /*
@@ -28,12 +36,52 @@ void enqueue(struct node *to_insert) {
  * @date 17/04/2021
  * @details Dequeue
 */
-struct node * dequeue() {
-   struct node *data = queue[front++];
-   nb_queue--;
-   return data;
+struct node * dequeue(struct queue *Q) {
+  if (Q->Node == NULL)
+    return NULL;
+
+  struct queue *index = Q;
+  struct queue *before = NULL;
+  while(index->next != NULL)
+  {
+    before = index;
+    index = index->next;
+  }
+
+  if (before != NULL) {
+    before->next = NULL;
+  }
+
+  struct node *data = index->Node;
+  if (index == Q) {
+    index->Node = NULL;
+  }
+  nb_queue--;
+  return data;
 }
 
+/*
+ * @author Anna
+ * @date 21/04/2021
+ * @details Free queue
+*/
+void free_queue(struct queue *Q)
+{
+  if (Q->Node == NULL) { // No element
+    printf("No element \n");
+    free(Q);
+    return;
+  }
+
+  struct queue *index = Q;
+  while(index->next != NULL) // Get last
+  { struct queue *del = index;
+    free(del);
+    index = index->next;
+  }
+  nb_queue = 0;
+  free(index);
+}
 
 /*
  * @author Anna
@@ -93,6 +141,7 @@ void __print(struct node *Node)
 */
 void print_tree(struct tree *Tree)
 {
+
   struct node *Root = Tree->root;
   for (int i = 0; i < Root->nb_children; i++) {
     __print(&Root->children[i]);
@@ -181,8 +230,13 @@ double king_table[64]={ -3, -4, -4, -5, -5, -4, -4, -3, \
  * @date 17/04/2021
  * @details Creates node - bfs
 */
-struct node * create_node(struct currentpiece *current_List, int i, int depth)
+struct node * create_node(struct currentpiece *current_List, int i, int depth, struct Piece *board)
 {
+  // Define queue
+  struct queue *Q = malloc(sizeof(struct queue));
+  Q->Node = NULL;
+  nb_queue = 0; // nb of elements in queue
+
   // Define parent
   struct node *parent = malloc(sizeof(struct node));
   parent->x = current_List[i].x;
@@ -191,28 +245,64 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth)
   int current_depth = -1;
 
   // enqueue parent
-  enqueue(parent);
+  Q = enqueue(parent, Q);
   while(nb_queue != 0)
   {
-    struct node *index = dequeue();
+
+    //printf("before dequeue \n");
+    struct node *index = dequeue(Q);
+    //printf("dequeue with %i\n", index->score);
+
+    current_depth += 1; // Works
+
     int nb_children = 0;
     struct node *children = malloc(sizeof(struct node));
 
-    current_depth += 1; // Will see if this actually works
-    if (current_depth > depth ) {
-      continue;
-    }
-    // Get List of All possible pieces (piece + x + y)
-    // for each possible piece
-        // Create node
-        // children[nb_children] = this node
-        // Nb children += 1
-        // enqueue node
-    index->nb_children = nb_children;
-    index->children = children;
-  }
+    // 1) Get List of All possible pieces (piece + x + y)
+    // 2) for each possible piece
+        // 3) Create node
+        // 4) children[nb_children] = this node
+        // 5) Nb children += 1
+        // 6) enqueue node
 
-  //free(queue);
+        // 1)
+        struct Moves testing[2];
+        testing[0].x_pos = 0;
+        testing[0].y_pos = 0;
+        testing[1].x_pos = 3;
+        testing[1].y_pos = 3;
+
+        // 2)
+        for (size_t i = 0; i < 2; i++) {
+          // 3)
+          struct node *new = malloc(sizeof(struct node));
+          new->x = testing[i].x_pos;
+          new->y = testing[i].y_pos;
+          struct currentpiece current;
+          current.piece = board[testing[i].y_pos*8+testing[i].x_pos];
+          current.x = new->x;
+          current.y = new->y;
+          new->score = getScore(current);
+          // 4) and 5)
+          children[nb_children++] = *new;
+          // 6)
+          Q = enqueue(new, Q);
+          //printf("enqueue with %i\n", new->score);
+        }
+
+    index->nb_children = nb_children;
+    //printf("NB children [ok]\n");
+    index->children = children;
+    //printf("Children [ok]\n");
+
+    if (current_depth == depth ) {
+      //printf("max depth \n");
+      free_queue(Q);
+      break; }
+
+    }
+
+  //printf("end \n");
   return parent;
 }
 
@@ -229,12 +319,13 @@ struct tree * create_tree(struct Piece *board, enum turn player_turn, struct cur
     struct tree *Tree = malloc(sizeof(struct tree));
     struct node *root = malloc(sizeof(struct node));
     Tree->root = root;
-    struct node *children;
+    struct node *children = malloc(nb_List * sizeof(struct node));
     for (int i = 0; i < nb_List; i++) {
-      children[i] = *create_node(current_List, i, depth);
+      children[i] = *create_node(current_List, i, depth, board);
     }
     root->children = children;
-
+    root->nb_children = nb_List;
+    printf("Tree created [ok] \n");
     return Tree;
 }
 

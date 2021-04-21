@@ -1,17 +1,13 @@
-# Makefile
-
-CC = gcc -std=c99
-CFLAGS = -Wall -Wextra -lssl
-
-all: minimax
-
-minimax : testing.o minimax.o ../../common/c/rules/check_and_pat.o ../../common/c/rules/pieces.o ../../common/c/rules/plate.o
-
-.PHONY: clean
+all: clean build
+		@echo "[Chess(ma)² - MiniMax] All sources game version 1 tasks DONE!"
 
 clean:
-	${RM} mainpage
-	${RM} *.o
-	${RM} *.d
+		@echo "[Chess(ma)² - MiniMax] Start to clean..."
+		@rm -f "minimax"
+		@echo "[Chess(ma)² - MiniMax] End to clean!"
 
-# END
+build:
+		@echo "[Chess(ma)² - MiniMax] Start build common sources..."
+		@gcc -pthread -lsqlite3 -Wall -O3 testing.c \
+	    -o "minimax"
+		@echo "[Chess(ma)² - MiniMax] End build sources!"
