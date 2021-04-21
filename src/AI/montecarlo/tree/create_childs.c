@@ -10,8 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "create_childs.h"
-#include "../../../common/c/rules/pieces.h"
-#include "../../../common/c/rules/check_and_pat.h"
+//#include "../../../common/c/rules/check_and_pat.h"
 
 
 /**

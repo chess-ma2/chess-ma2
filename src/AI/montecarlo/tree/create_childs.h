@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../common/c/rules/pieces.c"
+#include "../../../common/c/rules/pieces.h"
 
 
 /**

@@ -1,5 +1,8 @@
 # Makefile
 
+#Author: Marie
+#Date: Start 19/04/2021
+#About: Makefile of list of child system for monte carlo
 
 CC = gcc
 CFLAGS =  -Wall -O3
