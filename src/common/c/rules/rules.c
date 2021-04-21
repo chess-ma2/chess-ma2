@@ -5,19 +5,14 @@
 #include <math.h>
 #include <stdlib.h>
 
+/**
+ * @author Marie Maturana & Antoine
+ * @date Start 04/03/2021
+ * @details File rules.c containing all the functions relating the a game.
+ */
 
-//Safety loop guard
 #ifndef RULES_C
 #define RULES_C
-
-/*
-
-File rules.c containing all the functions relating the a game.
-By Marie Maturana & Antoine
-Start the 2021-03-04
-
-*/
-
 
 /**
  * @author Marie Maturana & Antoine

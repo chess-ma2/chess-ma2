@@ -3,27 +3,22 @@
 #include <math.h>
 #include <stdlib.h>
 
+/**
+ * @author Marie
+ * @date Start 04/03/2021
+ * @details File .c containing all the functions relating to the chess pieces and their movements.
+ */
+
 #ifndef PIECES_C
 #define PIECES_C
 
-/*
 
-File .c containing all the functions relating to the chess pieces and their movements.
-By Marie Maturana
-Start the 2021-03-04
-
-*/
-
-
-
-/*
-
-Name of the function : pieceMove
-Make the movement of the piece
-By Marie Maturana
-Start the 2021-03-04
-
-*/
+/**
+ * @author Marie
+ * @date Start 04/03/2021
+ * @details Make the movement of the piece
+ * @return the new board after the move
+ */
 
 struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
 {
@@ -79,14 +74,12 @@ struct Piece *pieceMove(int x, int y, int des_x, int des_y, struct Piece *board)
 }
 
 
-/*
-
-Name of the function : pieceMove_Rock
-Make the movement of the piece when it is the Rock movement 
-By Marie Maturana
-Start the 2021-03-12
-
-*/
+/**
+ * @author Marie
+ * @date Start 04/03/2021
+ * @details Make the movement of the piece when it is the Rock movement 
+ * @return the new board after the move after the rock
+ */
 
 struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *board)
 {
@@ -167,15 +160,12 @@ struct Piece *pieceMove_Rock(int x, int y, int des_x, int des_y, struct Piece *b
 }
 
 
-/*
-
-Name of the function : isValidMove
-Valid if the movement of the piece is possible
-By Marie Maturana
-Start the 2021-03-04
-
-*/
-
+/**
+ * @author Marie
+ * @date Start 04/03/2021
+ * @details Valid if the movement of the piece is possible 
+ * @return if the move is possible or not
+ */
 
 int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
 {
@@ -234,14 +224,12 @@ int isValidMove(int x, int y, int des_x, int des_y, struct Piece *board)
 }
 
 
-/*
-
-Name of the function : isValidMove_Pawn
-Valid if the movement of the pawn is possible
-By Marie Maturana
-Start the 2021-03-04
-
-*/
+/**
+ * @author Marie
+ * @date Start 04/03/2021
+ * @details Valid if the movement of the pawn is possible 
+ * @return if the move of the pawn is possible or not
+ */
 
 int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct Piece *board)
 {
@@ -286,15 +274,12 @@ int isValidMove_Pawn(int x, int y, int des_x, int des_y, int color_piece, struct
 
 
 
-
-/*
-
-Name of the function : isValidMove_Rook
-Valid if the movement of the rook is possible
-By Marie Maturana
-Start the 2021-03-11
-
-*/
+/**
+ * @author Marie
+ * @date Start 11/03/2021
+ * @details Valid if the movement of the rook is possible 
+ * @return if the move of the rook is possible or not
+ */
 
 int isValidMove_Rook(int x, int y, int des_x, int des_y, struct Piece *board)
 {
@@ -399,14 +384,12 @@ int isValidMove_Rook(int x, int y, int des_x, int des_y, struct Piece *board)
 
 
 
-/*
-
-Name of the function : isValidMove_Bishop
-Valid if the movement of the bishop is possible
-By Marie Maturana
-Start the 2021-03-11
-
-*/
+/**
+ * @author Marie
+ * @date Start 11/03/2021
+ * @details Valid if the movement of the bishop is possible 
+ * @return if the move of the bishop is possible or not
+ */
 
 int isValidMove_Bishop(int x, int y, int des_x, int des_y, struct Piece *board)
 {
@@ -514,16 +497,12 @@ int isValidMove_Bishop(int x, int y, int des_x, int des_y, struct Piece *board)
 }
 
 
-
-
-/*
-
-Name of the function : isValidMove_Knight
-Valid if the movement of the knight is possible
-By Marie Maturana
-Start the 2021-03-08
-
-*/
+/**
+ * @author Marie
+ * @date Start 08/03/2021
+ * @details Valid if the movement of the knight is possible 
+ * @return if the move of the knight is possible or not
+ */
 
 int isValidMove_Knight(int x, int y, int des_x, int des_y)
 {
@@ -542,14 +521,12 @@ int isValidMove_Knight(int x, int y, int des_x, int des_y)
 
 
 
-/*
-
-Name of the function : isValidMove_Queen
-Valid if the movement of the Queen is possible
-By Marie Maturana
-Start the 2021-03-11
-
-*/
+/**
+ * @author Marie
+ * @date Start 11/03/2021
+ * @details Valid if the movement of the queen is possible 
+ * @return if the move of the queen is possible or not
+ */
 
 int isValidMove_Queen(int x, int y, int des_x, int des_y, struct Piece *board) 
 {
@@ -558,15 +535,12 @@ int isValidMove_Queen(int x, int y, int des_x, int des_y, struct Piece *board)
 
 
 
-
-/*
-
-Name of the function : isValidMove_King
-Valid if the movement of the king is possible
-By Marie Maturana
-Start the 2021-03-07
-
-*/
+/**
+ * @author Marie
+ * @date Start 07/03/2021
+ * @details Valid if the movement of the king is possible 
+ * @return if the move of the king is possible or not
+ */
 
 int isValidMove_King(int x, int y, int des_x, int des_y)
 {
@@ -579,15 +553,12 @@ int isValidMove_King(int x, int y, int des_x, int des_y)
 }
 
 
-
-/*
-
-Name of the function : isValidMove_Rock
-Valid if the movement of the rock is possible
-By Marie Maturana
-Start the 2021-03-12
-
-*/
+/**
+ * @author Marie
+ * @date Start 12/03/2021
+ * @details Valid if the movement of the rock is possible 
+ * @return if the move of the rock is possible or not
+ */
 
 int isValidMove_Rock(int x, int y, int des_x, int des_y, int color_piece,  struct Piece *board)
 {

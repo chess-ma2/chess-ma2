@@ -4,23 +4,23 @@
 #include <math.h>
 #include <stdlib.h>
 
+/**
+ * @author Antoine and Marie
+ * @date Start 04/03/2021
+ * @details File .c containing all the functions relating to the chess plate and init this last.
+ */
+
 #ifndef PLATE_C
 #define PLATE_C
-/*
-
-File .c containing all the functions relating to the chess plate and init this last.
-By Marie Maturana & Antoine
-Start the 2021-03-04
-
-*/
 
 
 /**
- * @author Antoine with help of Marie
+ * @author Antoine and Marie
  * @date Start 04/03/2021
  * @details Generate start of chess game
  * @return board of 64 of size with good pieces position at start
  */
+
 struct Piece *init_board()
 {
     //create the board and initialise this to 0

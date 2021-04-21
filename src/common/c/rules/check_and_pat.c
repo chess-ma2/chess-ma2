@@ -5,26 +5,20 @@
 #include <stdlib.h>
 #include "check_and_pat.h"
 
+/**
+ * @author Marie Maturana 
+ * @date Start 23/03/2021
+ * @details File .c containing all the functions relating to the check, pat and checkmat
+ */
+
 #ifndef CHECK_AND_PAT_C
 #define CHECK_AND_PAT_C
 
-
-/*
-
-File .c containing all the functions relating to the check, pat and checkmat
-By Marie Maturana
-Start the 2021-03-23
-
-*/
-
-
-/* 
-
-function : checkmat_secondcondition
-see if an other movement can be make for stop the checkmat
-return 1 if an othen movement can be make 
-return 0 else 
-
+/**
+ * @author Marie Maturana 
+ * @date Start 29/03/2021
+ * @details see if an other movement can be make for stop the checkmat
+ * @return  1 if an othen movement can be make / 0 else
  */
 
 int checkmat_secondcondition(int x_king, int y_king, int color,  struct Piece *board)
@@ -90,15 +84,14 @@ int checkmat_secondcondition(int x_king, int y_king, int color,  struct Piece *b
  
 }
 
-/* 
 
-function : checkking_and_aroud
-create new board to see if the king in in check at this plate
-return 1 if king in check
-return 0 else 
 
+/**
+ * @author Marie Maturana 
+ * @date Start 29/03/2021
+ * @details create new board to see if the king in in check at this place
+ * @return  1 if king in check / 0 else
  */
-
 
 int checkking_and_aroud(int place_king_x, int place_king_y, int x_place, int y_place,struct Piece *board)
 {
@@ -136,15 +129,13 @@ int checkking_and_aroud(int place_king_x, int place_king_y, int x_place, int y_p
 }
 
 
-/* 
 
-function : othermove_pat1 & othermove_pat2
-check if other movement can be make in the king is in pat
-return 1 other moves possible
-return 0 else 
-
+/**
+ * @author Marie Maturana 
+ * @date Start 27/03/2021
+ * @details check if other movement can be make in the king is in pat
+ * @return  1 other moves possible / 0 else
  */
-
 
 int othermove_pat1(struct Piece *board)
 {
@@ -182,15 +173,14 @@ int othermove_pat2(int x_place, int y_place,struct Piece *board)
   
 }
 
-/* 
 
-function : kingcheck_plac
-see if the king is in check at this place
-return 1 if king in check
-return 0 else 
 
+/**
+ * @author Marie Maturana 
+ * @date Start 27/03/2021
+ * @details see if the king is in check at this place
+ * @return 1 if king in check / 0 else
  */
-
 
 int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Piece *board)
 {
@@ -208,13 +198,13 @@ int kingcheck_place(int x_king, int y_king, int x_piece, int y_piece, struct Pie
   
 }
 
-/* 
 
-function : piece_to_place
-test for all the pieces if the king is in check at this place
-return 1 if king in check
-return 0 else 
 
+/**
+ * @author Marie Maturana 
+ * @date Start 27/03/2021
+ * @details test for all the pieces if the king is in check at this place
+ * @return 1 if king in check around himself / 0 else
  */
 
 int piece_to_place(int x_place, int y_place,struct Piece *board)
@@ -236,13 +226,11 @@ int piece_to_place(int x_place, int y_place,struct Piece *board)
 }
 
 
-/* 
-
-function : checkmat_firstcondition
-test if the king is in check all around himself and at his place
-return 1 if king in check around himself
-return 0 else 
-
+/**
+ * @author Marie Maturana 
+ * @date Start 27/03/2021
+ * @details test if the king is in check all around himself and at his place
+ * @return 1 if king in check around himself / 0 else
  */
 
 int checkmat_firstcondition(int x_king, int y_king, struct Piece *board)
@@ -415,14 +403,11 @@ int checkmat_firstcondition(int x_king, int y_king, struct Piece *board)
 }
 
 
-
-/* 
-
-function :
-test if the king is in check and for that test the 2 conditions
-return 1 if king in checkmat
-return 0 else 
-
+/**
+ * @author Marie Maturana 
+ * @date Start 27/03/2021
+ * @details test if the king is in check and for that test the 2 conditions
+ * @return 1 if king in checkmate / 0 else
  */
 
 
@@ -436,14 +421,11 @@ int check_mat(int x_king, int y_king, int color, struct Piece *board)
     return 0; 
 }
 
-
-/* 
-
-function : pat
-test if the king is in pat => check all around him and not other moves
-return 1 if king in pat
-return 0 else 
-
+/**
+ * @author Marie Maturana 
+ * @date Start 27/03/2021
+ * @details test if the king is in pat => check all around him and not other moves
+ * @return 1 if king in pat / 0 else
  */
 
 int pat(int x_king, int y_king, struct Piece *board)
