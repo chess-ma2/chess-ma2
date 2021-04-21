@@ -10,14 +10,66 @@
 #include <stdio.h>
 #include <string.h>
 #include "create_childs.h"
-//#include "../../../common/c/rules/check_and_pat.h"
+#include "../../../common/c/rules/check_and_pat.h"
+
 
 
 /**
  * @author Marie
- * @date Start 17/04/2021
- * @details find all the possible moves for the list of sons of a node
+ * @date Start 16/04/2021
+ * @details find the king's position
  */
+
+struct coordonates_king *king_position(Piece *board, int color_team, struct coordonates_king *kingplace)
+{
+  for(int y = 0; y < 8; y++)
+    {
+      for( int x = 0; x < 8; x++)
+	{
+	  if((int)board[y*8+x].color == color_team && board[y*8+x].type == KING)
+	    {
+	      kingplace->x_king = x;
+	      kingplace->y_king = y;
+	    }
+	}
+    }
+  return kingplace; 
+}
+
+/**
+ * @author Marie
+ * @date Start 16/04/2021
+ * @details test if the king is in check if a move is possible
+ */
+
+int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
+{
+  struct coordonates_king *kingplace = malloc(sizeof(struct coordonates_king));
+  kingplace = king_position( board, color_team, kingplace);
+
+  struct Piece * board2 = calloc(8*8, sizeof(struct Piece));
+
+  for( int i = 0; i < 64; i++)
+    {
+      board2[i].type = board[i].type;
+      board2[i].color = board[i].color;
+    }
+
+  board2 = pieceMove(x, y, x_des, y_des, board2);
+
+  int res = piece_to_place(kingplace->x_king, kingplace->y_king, board2);
+
+  free(board2);
+
+  return res; 
+}
+
+/**
+ * @author Marie
+ * @date Start 17/04/2021
+ * @details find all the possible moves for the list of childs of a node
+ */
+
 
 struct tab *possible_moves(Piece *board, int color_team)
 {
@@ -28,11 +80,11 @@ struct tab *possible_moves(Piece *board, int color_team)
   struct_list_of_moves->index = index ;
   struct_list_of_moves->list_of_moves = list_of_moves ; 
     
-  for(int x = 0; x < 8; x++)
+  for(int y = 0; y < 8; y++)
     {
-      for( int y = 0; y < 8; y++)
+      for( int x = 0; x < 8; x++)
 	{
-	  if(board[y*8+x].color == color_team && board[y*8+x].type != 0)
+	  if((int)board[y*8+x].color == color_team && board[y*8+x].type != NONE)
 	    {
 	      switch(board[y*8+x].type)
 		{
@@ -70,56 +122,69 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    }
 	}
+	 
       x_des = x ;
       y_des = y-2 ;
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    } 
 	}
       x_des = x-1 ;
       y_des = y-1 ;
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    }
 	}
       x_des = x+1 ;
       y_des = y-1 ;
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    }
 	}
     }
 
@@ -130,56 +195,68 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    }
 	}
       x_des = x ;
       y_des = y+2 ;
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    } 
 	}
       x_des = x-1 ;
       y_des = y+1 ;
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    } 
 	}
       x_des = x+1 ;
       y_des = y+1 ;
 
       if( isValidMove( x, y, x_des, y_des, board) == 1)
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = x_des; 
-	  move->y_des = y_des;
+	  if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = x_des; 
+	      move->y_des = y_des;
       
-	  list_of_moves[index] = *move;
-	  index += 1; 
+	      list_of_moves[index] = *move;
+	      index += 1; 
+	    }
 	}
     }
 
@@ -224,14 +301,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x ;
@@ -239,14 +319,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x+1 ;
@@ -254,14 +337,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   x_des = x+1 ;
@@ -269,14 +355,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x-1 ;
@@ -284,14 +373,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x-1 ;
@@ -299,14 +391,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   x_des = x ;
@@ -329,14 +424,17 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   
@@ -363,14 +461,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   x_des = x-2 ;
@@ -378,14 +479,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   x_des = x+2 ;
@@ -393,14 +497,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x+2 ;
@@ -408,14 +515,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x+1 ;
@@ -423,14 +533,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   x_des = x-1 ;
@@ -438,14 +551,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	} 
     }
 
   x_des = x-1 ;
@@ -453,14 +569,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   x_des = x+1 ;
@@ -468,14 +587,17 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
-      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-      move->x = x;
-      move->y = y;
-      move->x_des = x_des; 
-      move->y_des = y_des;
+      if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
+	{ 
+	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	  move->x = x;
+	  move->y = y;
+	  move->x_des = x_des; 
+	  move->y_des = y_des;
       
-      list_of_moves[index] = *move;
-      index += 1; 
+	  list_of_moves[index] = *move;
+	  index += 1; 
+	}
     }
 
   tab_struct->index = index;
@@ -503,20 +625,8 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -525,6 +635,24 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 
@@ -540,20 +668,8 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -562,6 +678,24 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 
@@ -577,20 +711,8 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -599,6 +721,24 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 
@@ -614,20 +754,8 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -636,6 +764,24 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 
@@ -669,20 +815,8 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -691,6 +825,24 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
+	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+	      move->x = x;
+	      move->y = y;
+	      move->x_des = par_x; 
+	      move->y_des = par_y;
+      
+	      list_of_moves[index] = *move;
+	      index += 1;
+	    }
 	    }
 
 	  continue_par = 0; 
@@ -707,20 +859,8 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -729,6 +869,24 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 
@@ -745,20 +903,8 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -767,6 +913,24 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 
@@ -783,20 +947,8 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
     {
       if( board[par_y*8+par_x].type == NONE )
 	{
-	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
-	  move->x = x;
-	  move->y = y;
-	  move->x_des = par_x; 
-	  move->y_des = par_y;
-      
-	  list_of_moves[index] = *move;
-	  index += 1;
-	}
-
-      else if( board[par_y*8+par_x].type != NONE )
-	{
-	  if(board[par_y*8+par_x].color != color_team) 
-	    {
+	  if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+	    { 
 	      struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	      move->x = x;
 	      move->y = y;
@@ -805,6 +957,24 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
       
 	      list_of_moves[index] = *move;
 	      index += 1;
+	    }
+	}
+
+      else if( board[par_y*8+par_x].type != NONE )
+	{
+	  if(board[par_y*8+par_x].color != color_team) 
+	    {
+	      if(isInCheck(board, color_team, x, y, par_x, par_y) == 0)
+		{ 
+		  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
+		  move->x = x;
+		  move->y = y;
+		  move->x_des = par_x; 
+		  move->y_des = par_y;
+      
+		  list_of_moves[index] = *move;
+		  index += 1;
+		}
 	    }
 
 	  continue_par = 0; 

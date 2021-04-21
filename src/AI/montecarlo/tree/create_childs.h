@@ -33,6 +33,19 @@ struct coordonates_moves
 /**
  * @author Marie
  * @date Start 16/04/2021
+ * @details coordonates of the king  
+ */
+
+struct coordonates_king
+{
+  int x_king;
+  int y_king;
+};
+
+
+/**
+ * @author Marie
+ * @date Start 16/04/2021
  * @details struct for the list of move and index 
  */
 
@@ -41,6 +54,31 @@ struct tab
   int index;
   struct coordonates_moves *list_of_moves;
 };
+
+
+/**
+ * @author Marie
+ * @date Start 16/04/2021
+ * @details find the king's position
+ */
+
+struct coordonates_king *king_position(Piece *board, int color_team, struct coordonates_king *kingplace);
+
+/**
+ * @author Marie
+ * @date Start 16/04/2021
+ * @details test if the king is in check if a move is possible
+ */
+
+int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des);
+
+/**
+ * @author Marie
+ * @date Start 16/04/2021
+ * @details find all the possible moves
+ */
+
+struct tab *possible_moves(Piece *board, int color_team);
 
 
 /**
