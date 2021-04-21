@@ -12,6 +12,44 @@
 #include "../create_childs.h"
 
 
+
+/**
+ * @author Marie
+ * @date Start 19/04/2021
+ * @details print the board
+ */
+
+void display(struct Piece *board)
+{
+  printf("   ");
+  
+  for(int y = 0; y < 8; y++)
+    {
+      printf(" %c:   ",y+'A'); //print letter on the top of the place
+    }
+  printf("\n");
+  for(int y = 0; y < 8; y++) 
+    {
+      printf("%d: ",y+1); //print coordonates next to the plate
+
+      for(int x = 0; x < 8; x++)
+	{
+	  if(board[y*8+x].type != NONE)
+	    {
+	      printf("(%d|%d)", board[y*8+x].color,board[y*8+x].type ); //print the color and the type of the piece
+	    }
+	  else  //if nothing is on the place, "  " is print
+	    {
+	      printf("     ");
+	    }
+	  printf(" ");
+	}
+      printf("\n");
+    }
+
+}
+
+
 /**
  * @author Marie
  * @date Start 19/04/2021
@@ -40,6 +78,14 @@ void print_tab(struct coordonates_moves *tab, int size)
 int main()
 {
   struct Piece *board = init_board();
+
+  board[59].type = NONE;
+  board[59].color = 0;
+
+  board[36].type = QUEEN;
+  board[36].color = WHITE;
+
+  display(board);
 
   struct tab *all_moves = possible_moves(board, 1);
 

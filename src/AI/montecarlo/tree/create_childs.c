@@ -44,9 +44,6 @@ struct coordonates_king *king_position(Piece *board, int color_team, struct coor
 
 int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
 {
-  struct coordonates_king *kingplace = malloc(sizeof(struct coordonates_king));
-  kingplace = king_position( board, color_team, kingplace);
-
   struct Piece * board2 = calloc(8*8, sizeof(struct Piece));
 
   for( int i = 0; i < 64; i++)
@@ -56,6 +53,9 @@ int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
     }
 
   board2 = pieceMove(x, y, x_des, y_des, board2);
+
+  struct coordonates_king *kingplace = malloc(sizeof(struct coordonates_king));
+  kingplace = king_position( board2, color_team, kingplace);
 
   int res = piece_to_place(kingplace->x_king, kingplace->y_king, board2);
 
@@ -373,8 +373,12 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
     {
+
+      printf("the move is possible\n");
+      
       if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
-	{ 
+	{
+	  printf("il n'y a pas d'échecs\n");
 	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	  move->x = x;
 	  move->y = y;
