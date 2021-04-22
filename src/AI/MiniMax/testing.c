@@ -1,5 +1,5 @@
 #include "minimax.c"
-//#include "MINImove.c"
+#include "MINImove.c"
 #include "../../common/c/rules/plate.c"
 
 
@@ -7,20 +7,33 @@
 #define TESTING_C
 
 
+void printmoves (struct tab* moves)
+{
+    struct Moves *m=malloc(sizeof(struct Moves));
+    m=moves->moves;
+    for (int a=0; a<moves->numberofmoves; a++)
+    {
+        printf("%i%i\n",m[a].x_pos,m[a].y_pos);
+    }
+    free(m);
+}
+
 int main()
 {
     struct Piece* board = init_board();
     struct currentpiece *current_List = create_whiteList();
     struct tree * Tree = create_tree(board, WHITETURN, current_List, 16, 2);
+    int color = 1;//white
     print_tree(Tree);
     free_tree(Tree);
-    free(board);
+    printf("printTREEok\n");
+    //free(board);
 
-    /*int x='A';
+    int x='A';
     int y=1;
 
-    //juste pour tester compilation
-    find_chess_moves_pawn( board, x, y, color);
+    /*//juste pour tester compilation
+    printmoves(find_chess_moves_pawn( board, x, y, color));
 
     find_chess_moves_knight(board, x, y, color);
 

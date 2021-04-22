@@ -14,11 +14,23 @@
 /**
  * @author Marine
  * @date Start 16/04/2021
- */
+
 struct Moves
 {
     unsigned char x_pos;
     unsigned char y_pos;
+};
+ * */
+/**
+ * @author Marine
+ * @date Start 22/04/2021
+ * @details struct for the list of move and number of moves
+ */
+
+struct tab
+{
+  int numberofmoves;
+  struct Moves *moves;
 };
 
 /**
@@ -31,7 +43,7 @@ struct Moves
  *
  * @return 1 if in the bounds, 0 if out of bounds
  */
-int out_of_bounds( intx, int y);
+int out_of_bounds( int x, int y);
 
 /**
  * @author Marine
@@ -59,7 +71,7 @@ int is_obstacle(int x, int y, Piece* board,int color);
  *
  * @return 1 if possible, 0 otherwise
  */
-int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board);
+int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board, int color);
 
 
 /**
@@ -74,7 +86,7 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct Moves* find_chess_moves_pawn(Piece* board, int x, int y, int color);
+struct tab* find_chess_moves_pawn(Piece* board, int x, int y, int color);
 
 /**
  * @author Marine
@@ -88,7 +100,7 @@ struct Moves* find_chess_moves_pawn(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct Moves* find_chess_moves_knight(Piece* board, int x, int y, int color);
+struct tab* find_chess_moves_knight(Piece* board, int x, int y, int color);
 
 /**
  * @author Antoine & Marie
@@ -102,7 +114,7 @@ struct Moves* find_chess_moves_knight(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct Moves* find_chess_moves_king(Piece* board, int x, int y, int color);
+struct tab* find_chess_moves_king(Piece* board, int x, int y, int color);
 
 
 /**
@@ -117,7 +129,7 @@ struct Moves* find_chess_moves_king(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct Moves* find_chess_moves_bishop(Piece* board, int x, int y, int color);
+struct tab* find_chess_moves_bishop(Piece* board, int x, int y, int color);
 
 /**
  * @author Marine
@@ -131,7 +143,7 @@ struct Moves* find_chess_moves_bishop(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct Moves* find_chess_moves_rook(Piece* board, int x, int y, int color);
+struct tab* find_chess_moves_rook(Piece* board, int x, int y, int color);
 
 /**
  * @author Marine
@@ -145,7 +157,7 @@ struct Moves* find_chess_moves_rook(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct Moves* find_chess_moves_queen(Piece* board, int x, int y, int color);
+struct tab* find_chess_moves_queen(Piece* board, int x, int y, int color);
 
 //End safety Guard
 #endif

@@ -23,11 +23,10 @@ struct tree{
   struct node *root;
 };
 
-// À SUPPRIMER
 struct Moves
 {
-    unsigned char x_pos;
-    unsigned char y_pos;
+    int x_pos;
+    int y_pos;
 };
 
 struct queue {
