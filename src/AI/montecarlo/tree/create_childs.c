@@ -73,7 +73,7 @@ int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
 
 struct tab *possible_moves(Piece *board, int color_team)
 {
-  struct coordonates_moves list_of_moves[200];
+  struct coordonates_moves list_of_moves[218];
   int index = 0;
 
   struct tab *struct_list_of_moves = malloc(sizeof(struct tab));
