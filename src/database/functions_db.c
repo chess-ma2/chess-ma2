@@ -15,7 +15,6 @@
 #include <sqlite3.h>
 #include <stdlib.h>
 
-char *test_name;
 
 // Checking if an email is already in database
 int email_in_DB(char *email)
@@ -149,7 +148,7 @@ int callback_Name(void *NotUsed, int argc, char **argv,
 }
 
 
-//Get name from email
+//Print name from email
 void printNAME(char * email)
 {
     //Connection to the database
@@ -184,14 +183,15 @@ void printNAME(char * email)
     free(sql);
 }
 
+
+
 // Subfunction to get Name
 int __getNAME(void *NotUsed, int argc, char **argv,
                     char **azColName)
-{   NotUsed = 0;
-    for (int i = 0; i < argc; i++) {
-        azColName[i] = azColName[i];
-        test_name = argv[i] ? argv[i] : "NULL";
-    }
+{
+    char **test_name = (char **)NotUsed;
+    *test_name = (char *) realloc(*test_name, sizeof(argv[0]));
+    strcpy(*test_name, argv[0]);
     return 0;
 }
 
@@ -211,7 +211,8 @@ char * getNAME(char * email)
     char *err_msg = 0;
 
     //Execute query to print name
-    if (sqlite3_exec(db, sql, callback_Name, 0, &err_msg) != SQLITE_OK )
+    char *test_name=NULL;
+    if (sqlite3_exec(db, sql, __getNAME, &test_name, &err_msg) != SQLITE_OK )
     {
 
         fprintf(stderr, "SQL error: %s\n", err_msg);

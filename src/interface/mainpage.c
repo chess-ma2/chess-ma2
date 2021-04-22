@@ -212,7 +212,7 @@ void save_pl2(GtkButton *button, gpointer user_data)
     gtk_widget_show(game_v1);
     // Start Game
     struct to_play *playing = user_data;
-    play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn);
+    play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
   }
 }
 
@@ -279,7 +279,7 @@ void connect2(GtkButton *button, gpointer user_data)
         gtk_widget_show(game_v1); // Show GAME
         // _________ Play Game _______________
         struct to_play *playing = user_data;
-        play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn);
+        play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
         gtk_widget_hide(LoginAccount2);
     }
 }
@@ -552,6 +552,7 @@ int main (int argc, char *argv[])
     playing.Rules = rulesL;
     playing.Info = Info;
     playing.turn = turn;
+    playing.cr = area;
 
     // Got to first version
     g_signal_connect(first_version, "clicked", G_CALLBACK(first_v_start), NULL);

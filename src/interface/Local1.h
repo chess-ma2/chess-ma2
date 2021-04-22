@@ -66,6 +66,7 @@ struct to_play{
   GtkLabel *Rules;
   GtkLabel *Info;
   GtkLabel *turn;
+  cairo_t *cr;
 };
 
 // Players___________________________________________________________________
@@ -94,7 +95,9 @@ void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
 
 void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
 
+void redraw_board(cairo_t *cr, struct construction *res);
+
 // Main Game function
-void play_gtk(struct Player *pl1, struct Player *pl2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn);
+void play_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, cairo_t *cr);
 
 #endif
