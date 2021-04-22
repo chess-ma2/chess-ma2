@@ -24,6 +24,12 @@ int callback_Name(void *NotUsed, int argc, char **argv, char **azColName);
 //Get name from email to print it
 void printNAME(char * email);
 
+// Subfunction to get Name
+int __getNAME(void *NotUsed, int argc, char **argv, char **azColName);
+
+//Get name from email
+char * getNAME(char * email);
+
 //Get number of party won from email
 size_t getWINS(char *email);
 
