@@ -208,10 +208,11 @@ void save_pl2(GtkButton *button, gpointer user_data)
 
   if (res != NULL) {
     pl2 = res;
-
-    // Start Game
     gtk_widget_hide(NewPL2_W1);
     gtk_widget_show(game_v1);
+    // Start Game
+    struct to_play *playing = user_data;
+    play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn);
   }
 }
 
@@ -271,12 +272,15 @@ void login2_start(GtkButton *button, gpointer user_data)
  */
 void connect2(GtkButton *button, gpointer user_data)
 {
+
     pl2 =findplayer(Email_Log2,Password_Log2);
     if (pl2!=NULL)
     {
-        gtk_widget_show(game_v1);
+        gtk_widget_show(game_v1); // Show GAME
+        // _________ Play Game _______________
+        struct to_play *playing = user_data;
+        play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn);
         gtk_widget_hide(LoginAccount2);
-
     }
 }
 
@@ -497,6 +501,9 @@ int main (int argc, char *argv[])
     GtkDrawingArea* area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "area"));
     game_v1 = GTK_WIDGET(gtk_builder_get_object(builder, "game_v1"));
     GtkFixed *fixed = GTK_FIXED(gtk_builder_get_object(builder, "paned1"));
+    GtkLabel *Info = GTK_LABEL(gtk_builder_get_object(builder, "Info"));
+    GtkLabel *rulesL = GTK_LABEL(gtk_builder_get_object(builder, "rulesL"));
+    GtkLabel *turn = GTK_LABEL(gtk_builder_get_object(builder, "turn"));
 
     // Create widgets -> button board
     struct construction constr;
@@ -505,9 +512,19 @@ int main (int argc, char *argv[])
     constr.ImageBoard = malloc(64 * sizeof(GtkWidget));
     constr.fixed = fixed;
 
-    for (size_t i = 0; i < 64; i++) {
-      constr.Bboard[i] = gtk_button_new();
-      constr.ImageBoard[i] = gtk_image_new();
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+      constr.Bboard[i*8+j] = gtk_button_new();
+      // Connect to signal
+      struct coord Needed;
+      Needed.x = j;
+      Needed.y = i;
+      Needed.Bboard = constr.Bboard;
+      Needed.Info = Info;
+
+      g_signal_connect(constr.Bboard[i*8+j], "clicked", G_CALLBACK(on_clickedB), &Needed);
+      constr.ImageBoard[i*8+j] = gtk_image_new();
+      }
     }
 
     // __________________________________________________________________________________
@@ -530,6 +547,12 @@ int main (int argc, char *argv[])
     g_signal_connect(window1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     //___________ Version 1 _________________________________________________________
+    struct to_play playing;
+    playing.constr = constr;
+    playing.Rules = rulesL;
+    playing.Info = Info;
+    playing.turn = turn;
+
     // Got to first version
     g_signal_connect(first_version, "clicked", G_CALLBACK(first_v_start), NULL);
     // Destroys .exe when first version window is closed
@@ -579,7 +602,7 @@ int main (int argc, char *argv[])
     // Back to second player of first window (new or login)
     g_signal_connect(back_w2, "clicked", G_CALLBACK(back_pl2), NULL);
     // Click on New Player 2 -> Save info and create player in db
-    g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), NULL);
+    g_signal_connect(lock_new2, "clicked", G_CALLBACK(save_pl2), &playing);
 
     //LOGIN player 2
     // Back to second player of first window (new or login)
@@ -596,7 +619,8 @@ int main (int argc, char *argv[])
     // Destroys .exe when new first player login account is closed
     g_signal_connect(LoginAccount, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Destroys .exe when new first player login account 2 is closed
-    g_signal_connect(LoginAccount2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(LoginAccount2, "destroy", G_CALLBACK(gtk_main_quit), &playing);
+
 
     // Game ___________________________________________________________
     // Destroys .exe when game first version window is closed
@@ -617,8 +641,11 @@ int main (int argc, char *argv[])
     // Destroys .exe when third version window is closed
     g_signal_connect(window3rd_v_1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
+
+
     // Runs the main loop.
     gtk_main();
+
 
     //Free what needs to be freed
     free(pl1);

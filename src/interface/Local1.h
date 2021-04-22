@@ -12,19 +12,12 @@
 // Include Section
 #include "../database/create_db.c"
 #include "../database/functions_db.c"
+#include "../common/c/game/version1.c"
+#include "../common/c/game/added_functions.c"
 #include "../common/c/rules/check_and_pat.c"
 #include "../common/c/rules/pieces.c"
 #include "../common/c/rules/plate.c"
 
-// @struct Player
-struct Player {
-    char *name;
-    char *email;
-    size_t nb_won;
-    size_t nb_lost;
-    int team_color;
-
-};
 
 // @struct Needed to create chessboard
 struct construction{
@@ -52,6 +45,28 @@ struct windows{
   GtkEntry * Password;
 };
 
+// @struct coord
+struct coord{
+  int x;
+  int y;
+  GtkWidget **Bboard;
+  GtkLabel *Info;
+};
+
+// À SUPPRIMER
+struct Moves
+{
+    unsigned char x;
+    unsigned char y;
+};
+
+// @struct TO PLAY
+struct to_play{
+  struct construction constr;
+  GtkLabel *Rules;
+  GtkLabel *Info;
+  GtkLabel *turn;
+};
 
 // Players___________________________________________________________________
 // Subfunction when email already in db
@@ -68,4 +83,18 @@ struct Player * findplayer(GtkEntry* mail, GtkEntry* pass);
 // Game _________________________________________________________
 // Draw chessboard
 gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data);
+
+void change_boarders(struct coord *org);
+
+void on_clickedB(GtkButton *button, gpointer user_data);
+
+void printRulesLabel(GtkLabel *Rules);
+
+void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
+
+void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
+
+// Main Game function
+void play_gtk(struct Player *pl1, struct Player *pl2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn);
+
 #endif

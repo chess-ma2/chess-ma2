@@ -15,6 +15,8 @@
 #include <sqlite3.h>
 #include <stdlib.h>
 
+char *test_name;
+
 // Checking if an email is already in database
 int email_in_DB(char *email)
 {
@@ -142,7 +144,6 @@ int callback_Name(void *NotUsed, int argc, char **argv,
         printf("%s", argv[i] ? argv[i] : "NULL");
     }
 
-  //  printf("\n");
 
     return 0;
 }
@@ -181,6 +182,48 @@ void printNAME(char * email)
 
     //Free query
     free(sql);
+}
+
+// Subfunction to get Name
+int __getNAME(void *NotUsed, int argc, char **argv,
+                    char **azColName)
+{   NotUsed = 0;
+    for (int i = 0; i < argc; i++) {
+        azColName[i] = azColName[i];
+        test_name = argv[i] ? argv[i] : "NULL";
+    }
+    return 0;
+}
+
+
+//Get name from email
+char * getNAME(char * email)
+{
+    //Connection to the database
+    sqlite3 *db = createDB();
+
+    //Create SQL query
+    char *sql = malloc(200 * sizeof(char));
+    sprintf(sql, "Select NAME from PLAYER where email = '%s'",email);
+
+
+    //struct sqlite3_stmt *selectstmt;
+    char *err_msg = 0;
+
+    //Execute query to print name
+    if (sqlite3_exec(db, sql, callback_Name, 0, &err_msg) != SQLITE_OK )
+    {
+
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+    }
+    //Close connection to database
+    sqlite3_close(db);
+
+    //Free query
+    free(sql);
+    return test_name;
 }
 
 //get wins from mail
