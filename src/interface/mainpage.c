@@ -225,7 +225,7 @@ void save_pl2(GtkButton *button, gpointer user_data)
 void login1_start(GtkButton *button, gpointer user_data)
 {
     gtk_widget_show(LoginAccount);
-    gtk_widget_hide(window1);
+    gtk_widget_hide(window1st_v_1);
 }
 
 /*
@@ -239,8 +239,12 @@ void connect1(GtkButton *button, gpointer user_data)
     if (pl1!=NULL)
     {
         gtk_widget_show(transition1);
-        gtk_widget_hide(LoginAccount);
     }
+    else
+    {
+        gtk_widget_show(window1st_v_1);
+    }
+        gtk_widget_hide(LoginAccount);
 }
 
  /*
@@ -250,7 +254,7 @@ void connect1(GtkButton *button, gpointer user_data)
   */
 void back_from_login1(GtkButton *button, gpointer user_data)
 {
-    gtk_widget_show(window1);
+    gtk_widget_show(window1st_v_1);
     gtk_widget_hide(LoginAccount);
 }
 
@@ -263,7 +267,7 @@ void back_from_login1(GtkButton *button, gpointer user_data)
 void login2_start(GtkButton *button, gpointer user_data)
 {
     gtk_widget_show(LoginAccount2);
-    gtk_widget_hide(window1);
+    gtk_widget_hide(window1_version_PL2);
 }
 /*
  * @author Marine
@@ -277,11 +281,17 @@ void connect2(GtkButton *button, gpointer user_data)
     if (pl2!=NULL)
     {
         gtk_widget_show(game_v1); // Show GAME
+        printf("ici\n");
         // _________ Play Game _______________
         struct to_play *playing = user_data;
+        //seg fault ici?? chelou
         play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
-        gtk_widget_hide(LoginAccount2);
     }
+    else
+    {
+        gtk_widget_show(window1_version_PL2);
+    }
+        gtk_widget_hide(LoginAccount2);
 }
 
  /*
@@ -291,7 +301,7 @@ void connect2(GtkButton *button, gpointer user_data)
   */
 void back_from_login2(GtkButton *button, gpointer user_data)
 {
-    gtk_widget_show(window1);
+    gtk_widget_show(window1_version_PL2);
     gtk_widget_hide(LoginAccount2);
 }
 
@@ -384,7 +394,6 @@ int main (int argc, char *argv[])
 
     // Button to go back to main page
     GtkButton* back = GTK_BUTTON(gtk_builder_get_object(builder, "back"));
-    GtkButton* back3 = GTK_BUTTON(gtk_builder_get_object(builder,"back3"));
 
     // New Player n1 ___________________________________________________________________
     // New Player n°1 button
@@ -413,10 +422,11 @@ int main (int argc, char *argv[])
 
     // Save new info about player 1
     GtkButton* lock_new1 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new1"));
+    
     GtkButton* lock_new3 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new3"));
 
-    GtkWidget* Image_save;
-    GtkWidget* Image_savebis;
+    //GtkWidget* Image_save;
+    //GtkWidget* Image_savebis;
 
     gtk_button_set_image(lock_new1, gtk_image_new_from_file ("Images/save.png"));
     gtk_button_set_image(lock_new3, gtk_image_new_from_file ("Images/save.png"));
@@ -573,12 +583,13 @@ int main (int argc, char *argv[])
 
     //LOGIN PLAYER 1
     // Back to second player of first window (new or login)
-    g_signal_connect(back_w2, "clicked", G_CALLBACK(back_from_login1), NULL);
+    g_signal_connect(back_w3, "clicked", G_CALLBACK(back_from_login1), NULL);
     //goes to login n1
     g_signal_connect(login1, "clicked", G_CALLBACK(login1_start), NULL);
     // Destroys .exe when first player (new) of first version window is closed
     g_signal_connect(login1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    //g_signal_connect(lock_new2, "clicked", G_CALLBACK(), NULL);
+    
+    g_signal_connect(lock_new3, "clicked", G_CALLBACK(connect1), NULL);
 
     //ajouter interactions mais jsp comment faire pour m'y reetoruver je vais donc faire une liste d'abord ecrite cause i'm lost
 
@@ -613,8 +624,7 @@ int main (int argc, char *argv[])
     // Destroys .exe when first player (new) of first version window is closed
     g_signal_connect(login_2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Click on New Player 2 -> Save info and create player in db
-    //g_signal_connect(lock_new4, "clicked", G_CALLBACK(), NULL);
-    //TODO function that connects to db and check if player
+    g_signal_connect(lock_new4, "clicked", G_CALLBACK(connect2), NULL);
 
 
     // Destroys .exe when new first player login account is closed

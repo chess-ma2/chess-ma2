@@ -242,6 +242,7 @@ struct Player * findplayer(GtkEntry* mail, GtkEntry* pass)
         //p->name=printNAME(email);
         p->nb_won=getWINS(email);
         p->nb_lost=getLOST(email);
+        return p;
     }
     else
     {
