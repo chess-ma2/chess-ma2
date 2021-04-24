@@ -211,8 +211,8 @@ void save_pl2(GtkButton *button, gpointer user_data)
     gtk_widget_hide(NewPL2_W1);
     gtk_widget_show(game_v1);
     // Start Game
-    struct to_play *playing = user_data;
-    play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
+    //struct to_play *playing = user_data;
+    //play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
   }
 }
 
@@ -283,9 +283,9 @@ void connect2(GtkButton *button, gpointer user_data)
         gtk_widget_show(game_v1); // Show GAME
         printf("ici\n");
         // _________ Play Game _______________
-        struct to_play *playing = user_data;
+        //struct to_play *playing = user_data;
         //seg fault ici?? chelou
-        play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
+        //play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
     }
     else
     {
@@ -422,7 +422,7 @@ int main (int argc, char *argv[])
 
     // Save new info about player 1
     GtkButton* lock_new1 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new1"));
-    
+
     GtkButton* lock_new3 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new3"));
 
     //GtkWidget* Image_save;
@@ -521,6 +521,7 @@ int main (int argc, char *argv[])
     constr.Bboard = malloc(64 * sizeof(GtkWidget));
     constr.ImageBoard = malloc(64 * sizeof(GtkWidget));
     constr.fixed = fixed;
+    constr.Overlay = malloc(64 * sizeof(GtkWidget));
 
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
@@ -534,6 +535,7 @@ int main (int argc, char *argv[])
 
       g_signal_connect(constr.Bboard[i*8+j], "clicked", G_CALLBACK(on_clickedB), &Needed);
       constr.ImageBoard[i*8+j] = gtk_image_new();
+      constr.Overlay[i*8+j] = gtk_overlay_new();
       }
     }
 
@@ -562,7 +564,6 @@ int main (int argc, char *argv[])
     playing.Rules = rulesL;
     playing.Info = Info;
     playing.turn = turn;
-    playing.cr = area;
 
     // Got to first version
     g_signal_connect(first_version, "clicked", G_CALLBACK(first_v_start), NULL);
@@ -588,7 +589,7 @@ int main (int argc, char *argv[])
     g_signal_connect(login1, "clicked", G_CALLBACK(login1_start), NULL);
     // Destroys .exe when first player (new) of first version window is closed
     g_signal_connect(login1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    
+
     g_signal_connect(lock_new3, "clicked", G_CALLBACK(connect1), NULL);
 
     //ajouter interactions mais jsp comment faire pour m'y reetoruver je vais donc faire une liste d'abord ecrite cause i'm lost
