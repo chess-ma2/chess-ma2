@@ -147,7 +147,7 @@ void print_tree(struct tree *Tree)
 }
 */
 
-void print_tree(struct tree *Tree)
+void print_tree_dot(struct tree *Tree)
 {
   // Define queue
   struct queue *Q = malloc(sizeof(struct queue));
@@ -169,9 +169,27 @@ void print_tree(struct tree *Tree)
   free_queue(Q);
 }
 
-void pretty_print()
+void pretty_print(struct tree *Tree)
 {
-  
+  // Define queue
+  struct queue *Q = malloc(sizeof(struct queue));
+  Q->Node = NULL;
+  nb_queue = 0; // nb of elements in queue
+
+  // enqueue root
+  Q = enqueue(Tree->root, Q);
+  printf("Tree : \n");
+  while(nb_queue != 0)
+  {
+    struct node *index = dequeue(Q);
+    //printf("\n");
+    for (int i = 0; i < index->nb_children; i++) {
+      printf("-- %i", index->children[i].score);
+      Q = enqueue(&index->children[i], Q);
+    }
+    printf("\n");
+  }
+  free_queue(Q);
 }
 
 /*

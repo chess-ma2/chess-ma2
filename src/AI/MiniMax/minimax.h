@@ -51,8 +51,11 @@ void free_queue(struct queue *Queue);
 // Subfunction: prints a node -dfs
 //void __print(struct node *Node);
 
-// Function: prints a tree structure
-void print_tree(struct tree *Tree);
+// Function: prints a tree structure (dot version)
+void print_tree_dot(struct tree *Tree);
+
+// Function: prints a tree structure (almost pretty print)
+void pretty_print(struct tree *Tree);
 
 //Gets score for a chess piece on board (with coef)
 int getScore(struct currentpiece current);

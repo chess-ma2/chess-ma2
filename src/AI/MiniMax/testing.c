@@ -24,10 +24,10 @@ int main()
     struct currentpiece *current_List = create_whiteList();
     struct tree * Tree = create_tree(board, WHITETURN, current_List, 16, 2);
     int color = 1;//white
-    print_tree(Tree);
+    pretty_print(Tree);
     free_tree(Tree);
     //free(board);
-
+/*
     int x='A';
     int y=2;
 
@@ -42,7 +42,7 @@ int main()
 
     printmoves(find_chess_moves_rook( board, x, y, color));
 
-    printmoves(find_chess_moves_queen( board, x, y, color));
+    printmoves(find_chess_moves_queen( board, x, y, color));*/
 
 
 
