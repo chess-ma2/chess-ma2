@@ -68,7 +68,6 @@ struct node * dequeue(struct queue *Q) {
 void free_queue(struct queue *Q)
 {
   if (Q->Node == NULL) { // No element
-    printf("No element \n");
     free(Q);
     return;
   }
@@ -123,7 +122,7 @@ int getVal(struct Piece current)
  * @author Anna
  * @date 17/04/2021
  * @details Subfunction: prints a node -dfs
-*/
+
 void __print(struct node *Node)
 {
   printf("|%i|", Node->score);
@@ -134,18 +133,45 @@ void __print(struct node *Node)
 
 }
 
-/*
+
  * @author Anna
  * @date 17/04/2021
  * @details Function: prints a tree structure
-*/
+
 void print_tree(struct tree *Tree)
 {
-
   struct node *Root = Tree->root;
   for (int i = 0; i < Root->nb_children; i++) {
     __print(&Root->children[i]);
   }
+}
+*/
+
+void print_tree(struct tree *Tree)
+{
+  // Define queue
+  struct queue *Q = malloc(sizeof(struct queue));
+  Q->Node = NULL;
+  nb_queue = 0; // nb of elements in queue
+
+  // enqueue root
+  Q = enqueue(Tree->root, Q);
+
+  while(nb_queue != 0)
+  {
+    struct node *index = dequeue(Q);
+    printf("%i ", index->score);
+    for (int i = 0; i < index->nb_children; i++) {
+      printf("%i -- %i\n", index->score, index->children[i].score);
+      Q = enqueue(&index->children[i], Q);
+    }
+  }
+  free_queue(Q);
+}
+
+void pretty_print()
+{
+  
 }
 
 /*

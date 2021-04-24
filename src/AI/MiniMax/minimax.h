@@ -49,7 +49,7 @@ struct node * dequeue(struct queue *Q);
 void free_queue(struct queue *Queue);
 
 // Subfunction: prints a node -dfs
-void __print(struct node *Node);
+//void __print(struct node *Node);
 
 // Function: prints a tree structure
 void print_tree(struct tree *Tree);
