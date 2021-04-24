@@ -10,21 +10,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-
-/**
- * @author Marie
- * @date Start 15/04/2021
- * @details structures of a node
- */
-
-enum King_status
-{
- NOTHING = 0,
- CHECK,
- PAT,
- CHECK_AND_MAT,
-}
+#include "../../../common/c/rules/plate.h"
+#include "../../../common/c/rules/pieces.h"
 
 
 /**
@@ -44,17 +31,17 @@ struct MCTS_Node
 
   int nb_child; 
 
-  MCTS_Node * child;
+  struct MCTS_Node * child;
   
   unsigned long nb_visit;
   
   float value;
   
-  MCTS_Node *father;
+  struct MCTS_Node *father;
 
-  Piece board;
+  struct Piece *board;
 
-  King_status AKing_status;
+  enum king_status AKing_status;
 
   int x;
   int y;
@@ -70,7 +57,7 @@ struct MCTS_Node
  * @details create the tree with the first node and all the childs
  */
 
-MCTS_Node *create_tree(Piece *board, int color) //not good
+struct MCTS_Node *create_tree(Piece *board, int color); //not good
 
 /**
  * @author Marie
@@ -78,7 +65,7 @@ MCTS_Node *create_tree(Piece *board, int color) //not good
  * @details create the fisrt node with the good args
  */
 
-MCTS_Node *first_node(Piece *board, MCTS_Node *first)
+struct MCTS_Node *first_node(Piece *board, struct MCTS_Node *first);
 
 /**
  * @author Marie
@@ -86,7 +73,7 @@ MCTS_Node *first_node(Piece *board, MCTS_Node *first)
  * @details create childs of the father/node with the good args
  */
 
-void expand_childs(MCTS_Node *node, Piece *board, int color_team);
+struct MCTS_Node *expand_childs(struct MCTS_Node *node, Piece *board, int color_team);
 
 /**
  * @author Marie
@@ -94,15 +81,32 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team);
  * @details free the tree/node
  */
 
-void clean_mtcs(MCTS_Node *node);
+void clean_mtcs(struct MCTS_Node *node);
 
 /**
  * @author Marie
  * @date Start 20/04/2021
- * @details print the tree/node
+ * @details print the node's info 
  */
 
-void print_mtcs(MCTS_Node *node);
+void print_node(struct MCTS_Node *node);
 
+/**
+ * @author Marie
+ * @date Start 20/04/2021
+ * @details print the node and his childs
+ */
+
+void print_mtcs(struct MCTS_Node *node);
+
+
+
+/**
+ * @author Marie
+ * @date Start 19/04/2021
+ * @details print the board
+ */
+
+void display(struct Piece *board);
 
 #endif

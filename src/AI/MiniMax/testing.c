@@ -9,13 +9,13 @@
 
 void printmoves (struct tab* moves)
 {
-    struct Moves *m=malloc(sizeof(struct Moves));
-    m=moves->moves;
+    struct Moves * m=moves->moves;
+    printf("%i\n",moves->numberofmoves);
     for (int a=0; a<moves->numberofmoves; a++)
     {
         printf("%i%i\n",m[a].x_pos,m[a].y_pos);
     }
-    free(m);
+    //free(m);
 }
 
 int main()
@@ -26,24 +26,23 @@ int main()
     int color = 1;//white
     print_tree(Tree);
     free_tree(Tree);
-    printf("printTREEok\n");
     //free(board);
 
     int x='A';
-    int y=1;
+    int y=2;
 
-    /*//juste pour tester compilation
+    //juste pour tester compilation
     printmoves(find_chess_moves_pawn( board, x, y, color));
+    //printf("printTREEok\n");
+    printmoves(find_chess_moves_knight(board, x, y, color));
+    //printf("printTREEok\n");
+    printmoves(find_chess_moves_king( board, x, y, color));
 
-    find_chess_moves_knight(board, x, y, color);
+    printmoves(find_chess_moves_bishop( board, x, y, color));
 
-    find_chess_moves_king( board, x, y, color);
+    printmoves(find_chess_moves_rook( board, x, y, color));
 
-    find_chess_moves_bishop( board, x, y, color);
-
-    find_chess_moves_rook( board, x, y, color);
-
-    find_chess_moves_queen( board, x, y, color);*/
+    printmoves(find_chess_moves_queen( board, x, y, color));
 
 
 

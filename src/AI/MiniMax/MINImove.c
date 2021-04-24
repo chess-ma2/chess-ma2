@@ -52,10 +52,10 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board,int color
 
 struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
 {
-    struct tab* table= malloc(sizeof(struct Moves));
+    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
+    table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    
     struct Moves * moves=malloc(sizeof(struct Moves));
     
     //CHECK INTIAL PLACE +2
@@ -66,7 +66,7 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
             if (!testCHECK(x, y, x, y+2*(-1)*color,board,color))
             {
                 
-                struct Moves * moves=malloc(sizeof(struct Moves));
+                //struct Moves * moves=malloc(sizeof(struct Moves));
                 moves->x_pos = x;
                 moves->y_pos = y+2*(-1)*color;
                 global_moves[number] = *moves;
@@ -79,7 +79,7 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
     if (is_obstacle(x,y+1*(-1)*color,board,color) && out_of_bounds(x,y+1*(-1)*color) && !testCHECK(x, y, x, y+1*(-1)*color,board,color))
     {
         
-        struct Moves * moves=malloc(sizeof(struct Moves));
+        //struct Moves * moves=malloc(sizeof(struct tab));
         moves->x_pos = x;
         moves->y_pos = y+1*(-1)*color;
         global_moves[number] = *moves;
@@ -90,7 +90,7 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
     if (is_obstacle(x+1,y+1*(-1)*color,board,color) && out_of_bounds(x+1,y+1*(-1)*color) && !testCHECK(x, y, x+1, y+1*(-1)*color,board,color))
     {
         
-        struct Moves * moves=malloc(sizeof(struct Moves));
+        //struct Moves * moves=malloc(sizeof(struct Moves));
         moves->x_pos = x+1;
         moves->y_pos = y+1*(-1)*color;
         global_moves[number] = *moves;
@@ -101,7 +101,7 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
     if (is_obstacle(x-1,y+1*(-1)*color,board,color) && out_of_bounds(x-1,y+1*(-1)*color) && !testCHECK(x, y, x-1, y+1*(-1)*color, board,color))
     {
         
-        struct Moves * moves=malloc(sizeof(struct Moves));
+        //struct Moves * moves=malloc(sizeof(struct Moves));
         moves->x_pos = x-1;
         moves->y_pos = y+1*(-1)*color;
         global_moves[number] = *moves;
@@ -114,10 +114,11 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
 
 struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 {
-    struct tab* table= malloc(sizeof(struct Moves));
+    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
+    table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves* moves =malloc(sizeof(struct Moves));
+    struct Moves * moves =malloc(sizeof(struct Moves));
     //shape * dest
     //      *
     //      x
@@ -217,8 +218,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 
 struct tab* find_chess_moves_king(Piece* board, int x, int y,int color)
 {
-    struct tab* table= malloc(sizeof(struct Moves));
+    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
+    table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
     struct Moves* moves= malloc(sizeof(struct Moves));;
     //to do check 9 moves possible
@@ -297,8 +299,9 @@ struct tab* find_chess_moves_king(Piece* board, int x, int y,int color)
 struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
 {
     
-    struct tab* table= malloc(sizeof(struct Moves));
+    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
+    table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
     struct Moves* moves= malloc(sizeof(struct Moves));;
     int xmv=1; //x movement
@@ -365,8 +368,9 @@ struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
 
 struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
 {
-    struct tab* table= malloc(sizeof(struct Moves));
+    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
+    table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
     struct Moves* moves= malloc(sizeof(struct Moves));;
     int xmv=1; //x movement
@@ -440,8 +444,9 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
 struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
 {
     
-    struct tab* table= malloc(sizeof(struct Moves));
+    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
+    table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
     struct Moves* moves= malloc(sizeof(struct Moves));;
     int xmv=1; //x movement
