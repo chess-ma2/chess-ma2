@@ -13,7 +13,7 @@ void printmoves (struct tab* moves)
     printf("%i\n",moves->numberofmoves);
     for (int a=0; a<moves->numberofmoves; a++)
     {
-        printf("%i%i\n",m[a].x_pos,m[a].y_pos);
+        printf("%c%i\n",m[a].x_pos,m[a].y_pos);
     }
     //free(m);
 }
@@ -31,19 +31,18 @@ int main()
     int x='A';
     int y=2;
 
-    //juste pour tester compilation
-    printmoves(find_chess_moves_pawn( board, x, y, color));
-    //printf("printTREEok\n");
-    printmoves(find_chess_moves_knight(board, x, y, color));
-    //printf("printTREEok\n");
+    //printmoves(find_chess_moves_pawn( board, x, y, color));
+    printf("prinpawnok\n");
+    //printmoves(find_chess_moves_knight(board, x, y, color));
+    printf("printkinghtok\n");
     printmoves(find_chess_moves_king( board, x, y, color));
-
+    printf("prtinfkingok\n");
     printmoves(find_chess_moves_bishop( board, x, y, color));
-
+    printf("prtinfBISHOPok\n");
     printmoves(find_chess_moves_rook( board, x, y, color));
-
+    printf("prtinfROCKok\n");
     printmoves(find_chess_moves_queen( board, x, y, color));
-
+    printf("prtinfQUEENok\n");
 
 
   return 0;

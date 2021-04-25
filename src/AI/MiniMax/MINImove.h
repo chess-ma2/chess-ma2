@@ -61,6 +61,32 @@ int is_obstacle(int x, int y, Piece* board,int color);
 /**
  * @author Marine
  * @date Start 18/04/2021
+ * @details return 1 if case is empty
+ *
+ * @param xinit X pos of pawn.
+ * @param yinit Y pos of pawn.
+ * @param board the board
+ *
+ * @return 1 if empty, 0 otherwise
+ */
+
+int is_free(int x, int y, Piece * board);
+
+/**
+ * @author Marine
+ * @date Start 25/04/2021
+ * @details return the position of the king
+ *
+ * @param board the board
+ * @param int the color of the team
+ *
+ * @return Moves, the position of the king
+ */
+struct Moves king_position( Piece * board,int color);
+
+/**
+ * @author Marine
+ * @date Start 18/04/2021
  * @details return if the move is causing a danger for king
  *
  * @param xinit X pos of pawn.
