@@ -25,6 +25,7 @@ struct construction{
   GtkWidget **Bboard;
   GtkFixed *fixed;
   GtkWidget **ImageBoard;
+  GtkWidget **Overlay;
 };
 
 // @enum Game Type (normal by default)
@@ -66,7 +67,6 @@ struct to_play{
   GtkLabel *Rules;
   GtkLabel *Info;
   GtkLabel *turn;
-  cairo_t *cr;
 };
 
 // Players___________________________________________________________________
@@ -94,8 +94,6 @@ void printRulesLabel(GtkLabel *Rules);
 void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
 
 void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
-
-void redraw_board(cairo_t *cr, struct construction *res);
 
 // Main Game function
 void play_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, cairo_t *cr);

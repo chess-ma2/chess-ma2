@@ -9,6 +9,7 @@
 #include <string.h>
 #include <math.h>
 #include "../tree/mcts.h"
+#include "../tree/create_childs.h"
 
 /**
  * @author Marie
@@ -16,7 +17,7 @@
  * @details go down to a leaf of the tree
  */
 
-void select_action(MCTS_Node node)
+void *select_action(MCTS_Node *node)
 {
   node.terminus = 1;
 
@@ -33,7 +34,7 @@ void select_action(MCTS_Node node)
  * @details Select the "best" child with the exploration and the value
  */
 
-MCTS_Node select(MCTS_Node node)
+MCTS_Node *select(MCTS_Node *node)
 {
   MCTS_Node selec_Node = malloc(sizeof( struct MCTS_Node));
   float bestValue = -100000;
@@ -68,7 +69,7 @@ MCTS_Node select(MCTS_Node node)
  * @details continue a game to a winning ou equality issue
  */
 
-void roll_out(MCTS_Node node)
+void roll_out(MCTS_Node *node)
 {
   MCTS_Node child = malloc(sizeof(struct MCTS_Node)); 
 
@@ -99,7 +100,7 @@ void roll_out(MCTS_Node node)
  * @details update the value of a node to help to choose a child
  */
 
-void update_value(MCTS_Node node, float value)
+void update_value(MCTS_Node *node, float value)
 {
   node.nb_visit += 1;
   node.sommeGains = sommeGains + valeur;
@@ -116,7 +117,7 @@ void update_value(MCTS_Node node, float value)
  * @details choose a winning child
  */
 
-MCTS_Node winning_Node(MCTS_Node node)
+MCTS_Node *winning_Node(MCTS_Node *node)
 {
   for( int i = 0; i < node->nb_child ; i++)
     {
@@ -134,7 +135,7 @@ MCTS_Node winning_Node(MCTS_Node node)
  * @details choose a random child
  */
 
-MCTS_Node random_choose(MCTS_Node node)
+MCTS_Node *random_choose(MCTS_Node *node)
 {
   int nb_child = node->nb_child;
 

@@ -25,7 +25,7 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
     // All Images
     char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
     struct construction *res = user_data;
-    printf("%s\n", normal_images_cha[0]);
+    //printf("%s\n", normal_images_cha[0]);
 
     int c = 0; //white
     int x = 56; //original coordinates
@@ -43,41 +43,50 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
         GtkWidget *current_button = res->Bboard[i*8+j];
 
         // Get correct index for image from list in .h
-        int i = -1;
+        int in = -1;
 
         if(current.color == BLACK){
         switch(current.type){
-            case PAWN: i = 6; break;
-            case ROOK: i = 7; break;
-            case BISHOP: i = 8; break;
-            case KNIGHT: i = 9; break;
-            case QUEEN: i = 10; break;
-            case KING: i = 11; break;
-            default: i = -1; }}
+            case PAWN: in = 6; break;
+            case ROOK: in = 7; break;
+            case BISHOP: in = 8; break;
+            case KNIGHT: in = 9; break;
+            case QUEEN: in = 10; break;
+            case KING: in = 11; break;
+            default: in = -1; }}
         else {
         switch(current.type)
-        {   case PAWN: i = 0; break;
-            case ROOK: i = 1; break;
-            case BISHOP: i = 2; break;
-            case KNIGHT: i = 3; break;
-            case QUEEN: i = 4; break;
-            case KING: i = 5; break;
-            default: i = -1;} }
+        {   case PAWN: in = 0; break;
+            case ROOK: in = 1; break;
+            case BISHOP: in = 2; break;
+            case KNIGHT: in = 3; break;
+            case QUEEN: in = 4; break;
+            case KING: in = 5; break;
+            default: in = -1;} }
 
-
+        // Sets info on button
         gtk_widget_set_size_request (current_button,60,60);
-        gtk_widget_set_opacity(current_button , 0.01);
-        gtk_fixed_put (res->fixed, current_button, x + 15, y + 15);
+        //gtk_widget_set_opacity(current_button , 0.01);
+        gtk_widget_set_opacity(current_button , 0.2);
+        //gtk_fixed_put (res->fixed, current_button, x + 15, y + 15);
         gtk_widget_show(current_button);
 
-        if (i != -1) {
-          res->ImageBoard[i] = gtk_image_new_from_file(normal_images_cha[i]);
-          gtk_widget_set_size_request (res->ImageBoard[i],60,60);
+        // Sets info on Image
+        if (in != -1) {
+          res->ImageBoard[i*8+j] = gtk_image_new_from_file(normal_images_cha[in]);
+          gtk_widget_set_size_request (res->ImageBoard[i*8+j],60,60);
         //  gtk_widget_set_opacity(res->ImageBoard[i] , 0.2);
-          gtk_fixed_put (res->fixed, res->ImageBoard[i], x + 15, y + 15);
-          gtk_widget_show(res->ImageBoard[i]);
+          gtk_fixed_put (res->fixed, res->ImageBoard[i*8+j], x + 15, y + 15);
+          gtk_widget_show(res->ImageBoard[i*8+j]);
         }
 
+        // Puts all into Overlay and in fixed
+        gtk_overlay_add_overlay(GTK_OVERLAY (res->Overlay[i*8+j]), res->ImageBoard[i*8+j]);
+        gtk_overlay_add_overlay(GTK_OVERLAY (res->Overlay[i*8+j]), current_button);
+
+        gtk_widget_show(res->Overlay[i*8+j]);
+        gtk_widget_set_size_request (res->Overlay[i*8+j],60,60);
+        gtk_fixed_put(res->fixed, res->Overlay[i*8+j], x + 15, y + 15);
 
         if (c == 0) {
           // Draws the rectangle in bright-ish color.
@@ -283,6 +292,7 @@ void change_boarders(struct coord *org)
  */
 void on_clickedB(GtkButton *button, gpointer user_data)
 {
+  printf("\n \n \n clicked \n \n \n");
   struct coord * aboutB = user_data;
   if (second_clicked == 0) { // Chose original chess piece
     x = aboutB->x;
@@ -350,89 +360,6 @@ void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
     char *black = " (Black), it is your turn to play";
     strcat(name, black);
     gtk_label_set_text (turn, name);
-  }
-}
-
-// Redraw
-void redraw_board(cairo_t *cr, struct construction *res)
-{
-  // All Images
-  char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
-  printf("%s\n", normal_images_cha[0]);
-
-  int c = 0; //white
-  int x = 56; //original coordinates
-  int y = 90; //original coordinates
-  int width = 60;
-  int height = 60;
-
-  //Iterate through chessboard
-  for (size_t i = 0; i < 8; i++) {
-    for (size_t j = 0; j < 8; j++) {
-
-      // Current piece of Board
-      struct Piece current = res->board[i*8+j];
-      // Current button
-      GtkWidget *current_button = res->Bboard[i*8+j];
-
-      // Get correct index for image from list in .h
-      int i = -1;
-
-      if(current.color == BLACK){
-      switch(current.type){
-          case PAWN: i = 6; break;
-          case ROOK: i = 7; break;
-          case BISHOP: i = 8; break;
-          case KNIGHT: i = 9; break;
-          case QUEEN: i = 10; break;
-          case KING: i = 11; break;
-          default: i = -1; }}
-      else {
-      switch(current.type)
-      {   case PAWN: i = 0; break;
-          case ROOK: i = 1; break;
-          case BISHOP: i = 2; break;
-          case KNIGHT: i = 3; break;
-          case QUEEN: i = 4; break;
-          case KING: i = 5; break;
-          default: i = -1;} }
-
-
-      gtk_widget_set_size_request (current_button,60,60);
-      gtk_widget_set_opacity(current_button , 0.01);
-      gtk_fixed_put (res->fixed, current_button, x + 15, y + 15);
-      gtk_widget_show(current_button);
-
-      if (i != -1) {
-        res->ImageBoard[i] = gtk_image_new_from_file(normal_images_cha[i]);
-        gtk_widget_set_size_request (res->ImageBoard[i],60,60);
-      //  gtk_widget_set_opacity(res->ImageBoard[i] , 0.2);
-        gtk_fixed_put (res->fixed, res->ImageBoard[i], x + 15, y + 15);
-        gtk_widget_show(res->ImageBoard[i]);
-      }
-
-
-      if (c == 0) {
-        // Draws the rectangle in bright-ish color.
-        cairo_set_source_rgb(cr, 0.9, 0.7, 0.5);
-      }
-      else{
-        // Draws the rectangle in dark-ish color
-        cairo_set_source_rgb(cr, 0.8, 0, 0.2);
-      }
-      //cairo_paint(cr);
-      cairo_rectangle(cr, x, y, width, height);
-      cairo_fill(cr);
-
-      x += width;
-      if (c == 0) { c = 1; }
-      else{ c = 0; }
-    }
-    if (c == 0) { c = 1; }
-    else{ c = 0; }
-
-    x = 56;
-    y += height;
   }
 }
 
@@ -508,8 +435,6 @@ void play_gtk(struct Player *player1, struct Player *player2, struct constructio
       printf("after turns \n");
       gtk_label_set_text (Info, "Please select the chess piece you want to move (ex: A3)");
 
-      redraw_board(cr, &constr);
-      printf("after redraw \n");
       sleep(3);
       if (second_clicked == 1) { // Move detected
         // To align with Marie's logic -> -1

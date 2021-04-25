@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "mcts.h"
+#include "create_childs.h"
 #include "../../../common/c/rules/pieces.h"
 #include "../../../common/c/rules/check_and_pat.h"
 
@@ -21,12 +22,16 @@
  * @details create the tree with the first node and all the childs
  */
 
-MCTS_Node *create_tree(Piece *board, int color) //not good
+struct MCTS_Node *create_tree(struct Piece *board, int color) //not good
 {
-  MCTS_Node *first = malloc(sizeof(struct MCTS_Node));
-
-  expand_childs(MCTS_Node *node, Piece *board, int color_team); 
+  struct MCTS_Node *first = malloc(sizeof(struct MCTS_Node));
+  first = first_node(board , first);
   
+  printf("first node okay \n");
+  
+  first = expand_childs(first, board, color);
+
+  return first;
 }
 
 /**
@@ -35,7 +40,7 @@ MCTS_Node *create_tree(Piece *board, int color) //not good
  * @details create childs of the father/node with the good args
  */
 
-MCTS_Node *first_node(Piece *board, MCTS_Node *first)
+struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first)
 {
   first->leaf = 1;
   first->terminus = 1;
@@ -51,6 +56,8 @@ MCTS_Node *first_node(Piece *board, MCTS_Node *first)
   first->y = -1;
   first->x_des = -1;
   first->y_des = -1;
+
+  return first; 
   
 }
 
@@ -60,7 +67,7 @@ MCTS_Node *first_node(Piece *board, MCTS_Node *first)
  * @details create childs of the father/node with the good args
  */
 
-void expand_childs(MCTS_Node *node, Piece *board, int color_team)
+struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
   node->leaf = 0;
 
@@ -72,7 +79,7 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
     }
   
   struct coordonates_king *a_place_king = malloc(sizeof(struct coordonates_king));
-  a_place_king = king_position(board, advers_color_team, kingplace);
+  a_place_king = king_position(board, advers_color_team, a_place_king);
 
   if(pat( a_place_king->x_king , a_place_king->y_king , board))
     {
@@ -82,13 +89,13 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
 
   if(check_mat( a_place_king->x_king , a_place_king->y_king , advers_color_team  , board))
     {
-      node->AKing_status = CHECK_AND_MAT;
+      node->AKing_status = CHECKMATE;
       node->leaf = 1;
     }
 
   struct tab *list_for_child = malloc(sizeof(struct tab));
-  list_of_child = possible_moves(board, color_team);
-  int index = list_of_child->index;
+  list_for_child = possible_moves(board, color_team);
+  int index = list_for_child->index;
 
   node->nb_child = index;
 
@@ -98,9 +105,9 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
       node->leaf = 1;
     }
     
-  struct coordonates_moves *list_of_moves = list_of_child->list_of_moves;
+  struct coordonates_moves *list_of_moves = list_for_child->list_of_moves;
 
-  MCTS_Node *list = malloc(sizeof(struct MCTS_Node));
+  struct MCTS_Node *list = malloc(index * sizeof(struct MCTS_Node));
 
   int AI_or_not = node->AI;
   int AI_new_child = 0; 
@@ -115,10 +122,12 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
      AI_new_child = 1; 
    }
 
+   printf("start init child \n");
+
   for(int i = 0; i < index; i++)
     {
 
-      Piece *board2 = malloc(sizeof(struct Piece));
+      struct Piece *board2 = malloc(sizeof(struct Piece));
 
       for( int i = 0; i < 64; i++)
 	{
@@ -126,9 +135,10 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
 	  board2[i].color = board[i].color;
 	}
 
-      board2 = pieceMove( list_of_moves[i]->x , list_of_moves[i]->y , list_of_moves[i]->x_des  , list_of_moves[i]->y_des , board2);
-	
-      MCTS_Node *nb_child = malloc(sizeof(struct MCTS_Node));
+      board2 = pieceMove( list_of_moves[i].x , list_of_moves[i].y , list_of_moves[i].x_des  , list_of_moves[i].y_des , board2);
+
+      struct MCTS_Node *nb_child = malloc(sizeof(struct MCTS_Node));
+      
       nb_child->leaf = 1;
       nb_child->terminus = 1;
       nb_child->AI = AI_new_child;
@@ -139,16 +149,23 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
       nb_child->father = node;
       nb_child->board = board2;
       nb_child->AKing_status = NOTHING;
-      nb_child->x = list_of_moves[i]->x;
-      nb_child->y = list_of_moves[i]->y;
-      nb_child->x_des = list_of_moves[i]->x_des;
-      nb_child->y_des = list_of_moves[i]->y_des;
+      nb_child->x = list_of_moves[i].x;
+      nb_child->y = list_of_moves[i].y;
+      nb_child->x_des = list_of_moves[i].x_des;
+      nb_child->y_des = list_of_moves[i].y_des;
 
-      list[i]-> nb_child; 
+      print_node(nb_child);
+
+      printf("finish init child \n");
       
+      list[i].child = nb_child;
+
+      printf("add child to the child \n");
     }
 
   node->child = list;
+
+  return node; 
   
 }
 
@@ -158,18 +175,113 @@ void expand_childs(MCTS_Node *node, Piece *board, int color_team)
  * @details free the tree/node
  */
 
-void clean_mtcs(MCTS_Node *node)
+void clean_mtcs(struct MCTS_Node *node)
 {
-  //TODO
+  int nchild = node->nb_child;
+
+  for( int i = 0; i < nchild ; i++)
+    {
+      node = &node->child[i];
+      clean_mtcs(node);
+      free(node); 
+    }
 }
 
 /**
  * @author Marie
  * @date Start 20/04/2021
- * @details print the tree/node
+ * @details print the node's info 
  */
 
-void print_mtcs(MCTS_Node *node)
+void print_node(struct MCTS_Node *node)
 {
-    //TODO
+  printf("Feuille : %d \n", node->leaf);
+  printf("Terminus : %d \n", node->terminus);
+  printf("Jouer par une AI : %d \n", node->AI);
+  printf("Nombre de visite : %lu \n", node->nb_visit);
+  printf("Valeur du noeud : %f \n", node->value);
+
+  if(node->father == NULL)
+    {
+      printf("Père : Racine de l'arbre.\n");
+    }
+
+  else 
+    {
+      printf("Père : J'ai un père.\n");
+    }
+
+  display(node->board);
+
+  printf("Statue du roi adverse : %d \n", (int)node->AKing_status);
+
+  printf("---MOVE---\n");
+  
+  printf("x de départ : %d \n", node->x);
+  printf("y de départ : %d \n", node->y);
+  printf("x d'arrivée : %d \n", node->x_des);
+  printf("y d'arrivée : %d \n", node->y_des);
 }
+
+/**
+ * @author Marie
+ * @date Start 20/04/2021
+ * @details print the node and his childs 
+ */
+
+void print_mtcs(struct MCTS_Node *node)
+{
+  printf("--------------------THE NODE--------------------\n");
+
+  print_node(node);
+
+  int nchild = node->nb_child;
+
+  for( int i = 0; i < nchild ; i++)
+    {
+      printf("--------------------CHILD N°%d--------------------", i);
+      print_node(&node->child[i]); 
+    }
+  
+}
+
+
+
+/**
+ * @author Marie
+ * @date Start 19/04/2021
+ * @details print the board
+ */
+
+void display(struct Piece *board)
+{
+  printf("   ");
+  
+  for(int y = 0; y < 8; y++)
+    {
+      printf(" %c:   ",y+'A'); //print letter on the top of the place
+    }
+  printf("\n");
+  for(int y = 0; y < 8; y++) 
+    {
+      printf("%d: ",y+1); //print coordonates next to the plate
+
+      for(int x = 0; x < 8; x++)
+	{
+	  if(board[y*8+x].type != NONE)
+	    {
+	      printf("(%d|%d)", board[y*8+x].color,board[y*8+x].type ); //print the color and the type of the piece
+	    }
+	  else  //if nothing is on the place, "  " is print
+	    {
+	      printf("     ");
+	    }
+	  printf(" ");
+	}
+      printf("\n");
+    }
+
+}
+
+
+#endif

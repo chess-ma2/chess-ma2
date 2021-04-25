@@ -3,7 +3,7 @@ all: clean build
 
 clean:
 		@echo "[Chess(ma)² - MiniMax] Start to clean..."
-		@rm -f "minimax"
+		@rm -f "minimax" "*.o" "minimax.o" "testing.o"
 		@echo "[Chess(ma)² - MiniMax] End to clean!"
 
 build:
