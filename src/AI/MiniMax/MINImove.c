@@ -22,7 +22,7 @@ int out_of_bounds( int x,  int y)
 
 int is_obstacle(int x, int y, Piece* board,int color)
 {
-    struct Piece piece = board[y*8+x];
+    struct Piece piece = board[x+y*8];
     if (piece.type!=NONE && piece.color!=color)
     {
         return 1;
@@ -89,45 +89,50 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
     struct Moves * moves=malloc(sizeof(struct Moves));
     
     //CHECK INTIAL PLACE +2
-    if ((color==1 && y==2)|| (color==0 && y==7))
+    if ((color==0 && y==2)|| (color==1 && y==7))
     {
-        if ((is_obstacle(x,y-2+2*color,board,color) || is_free(x,y-2+2*color,board)) && out_of_bounds(x,y-2+2*color))
+        if ((is_obstacle(x,y+2-4*color,board,color) || is_free(x,y+2-4*color,board)) && out_of_bounds(x,y+2-4*color))
         {
-            if (!testCHECK(x, y, x, y-2+2*color,board,color))
+            if (!testCHECK(x, y, x, y+2-4*color,board,color))
             {
                 moves->x_pos = x;
-                moves->y_pos = y-2+4*color;
+                moves->y_pos = y+2-4*color;
                 global_moves[number] = *moves;
                 number++;
             }
         }
     }
     //CHECK +1 FRONT MOVE
-    if ((is_obstacle(x,y-1+2*color,board,color) || is_free(x,y-1+2*color,board)) && out_of_bounds(x,y-1+2*color) && !testCHECK(x, y, x, y-1+2*color,board,color))
+    if ((is_obstacle(x,y+1-2*color,board,color) || is_free(x,y+1-2*color,board)) && out_of_bounds(x,y+1-2*color) && !testCHECK(x, y, x, y+1-2*color,board,color))
     {
-        //struct Moves * moves=malloc(sizeof(struct tab));
         moves->x_pos = x;
-        moves->y_pos = y-1+2*color;
+        moves->y_pos = y+1-2*color;
         global_moves[number] = *moves;
         number++;
     }
     
     //CHECK EAT MOVE right diag
-    if (is_obstacle(x+1,y-1+2*color,board,color) && out_of_bounds(x+1,y-1+2*color) && !testCHECK(x, y, x+1, y-1+2*color,board,color))
+    if (out_of_bounds(x+1,y+1-2*color) && !testCHECK(x, y, x+1, y+1-2*color,board,color))
     {
+        if (is_obstacle(x+1,y+1-2*color,board,color))
+        {
         moves->x_pos = x+1;
-        moves->y_pos = y-1+2*color;
+        moves->y_pos = y+1-2*color;
         global_moves[number] = *moves;
         number++;
+        }
     }
     
     //CHECK EAT MOVE left diag
-    if (is_obstacle(x-1,y-1+2*color,board,color) && out_of_bounds(x-1,y-1+2*color) && !testCHECK(x, y, x-1, y-1+2*color, board,color))
+    if (out_of_bounds(x-1,y+1-2*color) && !testCHECK(x, y, x-1, y+1-2*color, board,color))
     {
+        if (is_obstacle(x-1,y+1-2*color,board,color))
+        {
         moves->x_pos = x-1;
-        moves->y_pos = y-1+2*color;
+        moves->y_pos = y+1-2*color;
         global_moves[number] = *moves;
         number++;
+        }
     }
     free(moves);
     table->numberofmoves=number;
@@ -146,7 +151,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //      *
     //      x
     
-    if (is_obstacle(x+1,y-2,board,color) && out_of_bounds(x+1,y-2) && !testCHECK(x, y, x+1, y-2, board,color))
+    if ((is_obstacle(x+1,y-2,board,color) ||  is_free(x+1,y-2,board)) && out_of_bounds(x+1,y-2) && !testCHECK(x, y, x+1, y-2, board,color))
     {
         moves->x_pos = x+1;
         moves->y_pos = y-2;
@@ -158,7 +163,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //           *
     //           x
     
-    if (is_obstacle(x-1,y-2,board,color) && out_of_bounds(x-1,y-2) && !testCHECK(x, y, x-1, y-2, board,color))
+    if ((is_obstacle(x-1,y-2,board,color) ||  is_free(x-1,y-2,board)) && out_of_bounds(x-1,y-2) && !testCHECK(x, y, x-1, y-2, board,color))
     {
         moves->x_pos = x-1;
         moves->y_pos = y-2;
@@ -169,8 +174,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     
     //shape   dest  *  *
     //                 x
-    if (is_obstacle(x-2,y-1,board,color) && out_of_bounds(x-2,y-1) && !testCHECK(x, y, x-2, y-1, board,color))
+    if ((is_obstacle(x-2,y-1,board,color) || is_free(x-2,y-1,board)) && out_of_bounds(x-2,y-1) && !testCHECK(x, y, x-2, y-1, board,color))
     {
+
         moves->x_pos = x-2;
         moves->y_pos = y-1;
         global_moves[number] = *moves;
@@ -180,7 +186,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     
     //shape *  *  dest
     //      x
-    if (is_obstacle(x+2,y-1,board,color) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y-1, board,color))
+    if ((is_obstacle(x+2,y-1,board,color) ||  is_free(x+2,y-1,board)) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y-1, board,color))
     {
         printf("here\n");
         moves->x_pos = x+2;
@@ -193,7 +199,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //shape x
     //      *
     //      * dest
-    if (is_obstacle(x+1,y+2,board,color) && out_of_bounds(x+1,y+2) && !testCHECK(x, y, x+1, y+2,board,color))
+    if ((is_obstacle(x+1,y+2,board,color) ||  is_free(x+1,y+2,board)) && out_of_bounds(x+1,y+2) && !testCHECK(x, y, x+1, y+2,board,color))
     {
         moves->x_pos = x+1;
         moves->y_pos = y+2;
@@ -205,7 +211,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //shape     x
     //          *
     //      dest
-    if (is_obstacle(x-1,y+2,board,color) && out_of_bounds(x-1,y+2) && !testCHECK(x, y, x-1, y+2, board,color))
+    if ((is_obstacle(x-1,y+2,board,color) ||  is_free(x-1,y+2,board)) && out_of_bounds(x-1,y+2) && !testCHECK(x, y, x-1, y+2, board,color))
     {
         moves->x_pos = x-1;
         moves->y_pos = y+2;
@@ -216,7 +222,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     
     //shape      x
     //           *  *   dest
-    if (is_obstacle(x+2,y+1,board,color) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y+1, board,color))
+    if ((is_obstacle(x+2,y+1,board,color) ||  is_free(x+2,y+1,board)) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y+1, board,color))
     {
         moves->x_pos = x+2;
         moves->y_pos = y+1;
@@ -227,7 +233,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     
     //shape          x
     //        dest * *
-    if (is_obstacle(x-2,y+1,board,color) && out_of_bounds(x-2,y+1) && !testCHECK(x, y, x-2, y+1, board,color))
+    if ((is_obstacle(x-2,y+1,board,color)|| is_free(x-2,y+1,board)) && out_of_bounds(x-2,y+1) && !testCHECK(x, y, x-2, y+1, board,color))
     {
         moves->x_pos = x-2;
         moves->y_pos = y+1;
