@@ -26,7 +26,7 @@ int main()
 
   struct MCTS_Node *node = create_tree(board, color_of_IA);
 
-  print_node(node);
+  print_mcts(node);
 
   free(node); 
 
