@@ -26,9 +26,7 @@ struct MCTS_Node *create_tree(struct Piece *board, int color) //not good
 {
   struct MCTS_Node *first = malloc(sizeof(struct MCTS_Node));
   first = first_node(board , first);
-  
-  printf("first node okay \n");
-  
+
   first = expand_childs(first, board, color);
 
   return first;
@@ -70,6 +68,7 @@ struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first)
 struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
   node->leaf = 0;
+  node->terminus = 0;
 
   int advers_color_team = 0;
 
@@ -107,7 +106,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
     
   struct coordonates_moves *list_of_moves = list_for_child->list_of_moves;
 
-  struct MCTS_Node *list = malloc(index * sizeof(struct MCTS_Node));
+  struct MCTS_Node *list = malloc( index * sizeof(struct Piece));
 
   int AI_or_not = node->AI;
   int AI_new_child = 0; 
@@ -122,12 +121,12 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
      AI_new_child = 1; 
    }
 
-   printf("start init child \n");
-
   for(int i = 0; i < index; i++)
     {
 
-      struct Piece *board2 = malloc(sizeof(struct Piece));
+      struct Piece *board2 = calloc(8*8, sizeof(struct Piece));
+
+      struct MCTS_Node *nb_child = malloc(sizeof(struct MCTS_Node));
 
       for( int i = 0; i < 64; i++)
 	{
@@ -136,8 +135,6 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
 	}
 
       board2 = pieceMove( list_of_moves[i].x , list_of_moves[i].y , list_of_moves[i].x_des  , list_of_moves[i].y_des , board2);
-
-      struct MCTS_Node *nb_child = malloc(sizeof(struct MCTS_Node));
       
       nb_child->leaf = 1;
       nb_child->terminus = 1;
@@ -154,13 +151,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
       nb_child->x_des = list_of_moves[i].x_des;
       nb_child->y_des = list_of_moves[i].y_des;
 
-      print_node(nb_child);
-
-      printf("finish init child \n");
-      
-      list[i].child = nb_child;
-
-      printf("add child to the child \n");
+      list[i] = *nb_child;
     }
 
   node->child = list;
@@ -229,7 +220,7 @@ void print_node(struct MCTS_Node *node)
  * @details print the node and his childs 
  */
 
-void print_mtcs(struct MCTS_Node *node)
+void print_mcts(struct MCTS_Node *node)
 {
   printf("--------------------THE NODE--------------------\n");
 
@@ -239,7 +230,7 @@ void print_mtcs(struct MCTS_Node *node)
 
   for( int i = 0; i < nchild ; i++)
     {
-      printf("--------------------CHILD N°%d--------------------", i);
+      printf("--------------------CHILD N°%d--------------------\n", i+1);
       print_node(&node->child[i]); 
     }
   
