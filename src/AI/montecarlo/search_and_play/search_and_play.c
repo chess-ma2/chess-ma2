@@ -7,9 +7,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <math.h>
 #include "../tree/mcts.h"
-#include "../tree/create_childs.h"
+#include "search_and_play.h"
 
 /**
  * @author Marie
@@ -17,15 +18,16 @@
  * @details go down to a leaf of the tree
  */
 
-void *select_action(MCTS_Node *node)
+void select_action(struct MCTS_Node *node, struct Piece *board, int color)
 {
-  node.terminus = 1;
+  node->terminus = 1;
 
-  while(node.leaf == 0)
+  while(node->leaf == 0)
     {
       node = select(node); 
     }
-  roll_out(node); 
+  
+  roll_out(node, board, color); 
 }
 
 /**
@@ -34,33 +36,32 @@ void *select_action(MCTS_Node *node)
  * @details Select the "best" child with the exploration and the value
  */
 
-MCTS_Node *select(MCTS_Node *node)
+struct MCTS_Node *select(struct MCTS_Node *node)
 {
-  MCTS_Node selec_Node = malloc(sizeof( struct MCTS_Node));
+  struct MCTS_Node *select_Node = malloc(sizeof( struct MCTS_Node));
   float bestValue = -100000;
   float c = sqrtf(2.0);
 
   for( int i = 0; i < node->nb_child ; i++)
     {
-      MCTS_Node child = malloc(sizeof(struct MCTS_Node));
 
-      if( child->nb_visit != 0)
+      if( node->child[i].nb_visit != 0)
 	{
-	  child->value = (child.value/child.nb_visit) + c * (sqrtf((logf(node->nb_visit + 1))/child.nb_visit)); 
+	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + c * (sqrtf((logf(node->nb_visit + 1))/node->child[i].nb_visit)); 
 	}
       else 
 	{
-	  child->value = (Rand() % 1) +  c * (sqrtf(logf(node->nb_visit + 1))); 
+	  node->child[i].value = (rand() % 1) +  c * (sqrtf(logf(node->nb_visit + 1))); 
 	}
 
-      if(child.value >= bestValue)
+      if(node->child->value >= bestValue)
 	{
-	  selec_Node = child;
-	  bestValue = child.value; 
+	  select_Node = &node->child[i];
+	  bestValue = node->child[i].value; 
 	}
     }
-  child.father = node;
-  return child; 
+  select_Node->father = node;
+  return select_Node; 
 }
 
 /**
@@ -69,22 +70,24 @@ MCTS_Node *select(MCTS_Node *node)
  * @details continue a game to a winning ou equality issue
  */
 
-void roll_out(MCTS_Node *node)
+void roll_out(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
-  MCTS_Node child = malloc(sizeof(struct MCTS_Node)); 
+  struct MCTS_Node *child = malloc(sizeof(struct MCTS_Node)); 
 
-  if( node.terminus == 0)
+  if( node->terminus == 0)
     {
-      child = expand_sons(node);
+      node = expand_childs(node, board, color_team);
 
-      if( child != NULL)
+      child = winning_Node(node); 
+
+      if( child == NULL)
 	{
 	  child = random_choose(node); 
 	}
 
-      if(child.terminus == 0)
+      if(child->terminus == 0)
 	{
-	  roll_out(child); 
+	  roll_out(child, child->board, color_team); 
 	}
       else
 	{
@@ -100,12 +103,12 @@ void roll_out(MCTS_Node *node)
  * @details update the value of a node to help to choose a child
  */
 
-void update_value(MCTS_Node *node, float value)
+void update_value(struct MCTS_Node *node, float value)
 {
-  node.nb_visit += 1;
-  node.sommeGains = sommeGains + valeur;
+  node->nb_visit += 1;
+  node->value = node->value + value;
 
-  if( node.father != NULL)
+  if( node->father != NULL)
     {
       update_value(node->father, value*0.9); 
     }
@@ -117,13 +120,13 @@ void update_value(MCTS_Node *node, float value)
  * @details choose a winning child
  */
 
-MCTS_Node *winning_Node(MCTS_Node *node)
+struct MCTS_Node *winning_Node(struct MCTS_Node *node)
 {
   for( int i = 0; i < node->nb_child ; i++)
     {
-      if(node.child[i].AKing_status == CHECK_AND_MAT)
+      if(node->child[i].AKing_status == CHECKMATE)
 	{
-	  return child; 
+	  return &node->child[i]; 
 	}
     }
   return NULL; 
@@ -135,13 +138,44 @@ MCTS_Node *winning_Node(MCTS_Node *node)
  * @details choose a random child
  */
 
-MCTS_Node *random_choose(MCTS_Node *node)
+struct MCTS_Node *random_choose(struct MCTS_Node *node)
 {
   int nb_child = node->nb_child;
 
-  int random = (Rand() % (nb_child-1));
+  int random = (rand() % (nb_child-1));
 
-  return node.child[random];
+  return &node->child[random];
 }
 
 
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details choose the best child between all the child after the training
+ */
+
+struct MCTS_Node *chosen_best(struct MCTS_Node *node)
+{
+  struct MCTS_Node *best = malloc(sizeof(struct MCTS_Node));
+  best = &node->child[0];
+
+  if( node->nb_child != 0)
+    {
+      float best_value =  (node->child[0].value)/(float)(node->child[0].nb_visit);
+
+      float inter = 0.0;
+
+      for(int i = 1; i < node->nb_child ; i++)
+	{
+	  inter = (node->child[i].value)/(float)(node->child[i].nb_visit);
+
+	  if(inter > best_value)
+	    {
+	      best = &node->child[i];
+	      best_value = inter; 
+	    }
+	}
+    }
+  
+  return best; 
+}
