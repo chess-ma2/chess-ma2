@@ -22,11 +22,11 @@ int main()
 {
   struct Piece *board = init_board();
 
-  int color_of_IA = 1;
+  int color_of_IA = 0;
 
   struct MCTS_Node *node = create_tree(board, color_of_IA);
 
-  print_node(node);
+  print_mcts(node);
 
   free(node); 
 

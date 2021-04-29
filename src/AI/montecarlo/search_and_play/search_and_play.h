@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.c>
+#include <math.h>
 #include <string.h>
 #include "../tree/mcts.h"
 
@@ -19,7 +19,7 @@
  * @details go down to a leaf of the tree
  */
 
-void select_action(MCTS_Node *node);
+void select_action(struct MCTS_Node *node, struct Piece *board, int color);
 
 /**
  * @author Marie
@@ -27,7 +27,7 @@ void select_action(MCTS_Node *node);
  * @details Select the "best" child with the exploration and the value
  */
 
-MCTS_Node *select(MCTS_Node *node);
+struct MCTS_Node *select(struct MCTS_Node *node);
 
 /**
  * @author Marie
@@ -35,7 +35,7 @@ MCTS_Node *select(MCTS_Node *node);
  * @details continue a game to a winning ou equality issue
  */
 
-void roll_out(MCTS_Node *node);
+void roll_out(struct MCTS_Node *node, struct Piece *board, int color);
 
 /**
  * @author Marie
@@ -43,7 +43,7 @@ void roll_out(MCTS_Node *node);
  * @details update the value of a node to help to choose a child
  */
 
-void update_value(MCTS_Node *node, float value);
+void update_value(struct MCTS_Node *node, float value);
 
 /**
  * @author Marie
@@ -51,7 +51,7 @@ void update_value(MCTS_Node *node, float value);
  * @details choose a winning child
  */
 
-MCTS_Node *winning_Node(MCTS_Node *node);
+struct MCTS_Node *winning_Node(struct MCTS_Node *node);
 
 /**
  * @author Marie
@@ -59,6 +59,14 @@ MCTS_Node *winning_Node(MCTS_Node *node);
  * @details choose a random child
  */
 
-MCTS_Node *random_choose(MCTS_Node *node); 
+struct MCTS_Node *random_choose(struct MCTS_Node *node);
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details choose the best child between all the child after the training
+ */
+
+struct MCTS_Node *chosen_best(struct MCTS_Node *node); 
 
 #endif

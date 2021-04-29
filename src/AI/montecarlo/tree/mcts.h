@@ -31,7 +31,7 @@ struct MCTS_Node
 
   int nb_child; 
 
-  struct MCTS_Node * child;
+  struct MCTS_Node *child;
   
   unsigned long nb_visit;
   
@@ -97,9 +97,7 @@ void print_node(struct MCTS_Node *node);
  * @details print the node and his childs
  */
 
-void print_mtcs(struct MCTS_Node *node);
-
-
+void print_mcts(struct MCTS_Node *node);
 
 /**
  * @author Marie

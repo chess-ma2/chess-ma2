@@ -26,9 +26,7 @@ struct MCTS_Node *create_tree(struct Piece *board, int color) //not good
 {
   struct MCTS_Node *first = malloc(sizeof(struct MCTS_Node));
   first = first_node(board , first);
-  
-  printf("first node okay \n");
-  
+
   first = expand_childs(first, board, color);
 
   return first;
@@ -43,7 +41,7 @@ struct MCTS_Node *create_tree(struct Piece *board, int color) //not good
 struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first)
 {
   first->leaf = 1;
-  first->terminus = 1;
+  first->terminus = 0;
   first->AI = 0;
   first->nb_child = 0;
   first->child = NULL;
@@ -70,6 +68,7 @@ struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first)
 struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
   node->leaf = 0;
+  node->terminus = 0;
 
   int advers_color_team = 0;
 
@@ -91,6 +90,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
     {
       node->AKing_status = CHECKMATE;
       node->leaf = 1;
+      node->terminus = 1 ; 
     }
 
   struct tab *list_for_child = malloc(sizeof(struct tab));
@@ -101,13 +101,12 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
 
   if(index == 0)
     {
-      node->terminus = 1;
       node->leaf = 1;
     }
     
   struct coordonates_moves *list_of_moves = list_for_child->list_of_moves;
 
-  struct MCTS_Node *list = malloc(index * sizeof(struct MCTS_Node));
+  struct MCTS_Node *list = malloc( index * sizeof(struct Piece));
 
   int AI_or_not = node->AI;
   int AI_new_child = 0; 
@@ -122,12 +121,12 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
      AI_new_child = 1; 
    }
 
-   printf("start init child \n");
-
   for(int i = 0; i < index; i++)
     {
 
-      struct Piece *board2 = malloc(sizeof(struct Piece));
+      struct Piece * board2 = calloc(8*8, sizeof(struct Piece));
+
+      struct MCTS_Node *nb_child = malloc(sizeof(struct MCTS_Node));
 
       for( int i = 0; i < 64; i++)
 	{
@@ -136,8 +135,6 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
 	}
 
       board2 = pieceMove( list_of_moves[i].x , list_of_moves[i].y , list_of_moves[i].x_des  , list_of_moves[i].y_des , board2);
-
-      struct MCTS_Node *nb_child = malloc(sizeof(struct MCTS_Node));
       
       nb_child->leaf = 1;
       nb_child->terminus = 1;
@@ -148,19 +145,17 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
       nb_child->value = 0;
       nb_child->father = node;
       nb_child->board = board2;
+
+      display(nb_child->board);
+      
       nb_child->AKing_status = NOTHING;
       nb_child->x = list_of_moves[i].x;
       nb_child->y = list_of_moves[i].y;
       nb_child->x_des = list_of_moves[i].x_des;
       nb_child->y_des = list_of_moves[i].y_des;
 
-      print_node(nb_child);
-
-      printf("finish init child \n");
+      list[i] = *nb_child;
       
-      list[i].child = nb_child;
-
-      printf("add child to the child \n");
     }
 
   node->child = list;
@@ -199,6 +194,7 @@ void print_node(struct MCTS_Node *node)
   printf("Terminus : %d \n", node->terminus);
   printf("Jouer par une AI : %d \n", node->AI);
   printf("Nombre de visite : %lu \n", node->nb_visit);
+  printf("Nombre de fils :  %d \n", node->nb_child); 
   printf("Valeur du noeud : %f \n", node->value);
 
   if(node->father == NULL)
@@ -229,7 +225,7 @@ void print_node(struct MCTS_Node *node)
  * @details print the node and his childs 
  */
 
-void print_mtcs(struct MCTS_Node *node)
+void print_mcts(struct MCTS_Node *node)
 {
   printf("--------------------THE NODE--------------------\n");
 
@@ -239,7 +235,7 @@ void print_mtcs(struct MCTS_Node *node)
 
   for( int i = 0; i < nchild ; i++)
     {
-      printf("--------------------CHILD N°%d--------------------", i);
+      printf("--------------------CHILD N°%d--------------------\n", i+1);
       print_node(&node->child[i]); 
     }
   
