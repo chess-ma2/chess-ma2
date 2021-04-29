@@ -22,10 +22,8 @@
 // @struct Needed to create chessboard
 struct construction{
   struct Piece *board;
-  GtkWidget **Bboard;
   GtkFixed *fixed;
   GtkWidget **ImageBoard;
-  GtkWidget **Overlay;
 };
 
 // @enum Game Type (normal by default)
@@ -69,6 +67,30 @@ struct to_play{
   GtkLabel *turn;
 };
 
+// @struct for Clicked
+struct for_clicked{
+  GtkEntry * Ori_Coord;
+  GtkEntry * New_Coord;
+  struct Player *player1;
+  struct Player *player2;
+  GtkLabel *turn;
+  GtkLabel *Info;
+  struct Piece* board;
+  struct currentpiece *currentW;
+  int nbWhite;
+  struct currentpiece *currentB;
+  int nbBlack;
+  int x_kingw;
+  int y_kingw;
+  int x_kingb;
+  int y_kingb;
+  enum turn player_turn; // team's turn
+  enum rock white_rock;
+  enum rock black_rock;
+  enum king_status white_kingstatus;
+  enum king_status black_kingstatus;
+};
+
 // Players___________________________________________________________________
 // Subfunction when email already in db
 void on_response (GtkDialog *dialog,
@@ -89,6 +111,8 @@ void change_boarders(struct coord *org);
 
 void on_clickedB(GtkButton *button, gpointer user_data);
 
+void click4move(GtkButton *button, gpointer user_data);
+
 void printRulesLabel(GtkLabel *Rules);
 
 void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
@@ -96,6 +120,6 @@ void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
 void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
 
 // Main Game function
-void play_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, cairo_t *cr);
+void init_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed);
 
 #endif

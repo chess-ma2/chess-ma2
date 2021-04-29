@@ -26,6 +26,11 @@ GtkWidget* LoginAccount2;
 //____ GAME ____________
 // Main Page for GAME
 GtkWidget* game_v1;
+// Entry for original coordinates
+GtkEntry * Ori_Coord;
+// Entry for new coordinates
+GtkEntry * New_Coord;
+struct for_clicked *move_str;
 
 
 //____Global_Initialization___
@@ -211,8 +216,8 @@ void save_pl2(GtkButton *button, gpointer user_data)
     gtk_widget_hide(NewPL2_W1);
     gtk_widget_show(game_v1);
     // Start Game
-    //struct to_play *playing = user_data;
-    //play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
+    struct to_play *playing = user_data;
+    init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
   }
 }
 
@@ -403,12 +408,11 @@ int main (int argc, char *argv[])
     GtkButton* login1 = GTK_BUTTON(gtk_builder_get_object(builder,"login_1"));
 
     // ButtonImage to go back to mainpage
-  //  GtkWidget* Image_back;
-  //  Image_back = gtk_image_new_from_file ("Images/back.png");
     gtk_button_set_image(back, gtk_image_new_from_file ("Images/back.png"));
 
     // First player is a new player Window
     NewPL1_W1 = GTK_WIDGET(gtk_builder_get_object(builder, "NewPL1_W1"));
+
     // First player exists
     LoginAccount = GTK_WIDGET(gtk_builder_get_object(builder, "LoginAccount"));
 
@@ -424,9 +428,6 @@ int main (int argc, char *argv[])
     GtkButton* lock_new1 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new1"));
 
     GtkButton* lock_new3 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new3"));
-
-    //GtkWidget* Image_save;
-    //GtkWidget* Image_savebis;
 
     gtk_button_set_image(lock_new1, gtk_image_new_from_file ("Images/save.png"));
     gtk_button_set_image(lock_new3, gtk_image_new_from_file ("Images/save.png"));
@@ -513,31 +514,25 @@ int main (int argc, char *argv[])
     GtkFixed *fixed = GTK_FIXED(gtk_builder_get_object(builder, "paned1"));
     GtkLabel *Info = GTK_LABEL(gtk_builder_get_object(builder, "Info"));
     GtkLabel *rulesL = GTK_LABEL(gtk_builder_get_object(builder, "rulesL"));
+    printRulesLabel(rulesL);
     GtkLabel *turn = GTK_LABEL(gtk_builder_get_object(builder, "turn"));
+    Ori_Coord = GTK_ENTRY(gtk_builder_get_object(builder,"oriCOORD"));
+    New_Coord = GTK_ENTRY(gtk_builder_get_object(builder,"newCOORD"));
+    GtkButton * click_coordinates = GTK_BUTTON(gtk_builder_get_object(builder, "click_coordinates"));
+    gtk_button_set_image(click_coordinates,gtk_image_new_from_file ("Images/save.png"));
 
     // Create widgets -> button board
     struct construction constr;
     constr.board = init_board();
-    constr.Bboard = malloc(64 * sizeof(GtkWidget));
     constr.ImageBoard = malloc(64 * sizeof(GtkWidget));
     constr.fixed = fixed;
-    constr.Overlay = malloc(64 * sizeof(GtkWidget));
 
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
-      constr.Bboard[i*8+j] = gtk_button_new();
-      // Connect to signal
-      struct coord Needed;
-      Needed.x = j;
-      Needed.y = i;
-      Needed.Bboard = constr.Bboard;
-      Needed.Info = Info;
-
-      g_signal_connect(constr.Bboard[i*8+j], "clicked", G_CALLBACK(on_clickedB), &Needed);
       constr.ImageBoard[i*8+j] = gtk_image_new();
-      constr.Overlay[i*8+j] = gtk_overlay_new();
       }
     }
+
 
     // __________________________________________________________________________________
 
@@ -639,7 +634,11 @@ int main (int argc, char *argv[])
     g_signal_connect(game_v1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Draw Chessboard
     g_signal_connect(area, "draw", G_CALLBACK(on_draw), &constr);
-
+    // Structure for click
+    move_str = malloc(sizeof(struct for_clicked));
+    move_str->Ori_Coord = Ori_Coord;
+    move_str->New_Coord = New_Coord;
+    g_signal_connect(click_coordinates, "clicked", G_CALLBACK(click4move), move_str);
 
     //___________ Version 2 _________________________________________________________
     // Got to second version
@@ -660,7 +659,8 @@ int main (int argc, char *argv[])
 
 
     //Free what needs to be freed
-    free(pl1);
+    //free(pl1);
+    //free(move_str);
 
     // Exits
     return 0;

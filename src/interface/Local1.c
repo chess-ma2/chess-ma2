@@ -25,7 +25,6 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
     // All Images
     char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
     struct construction *res = user_data;
-    //printf("%s\n", normal_images_cha[0]);
 
     int c = 0; //white
     int x = 56; //original coordinates
@@ -39,9 +38,6 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
         // Current piece of Board
         struct Piece current = res->board[i*8+j];
-        // Current button
-        GtkWidget *current_button = res->Bboard[i*8+j];
-
         // Get correct index for image from list in .h
         int in = -1;
 
@@ -64,13 +60,6 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
             case KING: in = 5; break;
             default: in = -1;} }
 
-        // Sets info on button
-        gtk_widget_set_size_request (current_button,60,60);
-        //gtk_widget_set_opacity(current_button , 0.01);
-        gtk_widget_set_opacity(current_button , 0.2);
-        //gtk_fixed_put (res->fixed, current_button, x + 15, y + 15);
-        gtk_widget_show(current_button);
-
         // Sets info on Image
         if (in != -1) {
           res->ImageBoard[i*8+j] = gtk_image_new_from_file(normal_images_cha[in]);
@@ -79,14 +68,6 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
           gtk_fixed_put (res->fixed, res->ImageBoard[i*8+j], x + 15, y + 15);
           gtk_widget_show(res->ImageBoard[i*8+j]);
         }
-
-        // Puts all into Overlay and in fixed
-        gtk_overlay_add_overlay(GTK_OVERLAY (res->Overlay[i*8+j]), res->ImageBoard[i*8+j]);
-        gtk_overlay_add_overlay(GTK_OVERLAY (res->Overlay[i*8+j]), current_button);
-
-        gtk_widget_show(res->Overlay[i*8+j]);
-        gtk_widget_set_size_request (res->Overlay[i*8+j],60,60);
-        gtk_fixed_put(res->fixed, res->Overlay[i*8+j], x + 15, y + 15);
 
         if (c == 0) {
           // Draws the rectangle in bright-ish color.
@@ -315,19 +296,15 @@ void on_clickedB(GtkButton *button, gpointer user_data)
 
 void printRulesLabel(GtkLabel *Rules)
 {
-  char *rules = " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n|                  Rules                        |\n|                                               |\n| If you wish to Withdraw please click on       |\n|              the Withdraw button              |\n|                                               |\n|                                               |\n| If you want to ask for a stalemate please     |\n|      click on the stalemate buttons           |\n|                                               |\n|                                               |\n| White team =  ♙  ♖  ♘  ♗  ♔  ♕                |\n| Black team =  ♟  ♜  ♞  ♝  ♚  ♛                |\n|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n";
+  char *rules = " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n|                                Rules                                  |\n|                                                                            |\n| If you wish to Withdraw please click on         |\n|               the Withdraw button                          |\n|                                                                            |\n|                                                                            |\n| If you want to ask for a stalemate please     |\n|      click on the stalemate button                     |\n|                                                                            |\n|                                                                            |\n| White team =  ♙  ♖  ♘  ♗  ♔  ♕                         |\n| Black team =  ♟  ♜  ♞  ♝  ♚  ♛                          |\n|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n";
 
   gtk_label_set_text (Rules, rules);
 }
 
 void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn)
 {
-  printf("in white player \n");
   if (player1->team_color == 0) {
-    printf("before get name \n");
     char *name = getNAME(player1->email);
-    printf(" after get name \n");
-    printf("name if %s \n", name);
     char *white = " (White), it is your turn to play";
     strcat(name, white);
     gtk_label_set_text (turn, name);
@@ -335,12 +312,9 @@ void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
   }
   else
   {
-    printf("in else \n");
     char *name = getNAME(player2->email);
-    printf("%s\n", name);
     char *white = " (White), it is your turn to play";
     strcat(name, white);
-    printf("after strcat\n");
     gtk_label_set_text (turn, name);
     return;
   }
@@ -364,14 +338,162 @@ void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
 }
 
 /*
+ * @author Anna
+ * @date 29/04/2021
+ * @details Clicked for move
+*/
+
+void click4move(GtkButton *button, gpointer user_data)
+{
+  struct for_clicked *needed = user_data;
+  if (needed->white_kingstatus != CHECKMATE || needed->black_kingstatus != CHECKMATE) {
+    gtk_label_set_text(needed->Info, "Game Over");
+
+  }
+  if (needed->player_turn == WHITETURN) { whiteplayerturn(needed->player1,needed->player2, needed->turn);} // Prints who's turn it is
+  else{ blackplayerturn(needed->player1, needed->player2, needed->turn); }
+
+  printf("after turns \n");
+
+  gtk_label_set_text(needed->Info, "Please select the chess piece you want to move (ex: A3)");
+
+  // Get Coordinates
+  char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
+  char * new = (char *) gtk_entry_get_text(needed->New_Coord);
+
+  printf("ori A is char = %c \n", ori[0]);
+  printf("ori A is int = %i \n", (int)ori[0]);
+  printf("ori A is int = %i for function\n", (int)ori[0] - 64);
+
+  printf("ori is char = %c \n", ori[1]);
+  printf("ori is int = %i \n", (int)ori[1]);
+  printf("ori is int = %i for function\n", (int)ori[1] - 48);
+  if (incorrect_char(ori[0]) == 1 || incorrect_int((int)ori[1] - 48) == 1 ||
+    incorrect_char(new[0]) == 1 || incorrect_int((int)new[1] - 48) == 1) {
+    gtk_label_set_text(needed->Info, "Incorrect coordinates please try again");
+    return;
+  }
+  int x = ((int)ori[0]) - 64;
+  int des_x = (int)new[0] - 64;
+  int y = (int)ori[1] - 48;
+  int des_y = (int)new[1] - 48;
+
+  printf("got coordinates \n");
+
+  //____________________________________ Game settings _____________________________________________________________
+  //Rock
+  struct res_rock res = rock_sub(needed->player_turn, needed->board, needed->white_kingstatus,
+    needed->black_kingstatus, needed->white_rock, needed->black_rock,needed-> x_kingb,
+    needed->y_kingb, needed->x_kingw, needed->y_kingw, x, y, des_x, des_y);
+
+  needed->player_turn = res.player_turn;
+  needed->x_kingb = res.x_kingb;
+  needed->y_kingb = res.y_kingb;
+  needed->x_kingw = res.x_kingw;
+  needed->y_kingw = res.y_kingw;
+
+  if (res.continuee == 1) {
+    // TURN FINISHED
+    gtk_entry_set_text(needed->Ori_Coord, "");
+    gtk_entry_set_text(needed->New_Coord, "");
+    gtk_label_set_text(needed->Info, "New Turn");
+  }
+
+  printf("rock function over \n");
+
+  //Other chess piece movements
+  int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->board); //movement is possible
+  printf("after possible \n");
+
+  switch(possible)
+  {
+      case 0:
+          gtk_label_set_text(needed->Info, "This move isn't possible for that chess piece, please check the rules.\n\n");
+          break;
+      case 2:
+           gtk_label_set_text(needed->Info,"This move isn't possible because one or some coordinates are out of bounds\n\n");
+          break;
+      case 3:
+          gtk_label_set_text(needed->Info,"This move isn't possible because the chess piece on the destination coordinates is already yours!\n\n");
+          break;
+      case 4:
+          gtk_label_set_text(needed->Info,"This move isn't possible because there aren't any chess pieces to move!\n\n");
+          break;
+      case 1:
+          // Check if there are any chess pieces on destination coordinates and if so remove them from list
+          // AND modifies in List coordinates of the chess piece that's moved
+
+          printf("is possible \n");
+          if (needed->player_turn == WHITETURN) {
+            needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->board, needed->currentW, needed->nbWhite); }
+          else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->board, needed->currentB, needed->nbBlack); }
+
+
+          //Move chess piece
+          needed->board = pieceMove(x-1 , y-1, des_x-1, des_y-1, needed->board);
+
+        //________ King ____________
+          if(needed->board[(y-1)*8+(x-1)].color == WHITE && needed->board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+            {
+              needed->x_kingw = des_x - 1;
+              needed->y_kingw = des_y - 1;
+              needed->white_rock = CANT_ROCK;
+            }
+
+          if(needed->board[(y-1)*8+(x-1)].color == BLACK && needed->board[(y-1)*8+(x-1)].type == KING)
+            {
+              needed->x_kingb = des_x - 1;
+              needed->y_kingb = des_y - 1;
+              needed->black_rock = CANT_ROCK;
+            }
+
+          //___________________________
+
+
+          // Impossible move
+          if((needed->player_turn == BLACKTURN && piece_to_place(needed->x_kingb, needed->y_kingb, needed->board) == 1 )
+          || (needed->player_turn == WHITETURN && piece_to_place(needed->x_kingw, needed->y_kingw, needed->board) == 1))
+            {
+              needed->board = pieceMove(des_x-1, des_y-1, x-1, y-1, needed->board);
+              gtk_label_set_text(needed->Info, "Impossible to move the king as checkmate would be unavoidable\n");
+
+              if(needed->board[(y-1)*8+(x-1)].color == BLACK && needed->board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+              {   needed->x_kingb = x - 1;
+                  needed->y_kingb = y - 1; }
+
+             if(needed->board[(y-1)*8+(x-1)].color == WHITE && needed->board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+             {    needed->x_kingw = x - 1;
+                  needed->y_kingw = y - 1; }
+              // NEXT TURN
+              gtk_entry_set_text(needed->Ori_Coord, "");
+              gtk_entry_set_text(needed->New_Coord, "");
+              gtk_label_set_text(needed->Info, "New Turn");
+            }
+
+          // Check for checkmates _________________________________________
+          struct checking res = check4checkmates(needed->player_turn, needed->board, needed->white_kingstatus,
+             needed->black_kingstatus, needed->x_kingb, needed->y_kingb, needed->x_kingw, needed->y_kingw,
+             des_x, des_y,  needed->player1, needed->player2);
+          needed->player_turn = res.player_turn;
+          needed->white_kingstatus = res.white_kingstatus;
+          needed->black_kingstatus = res.black_kingstatus;
+          if (res.returned == 1)
+          { return;}
+    } // end switch
+
+
+}
+
+
+/*
  * @author Anna and Marine
  * @date 21/04/2021
  * @details Main Game function (from version1 originaly)
 */
 
-void play_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, cairo_t *cr)
+void init_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed)
 {
-  printf("in play \n");
+
   // #TODO
   // 1) Print Rules in rulesL
   // 2) Get player's color and turn + play
@@ -422,113 +544,30 @@ void play_gtk(struct Player *player1, struct Player *player2, struct constructio
   }
 
   //____________________________________________________________________________
-  // 1
-  printf("before print rules \n");
-  printRulesLabel(Rules);
-  printf("after print rules \n");
-  // 2 + 3 + Start Game
-  while( white_kingstatus != CHECKMATE || black_kingstatus != CHECKMATE ) //continue while not chessmate
-    {
-      if (player_turn == WHITETURN) { whiteplayerturn(player1, player2, turn);} // Prints who's turn it is
-      else{ blackplayerturn(player1, player2, turn); }
+  if (player_turn == WHITETURN) { whiteplayerturn(player1, player2, turn);} // Prints who's turn it is
+  else{ blackplayerturn(player1, player2, turn); }
 
-      printf("after turns \n");
-      gtk_label_set_text (Info, "Please select the chess piece you want to move (ex: A3)");
-
-      sleep(3);
-      if (second_clicked == 1) { // Move detected
-        // To align with Marie's logic -> -1
-        x -= 1;
-        des_x -= 1;
-
-        //____________________________________ Game settings _____________________________________________________________
-        //Rock
-        struct res_rock res = rock_sub( player_turn, board, white_kingstatus, black_kingstatus, white_rock, black_rock, x_kingb, y_kingb, x_kingw, y_kingw, x, y, des_x, des_y);
-        player_turn = res.player_turn;
-        x_kingb = res.x_kingb;
-        y_kingb = res.y_kingb;
-        x_kingw = res.x_kingw;
-        y_kingw = res.y_kingw;
-
-        if (res.continuee == 1) {
-          continue;
-        }
-
-        //Other chess piece movements
-        int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, board); //movement is possible
-
-
-        switch(possible)
-        {
-            case 0:
-                gtk_label_set_text(Info, "This move isn't possible for that chess piece, please check the rules.\n\n");
-                break;
-            case 2:
-                 gtk_label_set_text(Info,"This move isn't possible because one or some coordinates are out of bounds\n\n");
-                break;
-            case 3:
-                gtk_label_set_text(Info,"This move isn't possible because the chess piece on the destination coordinates is already yours!\n\n");
-                break;
-            case 4:
-                gtk_label_set_text(Info,"This move isn't possible because there aren't any chess pieces to move!\n\n");
-                break;
-            case 1:
-                // Check if there are any chess pieces on destination coordinates and if so remove them from list
-                // AND modifies in List coordinates of the chess piece that's moved
-
-                if (player_turn == WHITETURN) {
-                  nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentW, nbWhite); }
-                else { nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentB, nbBlack); }
-
-
-                //Move chess piece
-                board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board);
-
-              //________ King ____________
-                if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-            	    {
-            	      x_kingw = des_x - 1;
-            	      y_kingw = des_y - 1;
-            	      white_rock = CANT_ROCK;
-            	    }
-
-            	  if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING)
-            	    {
-            	      x_kingb = des_x - 1;
-            	      y_kingb = des_y - 1;
-            	      black_rock = CANT_ROCK;
-            	    }
-
-                //___________________________
-
-
-                // Impossible move
-            	  if((player_turn == BLACKTURN && piece_to_place(x_kingb, y_kingb, board) == 1 ) || (player_turn == WHITETURN && piece_to_place(x_kingw, y_kingw, board) == 1))
-            	    {
-                    board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
-            	      gtk_label_set_text(Info, "Impossible to move the king as checkmate would be unavoidable\n");
-
-            	      if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-            		    {   x_kingb = x - 1;
-            		        y_kingb = y - 1; }
-
-                   if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-                   {    x_kingw = x - 1;
-                        y_kingw = y - 1; }
-            	      continue;
-            	    }
-
-                // Check for checkmates _________________________________________
-                struct checking res = check4checkmates( player_turn, board, white_kingstatus, black_kingstatus, x_kingb, y_kingb, x_kingw, y_kingw, des_x, des_y,  player1, player2);
-                player_turn = res.player_turn;
-                white_kingstatus = res.white_kingstatus;
-                black_kingstatus = res.black_kingstatus;
-                if (res.returned == 1)
-                { return;}
-          } // end switch
-      second_clicked = 0;
-    } // end if clicked x2
-  }// While
+  //struct for_clicked *needed = malloc(sizeof(struct for_clicked));
+  needed->player1 = player1;
+  needed->player2 = player2;
+  needed->turn = turn;
+  needed->Info = Info;
+  needed->board = board;
+  needed->currentW = currentW;
+  needed->nbWhite = nbWhite;
+  needed->currentB = currentB;
+  needed->nbBlack = nbBlack;
+  needed->x_kingw = x_kingw;
+  needed->y_kingw = y_kingw;
+  needed->x_kingb = x_kingb;
+  needed->y_kingb = y_kingb;
+  needed->player_turn = player_turn; // team's turn
+  needed->white_rock = white_rock;
+  needed->black_rock = black_rock;
+  needed->white_kingstatus = white_kingstatus;
+  needed->black_kingstatus = black_kingstatus;
+  printf("init [ok]\n");
+  return;
 }
 
 

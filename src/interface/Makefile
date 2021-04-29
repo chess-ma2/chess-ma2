@@ -27,6 +27,6 @@ clean:
 
 build:
 		@echo "[Chess(ma)² - Gtk] Start build common sources..."
-		@gcc -pthread -lsqlite3 -Wall -O3 `pkg-config --libs gtk+-3.0` `pkg-config --cflags gtk+-3.0` mainpage.c \
+		@gcc -pthread -lsqlite3  -O3 `pkg-config --libs gtk+-3.0` `pkg-config --cflags gtk+-3.0` mainpage.c \
 	    -o "game"
 		@echo "[Chess(ma)² - Gtk] End build sources!"
