@@ -287,6 +287,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
   parent->y = current_List[i].y;
   parent->score = getScore(current_List[i]);
   int current_depth = -1;
+  int MinOrMax = 1; // 1 for Max or 0 for Min
 
   // enqueue parent
   Q = enqueue(parent, Q);
@@ -301,6 +302,12 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
 
     int nb_children = 0;
     struct node *children = malloc(sizeof(struct node));
+    int min = 99;
+    int min_x = 0;
+    int min_y = 0;
+    int max = -99;
+    int max_x = 0;
+    int max_y = 0;
 
     // 1) Get List of All possible pieces (piece + x + y)
     // 2) for each possible piece
@@ -331,6 +338,17 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
           children[nb_children++] = *new;
           // 6)
           Q = enqueue(new, Q);
+          if (MinOrMax == 1 && new->score > max) {
+            max = new->score;
+            max_x = new->x;
+            max_y = new->y;
+          }
+          if (MinOrMax == 0 && new->score < min) {
+            min = new->score;
+            min_x = new->x;
+            min_y = new->y;
+          }
+
           //printf("enqueue with %i\n", new->score);
         }
 
@@ -338,6 +356,22 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
     //printf("NB children [ok]\n");
     index->children = children;
     //printf("Children [ok]\n");
+    if (nb_children > 0 && MinOrMax == 1) {
+      index->score = max;
+      index->x = max_x;
+      index->y = max_y;
+    }
+    if (nb_children > 0 && MinOrMax == 0) {
+      index->score = min;
+      index->x = min_x;
+      index->y = min_y;
+    }
+    if (MinOrMax == 1) {
+      MinOrMax = 0;
+    }
+    else{
+        MinOrMax = 1;
+    }
 
     if (current_depth == depth ) {
       //printf("max depth \n");
