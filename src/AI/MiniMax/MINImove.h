@@ -10,6 +10,7 @@
 
 #include "../../common/c/rules/pieces.c"
 #include "../../common/c/rules/check_and_pat.c"
+#include "../../common/c/game/version1.c"
 
 /**
  * @author Marine

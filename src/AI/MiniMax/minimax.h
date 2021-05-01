@@ -9,6 +9,7 @@
 #include "../../common/c/rules/pieces.c"
 #include "../../common/c/rules/plate.c"
 #include "../../common/c/game/added_functions.c"
+#include "MINImove.c"
 
 // Structure function ____________________________
 struct node {

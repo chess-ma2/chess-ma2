@@ -310,11 +310,11 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
     int max_y = 0;
 
     // 1) Get List of All possible pieces (piece + x + y)
-      
-      struct tab * moves;
-      for (int i=0; current_List[i]; i++)
+
+      struct tab * moves = malloc(sizeof(struct tab));
+      /*for (int i=0; current_List[i]; i++)
       {
-          
+
           switch (current_List[i].piece)
           {
               case PAWN:
@@ -337,10 +337,34 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
                   break;
               default:
                   printf("error\n");
+          } */
+          switch (board[index->y*8 + index->x].type)
+          {
+            case PAWN:
+                moves = find_chess_moves_pawn(board, index->x, index->y, board[index->y*8 + index->x].color);
+                break;
+            case BISHOP:
+                moves = find_chess_moves_bishop(board, index->x, index->y, board[index->y*8 + index->x].color);
+                break;
+            case KING:
+                moves = find_chess_moves_king(board, index->x, index->y, board[index->y*8 + index->x].color);
+                break;
+            case QUEEN:
+                moves = find_chess_moves_queen(board, index->x, index->y, board[index->y*8 + index->x].color);
+                break;
+            case KNIGHT:
+                moves = find_chess_moves_knight(board, index->x, index->y, board[index->y*8 + index->x].color);
+                break;
+            case ROOK:
+                moves = find_chess_moves_rook(board, index->x, index->y, board[index->y*8 + index->x].color);
+                break;
+            default:
+                printf("error\n");
           }
-          
-          for (size_t i = 0; i < moves.numberofmoves; i++) {
-              struct Moves pos= moves.Moves;
+
+          struct Moves *pos = moves->moves;
+
+          for (size_t i = 0; i < moves->numberofmoves; i++) {
             // 3)
             struct node *new = malloc(sizeof(struct node));
             new->x = pos[i].x_pos;
@@ -391,13 +415,15 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
 
           if (current_depth == depth ) {
             //printf("max depth \n");
+            free(moves);
             free_queue(Q);
             break; }
 
           }
       //printf("end \n");
+
       return parent;
-      
+
 
     // 2) for each possible piece
         // 3) Create node
@@ -486,6 +512,7 @@ struct tree * create_tree(struct Piece *board, enum turn player_turn, struct cur
     struct node *root = malloc(sizeof(struct node));
     Tree->root = root;
     struct node *children = malloc(nb_List * sizeof(struct node));
+    // First Depth -> all possibilities
     for (int i = 0; i < nb_List; i++) {
       children[i] = *create_node(current_List, i, depth, board);
     }
