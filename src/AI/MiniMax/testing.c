@@ -43,7 +43,8 @@ int main()
     printf("prtinfROOKok\n");
     printmoves(find_chess_moves_queen( board, x, y, color));
     printf("prtinfQUEENok\n");
-
+    
+    free(board);
 
 
   return 0;

@@ -10,6 +10,7 @@
 #define MINIMOVE_C
 
 #include "MINImove.h"
+#include "../../common/c/game/version1.c"
 
 int out_of_bounds( int x,  int y)
 {
@@ -63,6 +64,8 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board,int color
 {
     //changes coordinates to make the test
     board[xtest+ytest*8].type=board[xinit+yinit*8].type;
+    printf("%i\n",board[xinit+yinit*8].type);
+    printf("%i\n",board[xtest+ytest*8].type);
     board[xtest+ytest*8].color=board[xinit+yinit*8].color;
     board[xinit+yinit*8].type=NONE;
     struct Moves king = king_position(board,color);
@@ -91,7 +94,7 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
     //CHECK INTIAL PLACE +2
     if ((color==0 && y==2)|| (color==1 && y==7))
     {
-        if ((is_obstacle(x,y+2-4*color,board,color) || is_free(x,y+2-4*color,board)) && out_of_bounds(x,y+2-4*color))
+        if (is_free(x,y+2-4*color,board) && out_of_bounds(x,y+2-4*color))
         {
             if (!testCHECK(x, y, x, y+2-4*color,board,color))
             {
@@ -103,7 +106,7 @@ struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
         }
     }
     //CHECK +1 FRONT MOVE
-    if ((is_obstacle(x,y+1-2*color,board,color) || is_free(x,y+1-2*color,board)) && out_of_bounds(x,y+1-2*color) && !testCHECK(x, y, x, y+1-2*color,board,color))
+    if (is_free(x,y+1-2*color,board) && out_of_bounds(x,y+1-2*color) && !testCHECK(x, y, x, y+1-2*color,board,color))
     {
         moves->x_pos = x;
         moves->y_pos = y+1-2*color;
@@ -188,7 +191,6 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //      x
     if ((is_obstacle(x+2,y-1,board,color) ||  is_free(x+2,y-1,board)) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y-1, board,color))
     {
-        printf("here\n");
         moves->x_pos = x+2;
         moves->y_pos = y-1;
         global_moves[number] = *moves;
@@ -222,12 +224,19 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     
     //shape      x
     //           *  *   dest
-    if ((is_obstacle(x+2,y+1,board,color) ||  is_free(x+2,y+1,board)) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y+1, board,color))
+    if (out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y+1, board,color))
     {
+        if (is_obstacle(x+2,y+1,board,color) ||  is_free(x+2,y+1,board))
+        {
+            printf("%i\n",is_obstacle(x+2,y+1,board,color)==1);
+            printf("%i\n",is_free(x+2,y+1,board)==1);
+            printf("%i\n",board[y*8+x].type==NONE);
+            display_board_special(board);
         moves->x_pos = x+2;
         moves->y_pos = y+1;
         global_moves[number] = *moves;
         number++;
+        }
     }
     
     

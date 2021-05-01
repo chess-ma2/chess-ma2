@@ -21,9 +21,9 @@
 
 // Structure for Lists of current pieces
 struct currentpiece{
-  struct Piece piece;
-  int x;
-  int y;
+    struct Piece piece;
+    int x;
+    int y;
 };
 
 // Create List of white chess pieces

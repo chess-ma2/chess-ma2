@@ -66,6 +66,12 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
 // Creates Tree for MiniMax
 struct tree * create_tree(struct Piece *board, enum turn player_turn, struct currentpiece *current_List, int nb_List, int depth);
 
+int get_min_from_list(int nb_children,struct node *children);
+
+int get_max_from_list(int nb_children,struct node *children);
+
+struct tree * update_minimax (struct tree * T, int color);
+
 // Frees node -dfs
 void free_node(struct node *Node);
 
