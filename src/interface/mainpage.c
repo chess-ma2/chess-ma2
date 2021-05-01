@@ -50,10 +50,6 @@ GtkEntry * Password_Entry1;
 // Label to say if accound has been created with success
 GtkLabel * Create_account1_yes;
 
-//_________ Transition ___________________________
-// Transition Window
-GtkWidget* transition1;
-
 //______ Second Player ________
 // Entry for name
 GtkEntry * Name_Entry2;
@@ -154,8 +150,9 @@ void save_pl1(GtkButton *button, gpointer user_data)
     pl1 = res;
 
     // Show transition window
-    gtk_widget_show(transition1);
-    gtk_widget_hide(NewPL1_W1);
+    transition_page(NewPL1_W1, window1_version_PL2);
+    //gtk_widget_show(transition1);
+    //gtk_widget_hide(NewPL1_W1);
   }
 }
 
@@ -164,13 +161,14 @@ void save_pl1(GtkButton *button, gpointer user_data)
  * @author Anna
  * @date 15/04/2021
  * @details From transition window to player n2's window
-*/
+
 void go_2_player2(GtkButton *button, gpointer user_data)
 {
   // Show general window for Player 2 (login or new)
   gtk_widget_show(window1_version_PL2);
   gtk_widget_hide(transition1);
-}
+}*/
+
 // _____ Player 2 ____________________________________________________________
 /*
  * @author Anna
@@ -243,7 +241,9 @@ void connect1(GtkButton *button, gpointer user_data)
     pl1 =findplayer(Email_Log1,Password_Log1);
     if (pl1!=NULL)
     {
-        gtk_widget_show(transition1);
+        //gtk_widget_show(transition1);
+        transition_page(LoginAccount, window1_version_PL2);
+
     }
     else
     {
@@ -288,9 +288,8 @@ void connect2(GtkButton *button, gpointer user_data)
         gtk_widget_show(game_v1); // Show GAME
         printf("ici\n");
         // _________ Play Game _______________
-        //struct to_play *playing = user_data;
-        //seg fault ici?? chelou
-        //play_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, playing->cr);
+        struct to_play *playing = user_data;
+        init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
     }
     else
     {
@@ -448,11 +447,6 @@ int main (int argc, char *argv[])
     //entry for password
     Password_Log1= GTK_ENTRY(gtk_builder_get_object(builder,"password3"));
 
-    // Transition ______________________________________________________________________
-    // Window
-    transition1 = GTK_WIDGET(gtk_builder_get_object(builder, "transition1"));
-    // Button to go 2nd player's page
-    GtkButton* go22 = GTK_BUTTON(gtk_builder_get_object(builder, "go22"));
 
 
 
@@ -587,14 +581,6 @@ int main (int argc, char *argv[])
 
     g_signal_connect(lock_new3, "clicked", G_CALLBACK(connect1), NULL);
 
-    //ajouter interactions mais jsp comment faire pour m'y reetoruver je vais donc faire une liste d'abord ecrite cause i'm lost
-
-    // Transition _________________________
-    // Destroys .exe when transition window is closed
-    g_signal_connect(transition1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    // When ok clicked go to player n°2 page
-    g_signal_connect(go22, "clicked", G_CALLBACK(go_2_player2), NULL);
-
     // Player 2_________________________
 
     // Destroys .exe when first version window is closed for player 2 (new or login)
@@ -620,7 +606,7 @@ int main (int argc, char *argv[])
     // Destroys .exe when first player (new) of first version window is closed
     g_signal_connect(login_2, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Click on New Player 2 -> Save info and create player in db
-    g_signal_connect(lock_new4, "clicked", G_CALLBACK(connect2), NULL);
+    g_signal_connect(lock_new4, "clicked", G_CALLBACK(connect2), &playing);
 
 
     // Destroys .exe when new first player login account is closed
@@ -638,6 +624,7 @@ int main (int argc, char *argv[])
     move_str = malloc(sizeof(struct for_clicked));
     move_str->Ori_Coord = Ori_Coord;
     move_str->New_Coord = New_Coord;
+    move_str->constr = constr;
     g_signal_connect(click_coordinates, "clicked", G_CALLBACK(click4move), move_str);
 
     //___________ Version 2 _________________________________________________________

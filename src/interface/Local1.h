@@ -75,7 +75,6 @@ struct for_clicked{
   struct Player *player2;
   GtkLabel *turn;
   GtkLabel *Info;
-  struct Piece* board;
   struct currentpiece *currentW;
   int nbWhite;
   struct currentpiece *currentB;
@@ -89,9 +88,13 @@ struct for_clicked{
   enum rock black_rock;
   enum king_status white_kingstatus;
   enum king_status black_kingstatus;
+  struct construction constr;
 };
 
 // Players___________________________________________________________________
+// GTK Dialog for transition page
+void transition_page(GtkWidget *PREwindow, GtkWidget *PASTwindow);
+
 // Subfunction when email already in db
 void on_response (GtkDialog *dialog,
              gint       response_id,
@@ -106,6 +109,9 @@ struct Player * findplayer(GtkEntry* mail, GtkEntry* pass);
 // Game _________________________________________________________
 // Draw chessboard
 gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data);
+
+// Updates board images after a move
+void update_board(struct construction constr);
 
 void change_boarders(struct coord *org);
 

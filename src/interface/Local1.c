@@ -15,6 +15,33 @@
 
 /*
  * @author Anna
+ * @date 01/05/2021
+ * @details GKT Dialog
+*/
+void transition_page(GtkWidget *PREwindow, GtkWidget *PASTwindow)
+{
+  GtkWidget *dialog;
+  dialog = gtk_message_dialog_new(GTK_WINDOW(PREwindow),
+            GTK_DIALOG_DESTROY_WITH_PARENT,
+            GTK_MESSAGE_INFO,
+            GTK_BUTTONS_OK,
+            "Player n°1 is all up and done!");
+  gtk_window_set_title(GTK_WINDOW(dialog), "On to player n°2");
+  gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "Please now give the device to player n°2!");
+
+  struct windows for_rees;
+  for_rees.New_pl = PREwindow;
+  for_rees.Login = PASTwindow;
+
+  // Link to subfunction
+  g_signal_connect(GTK_DIALOG (dialog), "response", G_CALLBACK (on_response), &for_rees);
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  //gtk_widget_destroy(dialog);
+}
+
+/*
+ * @author Anna
  * @date 10/04/2021 - 16/04/2021
  * @details draw chessboard without chess pieces
 */
@@ -22,8 +49,6 @@
 // Signal handler for the "draw" signal of the drawing area.
 gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
-    // All Images
-    char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
     struct construction *res = user_data;
 
     int c = 0; //white
@@ -35,39 +60,6 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
     //Iterate through chessboard
     for (size_t i = 0; i < 8; i++) {
       for (size_t j = 0; j < 8; j++) {
-
-        // Current piece of Board
-        struct Piece current = res->board[i*8+j];
-        // Get correct index for image from list in .h
-        int in = -1;
-
-        if(current.color == BLACK){
-        switch(current.type){
-            case PAWN: in = 6; break;
-            case ROOK: in = 7; break;
-            case BISHOP: in = 8; break;
-            case KNIGHT: in = 9; break;
-            case QUEEN: in = 10; break;
-            case KING: in = 11; break;
-            default: in = -1; }}
-        else {
-        switch(current.type)
-        {   case PAWN: in = 0; break;
-            case ROOK: in = 1; break;
-            case BISHOP: in = 2; break;
-            case KNIGHT: in = 3; break;
-            case QUEEN: in = 4; break;
-            case KING: in = 5; break;
-            default: in = -1;} }
-
-        // Sets info on Image
-        if (in != -1) {
-          res->ImageBoard[i*8+j] = gtk_image_new_from_file(normal_images_cha[in]);
-          gtk_widget_set_size_request (res->ImageBoard[i*8+j],60,60);
-        //  gtk_widget_set_opacity(res->ImageBoard[i] , 0.2);
-          gtk_fixed_put (res->fixed, res->ImageBoard[i*8+j], x + 15, y + 15);
-          gtk_widget_show(res->ImageBoard[i*8+j]);
-        }
 
         if (c == 0) {
           // Draws the rectangle in bright-ish color.
@@ -96,6 +88,7 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
     return FALSE;
 }
 
+
 /*
  * @author Anna
  * @date 20/04/2021
@@ -109,14 +102,14 @@ void on_response (GtkDialog *dialog,
   // Get parent window and login window
   struct windows *res = user_data;
 
-  /* If the button clicked gives response "Login" == OK (response_id being -5) */
+  // If the button clicked gives response "Login" == OK (response_id being -5)
   if (response_id == GTK_RESPONSE_OK)
   { // Go to login page
     gtk_widget_show(res->Login);
     gtk_widget_hide(res->New_pl);
   }
 
-  /* If the button clicked gives response "Create New Account" == CANCEL (response_id being -6) */
+  /* If the button clicked gives response "Create New Account" == CANCEL (response_id being -6)
   else if (response_id == GTK_RESPONSE_CANCEL)
   {
     gtk_label_set_text (res->label, "Please create a new account with a new email.");
@@ -125,11 +118,11 @@ void on_response (GtkDialog *dialog,
     gtk_entry_set_text(res->Password, "");
   }
 
-  /* If the message dialog is destroyed (for example by pressing escape) */
+  // If the message dialog is destroyed (for example by pressing escape)
   else if (response_id == GTK_RESPONSE_DELETE_EVENT)
      g_print ("dialog closed or cancelled\n");
 
-  /* Destroy the dialog after one of the above actions have taken place */
+  // Destroy the dialog after one of the above actions have taken place */
   gtk_widget_destroy (GTK_WIDGET (dialog));
 
 }
@@ -296,7 +289,7 @@ void on_clickedB(GtkButton *button, gpointer user_data)
 
 void printRulesLabel(GtkLabel *Rules)
 {
-  char *rules = " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n|                                Rules                                  |\n|                                                                            |\n| If you wish to Withdraw please click on         |\n|               the Withdraw button                          |\n|                                                                            |\n|                                                                            |\n| If you want to ask for a stalemate please     |\n|      click on the stalemate button                     |\n|                                                                            |\n|                                                                            |\n| White team =  ♙  ♖  ♘  ♗  ♔  ♕                         |\n| Black team =  ♟  ♜  ♞  ♝  ♚  ♛                          |\n|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n";
+  char *rules = " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n|                                Rules                                  |\n|                                                                            |\n| If you wish to Withdraw please click on         |\n|                the Withdraw button                          |\n|                                                                            |\n|                                                                            |\n| If you want to ask for a stalemate please      |\n|      click on the stalemate button                     |\n|                                                                            |\n|                                                                            |\n| White team =  ♙  ♖  ♘  ♗  ♔  ♕                          |\n| Black team =  ♟  ♜  ♞  ♝  ♚  ♛                          |\n|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n";
 
   gtk_label_set_text (Rules, rules);
 }
@@ -337,6 +330,69 @@ void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
   }
 }
 
+
+/*
+ * @author Anna
+ * @date 01/05/2021
+ * @details Updates board images after a move
+*/
+void update_board(struct construction constr){
+  // All Images
+  char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
+
+  int x = 56; //original coordinates
+  int y = 90; //original coordinates
+
+  int width = 60;
+  int height = 60;
+
+  //Iterate through chessboard
+  for (size_t i = 0; i < 8; i++) {
+    for (size_t j = 0; j < 8; j++) {
+
+      // Current piece of Board
+      struct Piece current = constr.board[i*8+j];
+      // Get correct index for image from list in .h
+      int in = -1;
+
+      if(current.color == BLACK){
+      switch(current.type){
+          case PAWN: in = 6; break;
+          case ROOK: in = 7; break;
+          case BISHOP: in = 8; break;
+          case KNIGHT: in = 9; break;
+          case QUEEN: in = 10; break;
+          case KING: in = 11; break;
+          default: in = -1; }}
+      else {
+      switch(current.type)
+      {   case PAWN: in = 0; break;
+          case ROOK: in = 1; break;
+          case BISHOP: in = 2; break;
+          case KNIGHT: in = 3; break;
+          case QUEEN: in = 4; break;
+          case KING: in = 5; break;
+          default: in = -1;} }
+
+      // Sets info on Image
+      if (in != -1) {
+        gtk_image_set_from_file(constr.ImageBoard[i*8+j], normal_images_cha[in]);
+        gtk_widget_set_size_request (constr.ImageBoard[i*8+j],60,60);
+        gtk_fixed_put (constr.fixed, constr.ImageBoard[i*8+j], x + 15, y + 15);
+        gtk_widget_show(constr.ImageBoard[i*8+j]);
+      }
+      else
+      {
+        gtk_image_clear(constr.ImageBoard[i*8+j]);
+      }
+      x += width;
+    }
+    x = 56;
+    y += height;
+  }
+}
+
+
 /*
  * @author Anna
  * @date 29/04/2021
@@ -361,13 +417,17 @@ void click4move(GtkButton *button, gpointer user_data)
   char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
   char * new = (char *) gtk_entry_get_text(needed->New_Coord);
 
-  printf("ori A is char = %c \n", ori[0]);
+  /*printf("ori A is char = %c \n", ori[0]);
   printf("ori A is int = %i \n", (int)ori[0]);
   printf("ori A is int = %i for function\n", (int)ori[0] - 64);
 
   printf("ori is char = %c \n", ori[1]);
   printf("ori is int = %i \n", (int)ori[1]);
-  printf("ori is int = %i for function\n", (int)ori[1] - 48);
+  printf("ori is int = %i for function\n", (int)ori[1] - 48);*/
+  printf("original is %c%i\n",ori[0], (int)ori[1] - 48);
+  printf("new are %c%i\n", new[0], (int)new[1] - 48);
+
+
   if (incorrect_char(ori[0]) == 1 || incorrect_int((int)ori[1] - 48) == 1 ||
     incorrect_char(new[0]) == 1 || incorrect_int((int)new[1] - 48) == 1) {
     gtk_label_set_text(needed->Info, "Incorrect coordinates please try again");
@@ -382,7 +442,7 @@ void click4move(GtkButton *button, gpointer user_data)
 
   //____________________________________ Game settings _____________________________________________________________
   //Rock
-  struct res_rock res = rock_sub(needed->player_turn, needed->board, needed->white_kingstatus,
+  struct res_rock res = rock_sub(needed->player_turn, needed->constr.board, needed->white_kingstatus,
     needed->black_kingstatus, needed->white_rock, needed->black_rock,needed-> x_kingb,
     needed->y_kingb, needed->x_kingw, needed->y_kingw, x, y, des_x, des_y);
 
@@ -402,7 +462,7 @@ void click4move(GtkButton *button, gpointer user_data)
   printf("rock function over \n");
 
   //Other chess piece movements
-  int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->board); //movement is possible
+  int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->constr.board); //movement is possible
   printf("after possible \n");
 
   switch(possible)
@@ -425,22 +485,22 @@ void click4move(GtkButton *button, gpointer user_data)
 
           printf("is possible \n");
           if (needed->player_turn == WHITETURN) {
-            needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->board, needed->currentW, needed->nbWhite); }
-          else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->board, needed->currentB, needed->nbBlack); }
+            needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentW, needed->nbWhite); }
+          else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentB, needed->nbBlack); }
 
 
           //Move chess piece
-          needed->board = pieceMove(x-1 , y-1, des_x-1, des_y-1, needed->board);
+          needed->constr.board = pieceMove(x-1 , y-1, des_x-1, des_y-1, needed->constr.board);
 
         //________ King ____________
-          if(needed->board[(y-1)*8+(x-1)].color == WHITE && needed->board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+          if(needed->constr.board[(y-1)*8+(x-1)].color == WHITE && needed->constr.board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
             {
               needed->x_kingw = des_x - 1;
               needed->y_kingw = des_y - 1;
               needed->white_rock = CANT_ROCK;
             }
 
-          if(needed->board[(y-1)*8+(x-1)].color == BLACK && needed->board[(y-1)*8+(x-1)].type == KING)
+          if(needed->constr.board[(y-1)*8+(x-1)].color == BLACK && needed->constr.board[(y-1)*8+(x-1)].type == KING)
             {
               needed->x_kingb = des_x - 1;
               needed->y_kingb = des_y - 1;
@@ -451,17 +511,17 @@ void click4move(GtkButton *button, gpointer user_data)
 
 
           // Impossible move
-          if((needed->player_turn == BLACKTURN && piece_to_place(needed->x_kingb, needed->y_kingb, needed->board) == 1 )
-          || (needed->player_turn == WHITETURN && piece_to_place(needed->x_kingw, needed->y_kingw, needed->board) == 1))
+          if((needed->player_turn == BLACKTURN && piece_to_place(needed->x_kingb, needed->y_kingb, needed->constr.board) == 1 )
+          || (needed->player_turn == WHITETURN && piece_to_place(needed->x_kingw, needed->y_kingw, needed->constr.board) == 1))
             {
-              needed->board = pieceMove(des_x-1, des_y-1, x-1, y-1, needed->board);
+              needed->constr.board = pieceMove(des_x-1, des_y-1, x-1, y-1, needed->constr.board);
               gtk_label_set_text(needed->Info, "Impossible to move the king as checkmate would be unavoidable\n");
 
-              if(needed->board[(y-1)*8+(x-1)].color == BLACK && needed->board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+              if(needed->constr.board[(y-1)*8+(x-1)].color == BLACK && needed->constr.board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
               {   needed->x_kingb = x - 1;
                   needed->y_kingb = y - 1; }
 
-             if(needed->board[(y-1)*8+(x-1)].color == WHITE && needed->board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+             if(needed->constr.board[(y-1)*8+(x-1)].color == WHITE && needed->constr.board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
              {    needed->x_kingw = x - 1;
                   needed->y_kingw = y - 1; }
               // NEXT TURN
@@ -471,7 +531,7 @@ void click4move(GtkButton *button, gpointer user_data)
             }
 
           // Check for checkmates _________________________________________
-          struct checking res = check4checkmates(needed->player_turn, needed->board, needed->white_kingstatus,
+          struct checking res = check4checkmates(needed->player_turn, needed->constr.board, needed->white_kingstatus,
              needed->black_kingstatus, needed->x_kingb, needed->y_kingb, needed->x_kingw, needed->y_kingw,
              des_x, des_y,  needed->player1, needed->player2);
           needed->player_turn = res.player_turn;
@@ -479,6 +539,10 @@ void click4move(GtkButton *button, gpointer user_data)
           needed->black_kingstatus = res.black_kingstatus;
           if (res.returned == 1)
           { return;}
+
+          // Update board
+          update_board(needed->constr);
+
     } // end switch
 
 
@@ -505,7 +569,7 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
   // 7) Update needed positions and player's turn
 
   // Variables _________________________________________________________________
-  struct Piece* board = constr.board;
+  //struct Piece* board = constr.board;
 
   //_______________ Variables
   // Current white chess pieces on chessboard
@@ -547,12 +611,14 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
   if (player_turn == WHITETURN) { whiteplayerturn(player1, player2, turn);} // Prints who's turn it is
   else{ blackplayerturn(player1, player2, turn); }
 
+  // Show Board
+  update_board(constr);
+
   //struct for_clicked *needed = malloc(sizeof(struct for_clicked));
   needed->player1 = player1;
   needed->player2 = player2;
   needed->turn = turn;
   needed->Info = Info;
-  needed->board = board;
   needed->currentW = currentW;
   needed->nbWhite = nbWhite;
   needed->currentB = currentB;
