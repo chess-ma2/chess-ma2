@@ -23,16 +23,16 @@ int main()
     struct Piece* board = init_board();
     struct currentpiece *current_List = create_whiteList();
     struct tree * Tree = create_tree(board, WHITETURN, current_List, 16, 2);
-    //int color = 1;//white
     pretty_print(Tree);
     free_tree(Tree);
     //free(board);
 
-    //int x='A';
-    //int y=7;
+    /*int x='A';
+    int y=7;
+    int color = 1;//white
 
-    /*printmoves(find_chess_moves_pawn( board, x, y, color));
-    printf("prinpawnok\n");
+    printmoves(find_chess_moves_pawn( board, x, y, color));
+    printf("printpawnok\n");
     printmoves(find_chess_moves_knight(board, x, y, color));
     printf("printkinghtok\n");
     printmoves(find_chess_moves_king( board, x, y, color));

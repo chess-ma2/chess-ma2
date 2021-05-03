@@ -10,6 +10,7 @@
 #define MINIMOVE_C
 
 #include "MINImove.h"
+#include "minimax.h"
 
 
 int out_of_bounds( int x,  int y)
@@ -33,26 +34,25 @@ int is_obstacle(int x, int y, Piece* board,int color)
 
 int is_free(int x, int y, Piece * board)
 {
-    struct Piece piece=board[y*8+x];
-    return piece.type==NONE;
+    return board[y*8+x].type==NONE;
 }
 
 // ERROR SOLVING: TYPES
-struct Moves king_position( Piece * board,int color)
+struct Moves * king_position( Piece * board,int color)
 {
-    struct Moves pos;
+    struct Moves * pos= malloc(sizeof(struct Moves));
     int x=0;
     int y=0;
-    pos.x_pos=x;
-    pos.y_pos=y;
+    pos->x_pos=x;
+    pos->y_pos=y;
     for (x=0;x<8;x++)
     {
         for(y=0;y<8;y++)
         {
             if (board[x+8*y].type == KING && board[x+8*y].color==color)
             {
-                pos.x_pos=x;
-                pos.y_pos=y;
+                pos->x_pos=x;
+                pos->y_pos=y;
                 return pos;
             }
         }
@@ -65,13 +65,12 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board,int color
 {
     //changes coordinates to make the test
     board[xtest+ytest*8].type=board[xinit+yinit*8].type;
-    printf("%i\n",board[xinit+yinit*8].type);
-    printf("%i\n",board[xtest+ytest*8].type);
     board[xtest+ytest*8].color=board[xinit+yinit*8].color;
     board[xinit+yinit*8].type=NONE;
-    struct Moves king = king_position(board,color);
+    struct Moves * king = king_position(board,color);
 
-    if (check_mat(king.x_pos, king.y_pos, color,board))
+
+    if (check_mat(king->x_pos, king->y_pos, color,board))
     {
         //resset the orignal values
         board[xinit+yinit*8].type=board[xtest+ytest*8].type;
@@ -81,16 +80,17 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board,int color
     //resset the orignal values
     board[xinit+yinit*8].type=board[xtest+ytest*8].type;
     board[xtest+ytest*8].type=NONE;
+    free(king);
     return 0;
 }
 
-struct tab* find_chess_moves_pawn(Piece* board,  int x,  int y,int color)
+struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
 {
     struct tab* table= malloc(sizeof(struct tab));
     int number=0;
     table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves * moves=malloc(sizeof(struct Moves));
+    struct Moves* moves=malloc(sizeof(struct Moves));
 
     //CHECK INTIAL PLACE +2
     if ((color==0 && y==2)|| (color==1 && y==7))
@@ -229,9 +229,6 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     {
         if (is_obstacle(x+2,y+1,board,color) ||  is_free(x+2,y+1,board))
         {
-            printf("%i\n",is_obstacle(x+2,y+1,board,color)==1);
-            printf("%i\n",is_free(x+2,y+1,board)==1);
-            printf("%i\n",board[y*8+x].type==NONE);
             display_board_special(board);
         moves->x_pos = x+2;
         moves->y_pos = y+1;
@@ -349,7 +346,7 @@ struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
     int ymv=1; //y movement
 
     //>>>>>move
-    while ( is_free(x+xmv,y,board) && out_of_bounds(x+xmv,y))
+    while (is_free(x+xmv,y,board) && out_of_bounds(x+xmv,y))
     {
         if (!testCHECK(x, y, x+xmv, y, board,color))
         {

@@ -1,4 +1,5 @@
 #include "minimax.h"
+#include "MINImove.c"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -312,32 +313,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
     // 1) Get List of All possible pieces (piece + x + y)
 
       struct tab * moves = malloc(sizeof(struct tab));
-      /*for (int i=0; current_List[i]; i++)
-      {
-
-          switch (current_List[i].piece)
-          {
-              case PAWN:
-                  moves= find_chess_moves_pawn(board,current_List[i].x,current_List[i].y,board[current_List[i].x + current_List[i].y*8].color);
-                  break;
-              case BISHOP:
-                  moves= find_chess_moves_bishop(board,current_List[i].x,current_List[i].y,board[current_List[i].x + current_List[i].y*8].color);
-                  break;
-              case KING:
-                  moves= find_chess_moves_king(board,current_List[i].x,current_List[i].y,board[current_List[i].x + current_List[i].y*8].color);
-                  break;
-              case QUEEN:
-                  moves= find_chess_moves_queen(board,current_List[i].x,current_List[i].y,board[current_List[i].x + current_List[i].y*8].color);
-                  break;
-              case KNIGHT:
-                  moves= find_chess_moves_knight(board,current_List[i].x,current_List[i].y,board[current_List[i].x + current_List[i].y*8].color);
-                  break;
-              case ROOK:
-                  moves= find_chess_moves_rook(board,current_List[i].x,current_List[i].y,board[current_List[i].x + current_List[i].y*8].color);
-                  break;
-              default:
-                  printf("error\n");
-          } */
+      
           switch (board[index->y*8 + index->x].type)
           {
             case PAWN:

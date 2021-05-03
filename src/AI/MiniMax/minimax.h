@@ -24,11 +24,6 @@ struct tree{
   struct node *root;
 };
 
-struct Moves
-{
-    int x_pos;
-    int y_pos;
-};
 
 struct queue {
   struct node *Node;

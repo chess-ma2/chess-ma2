@@ -31,8 +31,17 @@ struct Moves
 struct tab
 {
   int numberofmoves;
-  struct Moves *moves;
+  struct Moves * moves;
 };
+
+
+struct Moves
+{
+    int x_pos;
+    int y_pos;
+};
+
+
 
 /**
  * @author Marine
@@ -83,7 +92,7 @@ int is_free(int x, int y, Piece * board);
  *
  * @return Moves, the position of the king
  */
-struct Moves king_position( Piece * board,int color);
+struct Moves * king_position( Piece * board,int color);
 
 /**
  * @author Marine
