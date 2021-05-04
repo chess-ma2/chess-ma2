@@ -13,7 +13,7 @@ void printmoves (struct tab* moves)
     printf("%i\n",moves->numberofmoves);
     for (int a=0; a<moves->numberofmoves; a++)
     {
-        printf("%c%i\n",m[a].x_pos,m[a].y_pos);
+        printf("%i %i\n",m[a].x_pos,m[a].y_pos);
     }
     //free(m);
 }
@@ -21,13 +21,13 @@ void printmoves (struct tab* moves)
 int main()
 {
     struct Piece* board = init_board();
-    struct currentpiece *current_List = create_whiteList();
+    /*struct currentpiece *current_List = create_whiteList();
     struct tree * Tree = create_tree(board, WHITETURN, current_List, 16, 2);
     pretty_print(Tree);
     free_tree(Tree);
-    //free(board);
+    //free(board);*/
 
-    /*int x='A';
+    int x=0;
     int y=7;
     int color = 1;//white
 
@@ -42,7 +42,7 @@ int main()
     printmoves(find_chess_moves_rook( board, x, y, color));
     printf("prtinfROOKok\n");
     printmoves(find_chess_moves_queen( board, x, y, color));
-    printf("prtinfQUEENok\n");*/
+    printf("prtinfQUEENok\n");
 
     free(board);
 

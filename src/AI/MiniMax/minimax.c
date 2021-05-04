@@ -332,7 +332,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
           }
 
           struct Moves *pos = moves->moves;
-          //printf("nb moves %i\n", moves->numberofmoves);
+      
           for (size_t i = 0; i < moves->numberofmoves; i++) {
             // 3)
             struct node *new = malloc(sizeof(struct node));
