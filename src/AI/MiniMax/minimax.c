@@ -259,12 +259,12 @@ double king_table[64]={ -3, -4, -4, -5, -5, -4, -4, -3, \
   int piece_val = getVal(current.piece);
   int res;
   switch (current.piece.type) {
-    case PAWN: res = (int) piece_val * pawn_table[current.y*8+current.x]; break;
-    case ROOK: res = (int) piece_val * rook_table[current.y*8+current.x]; break;
-    case BISHOP: res = (int) piece_val * bishop_table[current.y*8+current.x]; break;
-    case KNIGHT: res = (int) piece_val * knight_table[current.y*8+current.x]; break;
-    case QUEEN: res = (int) piece_val * queen_table[current.y*8+current.x]; break;
-    case KING: res = (int) piece_val * king_table[current.y*8+current.x]; break;
+    case PAWN: res = (int) piece_val * pawn_table[(current.y)*8+current.x]; break;
+    case ROOK: res = (int) piece_val * rook_table[(current.y)*8+current.x]; break;
+    case BISHOP: res = (int) piece_val * bishop_table[(current.y)*8+current.x]; break;
+    case KNIGHT: res = (int) piece_val * knight_table[(current.y)*8+current.x]; break;
+    case QUEEN: res = (int) piece_val * queen_table[(current.y)*8+current.x]; break;
+    case KING: res = (int) piece_val * king_table[(current.y)*8+current.x]; break;
     default: res = 0;
   }
   return res;
@@ -306,27 +306,37 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
     // 1) Get List of All possible pieces (piece + x + y)
 
       struct tab * moves = malloc(sizeof(struct tab));
-
-          switch (board[index->y*8 + index->x].type)
+      printf("%i %i\n",index->x,index->y);
+      printf("work %u\n",board[(index->y)*8 + index->x].type);
+          switch (board[(index->y)*8 + index->x].type)
           {
             case PAWN:
+                  printf("found pawn \n");
                 moves = find_chess_moves_pawn(board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case BISHOP:
+                  printf("found bishop \n");
                 moves = find_chess_moves_bishop(board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case KING:
+                  printf("found king \n");
                 moves = find_chess_moves_king(board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case QUEEN:
+                  printf("found queen \n");
                 moves = find_chess_moves_queen(board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case KNIGHT:
+                  printf("found knight \n");
                 moves = find_chess_moves_knight(board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case ROOK:
+                  printf("found rook \n");
                 moves = find_chess_moves_rook(board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
+            case NONE:
+                  printf("NONE \n");
+                  break;
             default:
                 printf("error\n");
           }

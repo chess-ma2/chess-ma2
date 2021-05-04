@@ -64,7 +64,7 @@ struct Moves * king_position( Piece * board,int color)
 int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board,int color)
 {
     //changes coordinates to make the test
-    display_board_special(board);
+    //display_board_special(board);
     char type= board[xtest+ytest*8].type;
     board[xtest+ytest*8].type=board[xinit+yinit*8].type;
     board[xtest+ytest*8].color=board[xinit+yinit*8].color;
@@ -95,7 +95,7 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
     struct Moves* moves=malloc(sizeof(struct Moves));
 
     //CHECK INTIAL PLACE +2
-    if ((color==0 && y==2)|| (color==1 && y==7))
+    if ((color==0 && y==1)|| (color==1 && y==6))
     {
         if (is_free(x,y+2-4*color,board) && out_of_bounds(x,y+2-4*color) )
         {
@@ -150,7 +150,7 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
 
 struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 {
-    display_board_special(board);
+    //display_board_special(board);
     struct tab* table= malloc(sizeof(struct tab));
     int number=0;
     table->moves=malloc(sizeof(struct Moves));
