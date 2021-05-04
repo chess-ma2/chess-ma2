@@ -288,7 +288,6 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
   parent->y = current_List[i].y;
   parent->score = getScore(current_List[i]);
   int current_depth = -1;
-  int MinOrMax = 1; // 1 for Max or 0 for Min
 
   // enqueue parent
   Q = enqueue(parent, Q);
@@ -303,17 +302,11 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
 
     int nb_children = 0;
     struct node *children = malloc(sizeof(struct node));
-    int min = 99;
-    int min_x = 0;
-    int min_y = 0;
-    int max = -99;
-    int max_x = 0;
-    int max_y = 0;
 
     // 1) Get List of All possible pieces (piece + x + y)
 
       struct tab * moves = malloc(sizeof(struct tab));
-      
+
           switch (board[index->y*8 + index->x].type)
           {
             case PAWN:
@@ -339,12 +332,13 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
           }
 
           struct Moves *pos = moves->moves;
-
+          //printf("nb moves %i\n", moves->numberofmoves);
           for (size_t i = 0; i < moves->numberofmoves; i++) {
             // 3)
             struct node *new = malloc(sizeof(struct node));
             new->x = pos[i].x_pos;
             new->y = pos[i].y_pos;
+            //printf("new move is x=%i, y=%i \n", new->x, new->y);
             struct currentpiece current;
             current.piece = board[pos[i].y_pos*8+pos[i].x_pos];
             current.x = new->x;
@@ -354,40 +348,9 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
             children[nb_children++] = *new;
             // 6)
             Q = enqueue(new, Q);
-            //printf("enqueue with %i\n", new->score);
-              if (MinOrMax == 1 && new->score > max) {
-                max = new->score;
-                max_x = new->x;
-                max_y = new->y;
-              }
-              if (MinOrMax == 0 && new->score < min) {
-                min = new->score;
-                min_x = new->x;
-                min_y = new->y;
-              }
-
-              //printf("enqueue with %i\n", new->score);
             }
           index->nb_children = nb_children;
-          //printf("NB children [ok]\n");
           index->children = children;
-          //printf("Children [ok]\n");
-          if (nb_children > 0 && MinOrMax == 1) {
-            index->score = max;
-            index->x = max_x;
-            index->y = max_y;
-          }
-          if (nb_children > 0 && MinOrMax == 0) {
-            index->score = min;
-            index->x = min_x;
-            index->y = min_y;
-          }
-          if (MinOrMax == 1) {
-            MinOrMax = 0;
-          }
-          else{
-              MinOrMax = 1;
-          }
 
           if (current_depth == depth ) {
             //printf("max depth \n");
@@ -396,82 +359,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
             break; }
 
           }
-      //printf("end \n");
-
       return parent;
-
-
-    // 2) for each possible piece
-        // 3) Create node
-        // 4) children[nb_children] = this node
-        // 5) Nb children += 1
-        // 6) enqueue node
-
-        /*// 1)
-        struct Moves testing[2];
-        testing[0].x_pos = 0;
-        testing[0].y_pos = 0;
-        testing[1].x_pos = 3;
-        testing[1].y_pos = 3;
-
-        // 2)
-        for (size_t i = 0; i < 2; i++) {
-          // 3)
-          struct node *new = malloc(sizeof(struct node));
-          new->x = testing[i].x_pos;
-          new->y = testing[i].y_pos;
-          struct currentpiece current;
-          current.piece = board[testing[i].y_pos*8+testing[i].x_pos];
-          current.x = new->x;
-          current.y = new->y;
-          new->score = getScore(current);
-          // 4) and 5)
-          children[nb_children++] = *new;
-          // 6)
-          Q = enqueue(new, Q);
-          if (MinOrMax == 1 && new->score > max) {
-            max = new->score;
-            max_x = new->x;
-            max_y = new->y;
-          }
-          if (MinOrMax == 0 && new->score < min) {
-            min = new->score;
-            min_x = new->x;
-            min_y = new->y;
-          }
-
-          //printf("enqueue with %i\n", new->score);
-
-    index->nb_children = nb_children;
-    //printf("NB children [ok]\n");
-    index->children = children;
-    //printf("Children [ok]\n");
-    if (nb_children > 0 && MinOrMax == 1) {
-      index->score = max;
-      index->x = max_x;
-      index->y = max_y;
-    }
-    if (nb_children > 0 && MinOrMax == 0) {
-      index->score = min;
-      index->x = min_x;
-      index->y = min_y;
-    }
-    if (MinOrMax == 1) {
-      MinOrMax = 0;
-    }
-    else{
-        MinOrMax = 1;
-    }
-
-    if (current_depth == depth ) {
-      //printf("max depth \n");
-      free_queue(Q);
-      break; }
-
-    }
-
-  //printf("end \n");
-  return parent;*/
 }
 
 /*
