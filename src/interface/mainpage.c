@@ -216,6 +216,7 @@ void save_pl2(GtkButton *button, gpointer user_data)
     // Start Game
     struct to_play *playing = user_data;
     init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
+    printf("init [ok] \n");
   }
 }
 

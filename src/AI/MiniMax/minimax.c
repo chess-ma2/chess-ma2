@@ -296,7 +296,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
 
     //printf("before dequeue \n");
     struct node *index = dequeue(Q);
-    //printf("dequeue with %i\n", index->score);
+    printf("dequeue with %i x=%i and y=%i\n", index->score, index->x, index->y);
 
     current_depth += 1; // Works
 
@@ -310,7 +310,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
           switch (board[index->y*8 + index->x].type)
           {
             case PAWN:
-                moves = find_chess_moves_pawn(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_pawn(board, index->x , index->y, board[index->y*8 + index->x].color);
                 break;
             case BISHOP:
                 moves = find_chess_moves_bishop(board, index->x, index->y, board[index->y*8 + index->x].color);

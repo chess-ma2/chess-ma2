@@ -145,6 +145,7 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
 
 struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 {
+    printf("x= %i, y = %i \n", x,y);
     struct tab* table= malloc(sizeof(struct tab));
     int number=0;
     table->moves=malloc(sizeof(struct Moves));
@@ -249,6 +250,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     }
 
     free(moves);
+    printf("number is %i \n", number);
     table->numberofmoves=number;
     return table;
 }
