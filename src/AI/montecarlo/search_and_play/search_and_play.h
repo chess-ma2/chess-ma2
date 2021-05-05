@@ -19,7 +19,7 @@
  * @details go down to a leaf of the tree
  */
 
-void select_action(struct MCTS_Node *node, struct Piece *board, int color);
+struct MCTS_Node *select_action(struct MCTS_Node *node, struct Piece *board, int color);
 
 /**
  * @author Marie
@@ -35,7 +35,7 @@ struct MCTS_Node *select(struct MCTS_Node *node);
  * @details continue a game to a winning ou equality issue
  */
 
-void roll_out(struct MCTS_Node *node, struct Piece *board, int color);
+struct MCTS_Node *roll_out(struct MCTS_Node *node, struct Piece *board, int color_team);
 
 /**
  * @author Marie
@@ -43,8 +43,7 @@ void roll_out(struct MCTS_Node *node, struct Piece *board, int color);
  * @details update the value of a node to help to choose a child
  */
 
-void update_value(struct MCTS_Node *node, float value);
-
+struct MCTS_Node *update_value(struct MCTS_Node *node, float value);
 /**
  * @author Marie
  * @date Start 15/04/2021

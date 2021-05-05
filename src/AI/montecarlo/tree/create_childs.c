@@ -50,6 +50,7 @@ int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
     {
       board2[i].type = board[i].type;
       board2[i].color = board[i].color;
+    }
 
   board2 = pieceMove(x, y, x_des, y_des, board2);
 
