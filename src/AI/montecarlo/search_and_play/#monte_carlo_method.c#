@@ -1,4 +1,4 @@
-/**
+m/**
  * @author Marie
  * @date Start 15/04/2021
  * @details Contain functions for the AI
@@ -26,6 +26,7 @@ struct MCTS_Node *find_the_child(struct Piece *board, int color_team, struct MCT
   for(int i = 0 ; i < 1000 ; i++)
     {
       node = select_action(node, board, color_team);
+      printf("%d \n", i);
     }
 
   return chosen_best(node);

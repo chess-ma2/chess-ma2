@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include <string.h>
 #include "../../../../common/c/rules/plate.h"
 #include "../../../../common/c/rules/check_and_pat.h"
@@ -28,6 +29,8 @@
 int main()
 {
   //-----------------------------------necessary variables-----------------------------------
+
+  srand(time(NULL));
   
   // int x = 0; 
   //int y = 0;
@@ -55,8 +58,7 @@ int main()
       node = first_node(board, node);
       node = expand_childs(node, board, 1);
       node = select_action(node, board, 1) ;
-
-      print_node(node); 
+      
     }
 
 
