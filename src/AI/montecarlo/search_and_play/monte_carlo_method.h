@@ -21,7 +21,7 @@
  * @details fonction which create the tree, training, and find the "best" child
  */
 
-struct MCTS_Node *find_the_child(struct Piece *board, int color_team); 
+struct MCTS_Node *find_the_child(struct Piece *board, int color_team, struct MCTS_Node *node); 
 
 /**
  * @author Marie

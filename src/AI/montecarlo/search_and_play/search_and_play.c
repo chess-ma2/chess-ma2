@@ -18,16 +18,23 @@
  * @details go down to a leaf of the tree
  */
 
-void select_action(struct MCTS_Node *node, struct Piece *board, int color)
+struct MCTS_Node *select_action(struct MCTS_Node *node, struct Piece *board, int color)
 {
   node->terminus = 1;
 
   while(node->leaf == 0)
     {
-      node = select(node); 
+      node = select(node);
     }
+
+  print_node(node);
+
+  struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
+  final = roll_out(node, board, color);
+
+  printf("%d   %d    %d    %d", final->x , final->y, final->x_des, final->y_des);
   
-  roll_out(node, board, color); 
+  return final; 
 }
 
 /**
@@ -70,30 +77,27 @@ struct MCTS_Node *select(struct MCTS_Node *node)
  * @details continue a game to a winning ou equality issue
  */
 
-void roll_out(struct MCTS_Node *node, struct Piece *board, int color_team)
+struct MCTS_Node *roll_out(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
-  struct MCTS_Node *child = malloc(sizeof(struct MCTS_Node)); 
+  struct MCTS_Node *child = malloc(sizeof(struct MCTS_Node));
+  struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node)); 
 
-  if( node->terminus == 0)
+  while(node->terminus == 0)
     {
+	  
       node = expand_childs(node, board, color_team);
 
-      child = winning_Node(node); 
+      node = winning_Node(node); 
 
       if( child == NULL)
 	{
-	  child = random_choose(node); 
+	  node = random_choose(node); 
 	}
-
-      if(child->terminus == 0)
-	{
-	  roll_out(child, child->board, color_team); 
-	}
-      else
-	{
-	  update_value(child, child->value); 
-	}
+	  
     }
+  
+  final = update_value(node, node->value); 
+  return final; 
 
 }
 
@@ -103,15 +107,17 @@ void roll_out(struct MCTS_Node *node, struct Piece *board, int color_team)
  * @details update the value of a node to help to choose a child
  */
 
-void update_value(struct MCTS_Node *node, float value)
+struct MCTS_Node *update_value(struct MCTS_Node *node, float value)
 {
-  node->nb_visit += 1;
-  node->value = node->value + value;
-
-  if( node->father != NULL)
+  while( node->father != NULL)
     {
-      update_value(node->father, value*0.9); 
+      node->nb_visit += 1;
+      node->value = node->value + value;
+      value = value*0.9; 
+      node = node->father; 
     }
+
+  return node; 
 }
 
 /**

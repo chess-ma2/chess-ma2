@@ -145,9 +145,6 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
       nb_child->value = 0;
       nb_child->father = node;
       nb_child->board = board2;
-
-      display(nb_child->board);
-      
       nb_child->AKing_status = NOTHING;
       nb_child->x = list_of_moves[i].x;
       nb_child->y = list_of_moves[i].y;
@@ -206,10 +203,9 @@ void print_node(struct MCTS_Node *node)
     {
       printf("Père : J'ai un père.\n");
     }
+  printf("Statue du roi adverse : %d \n", (int)node->AKing_status);
 
   display(node->board);
-
-  printf("Statue du roi adverse : %d \n", (int)node->AKing_status);
 
   printf("---MOVE---\n");
   

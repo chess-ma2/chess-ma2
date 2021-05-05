@@ -18,17 +18,17 @@
  * @details fonction which create the tree, training, and find the "best" child
  */
 
-struct MCTS_Node *find_the_child(struct Piece *board, int color_team)
+struct MCTS_Node *find_the_child(struct Piece *board, int color_team, struct MCTS_Node *node)
 {
-  struct MCTS_Node *node = malloc(sizeof( struct MCTS_Node ));
-  node = first_node(board, node); 
+  node = first_node(board, node);
+  node = expand_childs(node, board, color_team);
 
-  for(int i = 0 ; i < 10000 ; i++)
+  for(int i = 0 ; i < 1 ; i++)
     {
       select_action(node, board, color_team);
     }
 
-  return chosen_best(node); 
+  return chosen_best(node);
 }
 
 /**
@@ -40,7 +40,7 @@ struct MCTS_Node *find_the_child(struct Piece *board, int color_team)
 struct coordonates_moves *coordonates_by_mc(struct Piece *board, int color_team, struct coordonates_moves *chosen_coordonates)
 {
   struct MCTS_Node *chosen_node = malloc(sizeof(struct MCTS_Node));
-  chosen_node = find_the_child(board, color_team);
+  chosen_node = find_the_child(board, color_team, chosen_node);
 
   chosen_coordonates->x = chosen_node->x;
   chosen_coordonates->y = chosen_node->y;
