@@ -24,31 +24,20 @@
 struct MCTS_Node
 {
   int leaf;
-  
   int terminus;
-  
   int AI;
-
   int nb_child; 
-
   struct MCTS_Node *child;
-  
   unsigned long nb_visit;
-  
-  float value;
-  
+  float value;  
   struct MCTS_Node *father;
-
   struct Piece *board;
-
   enum king_status AKing_status;
 
   int x;
   int y;
   int x_des;
-  int y_des;
-
-  
+  int y_des;  
 };
 
 /**

@@ -255,6 +255,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     }
 
     free(moves);
+    printf("number is %i \n", number);
     table->numberofmoves=number;
     return table;
 }
