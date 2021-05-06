@@ -26,3 +26,10 @@ build: clean
 	make -s -C src/client/c/ -f Makefile build
 	make -s -C src/AI/montecarlo/ -f Makefile build
 	@echo "[Chess(ma)² - Global] Final build is in target directory!"
+
+xor:
+	@echo "[Chess(ma)² - MonteCarlo - XOR] Start build MonteCarlo XOR sources..."
+	@mkdir -p target/
+	@gcc -pthread -lsqlite3 -lm -Wall -O3 src/AI/montecarlo/network/xor/xor_demo.c \
+    -o "target/MonteCarloXOR.out"
+	@echo "[Chess(ma)² - MonteCarlo - XOR] End build sources!"
