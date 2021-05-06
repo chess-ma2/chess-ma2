@@ -13,6 +13,7 @@
 
 // Structure function ____________________________
 struct node {
+  struct Piece *board;
   int x;
   int y;
   int score;
@@ -24,12 +25,17 @@ struct tree{
   struct node *root;
 };
 
+struct finalmove{
+    int x;
+    int y;
+    int xdes;
+    int ydes;
+};
 
 struct queue {
   struct node *Node;
   struct queue *next;
 };
-
 
 // Function section _______________________________
 // Position evaluation function
@@ -66,7 +72,9 @@ int get_min_from_list(int nb_children,struct node *children);
 
 int get_max_from_list(int nb_children,struct node *children);
 
-struct tree * update_minimax (struct tree * T, int color);
+struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int nb_List, int depth);
+
+struct tree * update_value (struct tree * T, int color, int depth);
 
 // Frees node -dfs
 void free_node(struct node *Node);

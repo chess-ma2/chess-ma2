@@ -93,7 +93,7 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
     table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
     struct Moves* moves=malloc(sizeof(struct Moves));
-
+    table->numberofmoves=0;
     //CHECK INTIAL PLACE +2
     if ((color==0 && y==1)|| (color==1 && y==6))
     {
@@ -156,6 +156,7 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
     struct Moves * moves =malloc(sizeof(struct Moves));
+    table->numberofmoves=0;
 
     //shape * dest
     //      *

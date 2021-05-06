@@ -1,5 +1,6 @@
 #include "minimax.h"
 #include "MINImove.c"
+#include "../../common/c/rules/plate.c"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -287,10 +288,12 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
   parent->x = current_List[i].x;
   parent->y = current_List[i].y;
   parent->score = getScore(current_List[i]);
+  parent->board = board;
   int current_depth = -1;
 
   // enqueue parent
   Q = enqueue(parent, Q);
+    printf("parent is x = %i, y=%i \n ", parent->x, parent->y);
   while(nb_queue != 0)
   {
 
@@ -307,32 +310,33 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
 
       struct tab * moves = malloc(sizeof(struct tab));
       printf("%i %i\n",index->x,index->y);
-      printf("work %u\n",board[(index->y)*8 + index->x].type);
+      printf("work %u\n",index->board[(index->y)*8 + index->x].type);
+      display_board_special(index->board);
           switch (board[(index->y)*8 + index->x].type)
           {
             case PAWN:
                   printf("found pawn \n");
-                moves = find_chess_moves_pawn(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_pawn(index->board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case BISHOP:
                   printf("found bishop \n");
-                moves = find_chess_moves_bishop(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_bishop(index->board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case KING:
                   printf("found king \n");
-                moves = find_chess_moves_king(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_king(index->board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case QUEEN:
                   printf("found queen \n");
-                moves = find_chess_moves_queen(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_queen(index->board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case KNIGHT:
                   printf("found knight \n");
-                moves = find_chess_moves_knight(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_knight(index->board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case ROOK:
                   printf("found rook \n");
-                moves = find_chess_moves_rook(board, index->x, index->y, board[index->y*8 + index->x].color);
+                moves = find_chess_moves_rook(index->board, index->x, index->y, board[index->y*8 + index->x].color);
                 break;
             case NONE:
                   printf("NONE \n");
@@ -340,25 +344,38 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
             default:
                 printf("error\n");
           }
-
           struct Moves *pos = moves->moves;
-      
           for (size_t i = 0; i < moves->numberofmoves; i++) {
             // 3)
             struct node *new = malloc(sizeof(struct node));
+            new->board = malloc(sizeof(struct node));
             new->x = pos[i].x_pos;
             new->y = pos[i].y_pos;
             //printf("new move is x=%i, y=%i \n", new->x, new->y);
             struct currentpiece current;
-            current.piece = board[pos[i].y_pos*8+pos[i].x_pos];
+              printf("new x = %i\n",new->x);
+              printf("new y = %i\n",new->y);
+              
+              //debug chelou à changer
+              if (!(new->x<0 || new->x>7 || new->y<0 || new->y>7))
+              {
+            current.piece = index->board[pos[i].y_pos*8+pos[i].x_pos]; //here seg fault
+              }
+              else{
+                  break;
+              }
             current.x = new->x;
             current.y = new->y;
             new->score = getScore(current);
-            // 4) and 5)
-            children[nb_children++] = *new;
+            new->board= pieceMove(index->x, index->y, new->x, new->y, board);
+              // 4) and 5)
+              nb_children++;
+            children[nb_children] = *new;
             // 6)
             Q = enqueue(new, Q);
+              printf("found ok\n");
             }
+      printf("found oups\n");
           index->nb_children = nb_children;
           index->children = children;
 
@@ -366,7 +383,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int depth, s
             //printf("max depth \n");
             free(moves);
             free_queue(Q);
-            break; }
+              nb_queue=0; }
 
           }
       return parent;
@@ -426,12 +443,26 @@ int get_max_from_list(int nb_children,struct node *children)
     return max;
 }
 
-struct tree * update_minimax (struct tree * T, int color)
+struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int nb_List, int depth)
 {
-    int coef = 1;
-    if (color == BLACK)
+    struct finalmove * final = malloc(sizeof(struct finalmove));
+    struct currentpiece *current_List = create_whiteList();
+    struct tree * T = create_tree(board,player_turn,current_List,nb_List,depth);
+    struct node * root = T->root;
+    
+    
+    return final;
+}
+
+struct tree * update_values(struct tree * T, int color, int depth)
+{
+    struct node * root = T->root;
+    if (color==BLACK)
     {
-        coef =-1;
+        get_min_from_list(root->nb_children, root->children);
+    }
+    else{
+        get_max_from_list(root->nb_children,root->children);
     }
     return T;
 }

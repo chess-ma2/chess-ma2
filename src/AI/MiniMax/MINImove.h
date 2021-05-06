@@ -30,7 +30,7 @@ struct Moves
 
 struct tab
 {
-  int numberofmoves;
+    int numberofmoves;
   struct Moves * moves;
 };
 
