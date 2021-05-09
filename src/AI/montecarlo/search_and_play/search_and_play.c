@@ -20,19 +20,26 @@
 
 struct MCTS_Node *select_action(struct MCTS_Node *node, struct Piece *board, int color)
 {
-  node->terminus = 1;
+  node->terminus = 0;
 
   while(node->leaf == 0)
     {
       node = select(node);
     }
 
+  printf("je suis choisi\n");
+
   print_node(node);
 
+  printf("stop\n");
+
   struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
+
+  printf("stop\n");
+  
   final = roll_out(node, board, color);
 
-  printf("%d   %d    %d    %d", final->x , final->y, final->x_des, final->y_des);
+  printf("stop\n");
   
   return final; 
 }
@@ -56,9 +63,11 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 	{
 	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + c * (sqrtf((logf(node->nb_visit + 1))/node->child[i].nb_visit)); 
 	}
-      else 
+      else if (node->child[i].nb_visit == 0)
 	{
-	  node->child[i].value = (rand() % 1) +  c * (sqrtf(logf(node->nb_visit + 1))); 
+	  float nb = 0;
+	  nb =  (float)rand() / (float)RAND_MAX;
+	  node->child[i].value = nb +  c * (sqrtf(logf(node->nb_visit + 1)));
 	}
 
       if(node->child->value >= bestValue)
@@ -67,6 +76,7 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 	  bestValue = node->child[i].value; 
 	}
     }
+
   select_Node->father = node;
   return select_Node; 
 }
@@ -79,20 +89,29 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 
 struct MCTS_Node *roll_out(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
-  struct MCTS_Node *child = malloc(sizeof(struct MCTS_Node));
-  struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node)); 
+
+  print_node(node);
+  
+  struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
+
+  node = expand_childs(node, board, color_team);
+
+  print_node_and_child(node); 
 
   while(node->terminus == 0)
     {
-	  
-      node = expand_childs(node, board, color_team);
+      
 
+      printf("coucou\n");
+      
       node = winning_Node(node); 
 
-      if( child == NULL)
+      if( node == NULL)
 	{
 	  node = random_choose(node); 
 	}
+
+      //print_node(node); 
 	  
     }
   
@@ -132,6 +151,7 @@ struct MCTS_Node *winning_Node(struct MCTS_Node *node)
     {
       if(node->child[i].AKing_status == CHECKMATE)
 	{
+	  print_node(&node->child[i]);
 	  return &node->child[i]; 
 	}
     }
@@ -150,6 +170,8 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
 
   int random = (rand() % (nb_child-1));
 
+  print_node(&node->child[random]);
+
   return &node->child[random];
 }
 
@@ -163,10 +185,12 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
 struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 {
   struct MCTS_Node *best = malloc(sizeof(struct MCTS_Node));
-  best = &node->child[0];
 
   if( node->nb_child != 0)
     {
+
+      best = &node->child[0];
+      
       float best_value =  (node->child[0].value)/(float)(node->child[0].nb_visit);
 
       float inter = 0.0;
@@ -182,6 +206,8 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 	    }
 	}
     }
+
+  print_node(best);
   
   return best; 
 }

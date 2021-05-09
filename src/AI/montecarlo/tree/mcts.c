@@ -68,7 +68,6 @@ struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first)
 struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int color_team)
 {
   node->leaf = 0;
-  node->terminus = 0;
 
   int advers_color_team = 0;
 
@@ -106,7 +105,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
     
   struct coordonates_moves *list_of_moves = list_for_child->list_of_moves;
 
-  struct MCTS_Node *list = malloc( index * sizeof(struct Piece));
+  struct MCTS_Node *list = malloc( index * sizeof(struct MCTS_Node));
 
   int AI_or_not = node->AI;
   int AI_new_child = 0; 
@@ -137,7 +136,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board, int
       board2 = pieceMove( list_of_moves[i].x , list_of_moves[i].y , list_of_moves[i].x_des  , list_of_moves[i].y_des , board2);
       
       nb_child->leaf = 1;
-      nb_child->terminus = 1;
+      nb_child->terminus = 0;
       nb_child->AI = AI_new_child;
       nb_child->nb_child = 0;
       nb_child->child = NULL;
@@ -221,7 +220,7 @@ void print_node(struct MCTS_Node *node)
  * @details print the node and his childs 
  */
 
-void print_mcts(struct MCTS_Node *node)
+void print_node_and_child(struct MCTS_Node *node)
 {
   printf("--------------------THE NODE--------------------\n");
 
@@ -237,6 +236,27 @@ void print_mcts(struct MCTS_Node *node)
   
 }
 
+
+/**
+ * @author Marie
+ * @date Start 20/04/2021
+ * @details print the mcts 
+ */
+
+void print_mcts(struct MCTS_Node *node)
+{
+  while(node->child != NULL)
+    {
+      print_node(node);
+      for( int i = 0; i < node->nb_child ; i++)
+	{
+	  return print_mcts(&node->child[i]);
+	}
+    }
+
+
+  
+}
 
 
 /**
