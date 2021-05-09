@@ -17,6 +17,7 @@
 #include "../common/c/rules/check_and_pat.c"
 #include "../common/c/rules/pieces.c"
 #include "../common/c/rules/plate.c"
+#include "added_functions4local.c"
 
 
 // @struct Needed to create chessboard

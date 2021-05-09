@@ -126,7 +126,7 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
   char * password1 = (char *) gtk_entry_get_text(Password_Entry1);
   unsigned char password[64];
   // Copy to array to get password
-  strcpy(&password, password1);
+  strcpy((char *)&password, password1);
 
   // Connect to Database
   creatingTables();
@@ -136,7 +136,7 @@ struct Player * New_player_v1(GtkEntry* Name_Entry1, GtkEntry* Email_Entry1, Gtk
   {
     // Create dialog if email in db
     GtkWidget *dialog;
-    dialog = GTK_WIDGET (gtk_message_dialog_new (parentwindow,
+    dialog = GTK_WIDGET (gtk_message_dialog_new (GTK_WINDOW(parentwindow),
                                                GTK_DIALOG_MODAL|
                                                GTK_DIALOG_DESTROY_WITH_PARENT|
                                                GTK_DIALOG_USE_HEADER_BAR,
@@ -200,7 +200,7 @@ struct Player * findplayer(GtkEntry* mail, GtkEntry* pass)
     char * password1 = (char *) gtk_entry_get_text(pass);
     unsigned char password[64];
     // Copy to array to get password
-    strcpy(&password, password1);
+    strcpy((char *)&password, password1);
     //testing if email is in database
     if (email_in_DB(email) && rightPassword(email, password))
     {
@@ -359,20 +359,24 @@ void update_board(struct construction constr){
 
       // Sets info on Image
       if (in != -1) {
-        gtk_image_set_from_file(constr.ImageBoard[i*8+j], normal_images_cha[in]);
+        printf("set image \n");
+        gtk_image_set_from_file(GTK_IMAGE(constr.ImageBoard[i*8+j]), normal_images_cha[in]);
         gtk_widget_set_size_request (constr.ImageBoard[i*8+j],60,60);
         gtk_fixed_put (constr.fixed, constr.ImageBoard[i*8+j], x + 15, y + 15);
         gtk_widget_show(constr.ImageBoard[i*8+j]);
       }
       else
       {
-        gtk_image_clear(constr.ImageBoard[i*8+j]);
+        printf("clear image \n");
+        //gtk_image_clear(GTK_IMAGE(constr.ImageBoard[i*8+j]));
+        gtk_widget_hide(constr.ImageBoard[i*8+j]);
       }
       x += width;
     }
     x = 56;
     y += height;
   }
+  printf("end of board \n");
 }
 
 /*
@@ -522,6 +526,7 @@ struct checking check4checkmates_2(enum turn player_turn, struct Piece *board,
 void click4move(GtkButton *button, gpointer user_data)
 {
   struct for_clicked *needed = user_data;
+  printf("got user data \n");
   if (needed->white_kingstatus == CHECKMATE || needed->black_kingstatus == CHECKMATE) {
     if (needed->white_kingstatus == CHECKMATE) {
       win_update(needed->Info, needed->player1, needed->player2, BLACKTURN);
@@ -530,6 +535,8 @@ void click4move(GtkButton *button, gpointer user_data)
       win_update(needed->Info, needed->player1, needed->player2, WHITETURN);
     }
   }
+
+  printf("checkmate tested \n");
 
   // Get Coordinates
   char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
@@ -582,12 +589,14 @@ void click4move(GtkButton *button, gpointer user_data)
       case 1:
           // Check if there are any chess pieces on destination coordinates and if so remove them from list
           // AND modifies in List coordinates of the chess piece that's moved
-          
+          printf("possible \n");
           if (needed->player_turn == WHITETURN) {
             needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentW, needed->nbWhite); }
           else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentB, needed->nbBlack); }
+
           //Move chess piece
           needed->constr.board = pieceMove(x-1 , y-1, des_x-1, des_y-1, needed->constr.board);
+          printf("moved \n");
 
         //________ King ____________
           if(needed->constr.board[(y-1)*8+(x-1)].color == WHITE && needed->constr.board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
@@ -625,6 +634,8 @@ void click4move(GtkButton *button, gpointer user_data)
               gtk_label_set_text(needed->Info, "New Turn");
             }
 
+          printf("not impossible \n");
+
           // Check for checkmates _________________________________________
           struct checking res = check4checkmates_2(needed->player_turn, needed->constr.board, needed->white_kingstatus,
              needed->black_kingstatus, needed->x_kingb, needed->y_kingb, needed->x_kingw, needed->y_kingw,
@@ -632,6 +643,8 @@ void click4move(GtkButton *button, gpointer user_data)
           needed->player_turn = res.player_turn;
           needed->white_kingstatus = res.white_kingstatus;
           needed->black_kingstatus = res.black_kingstatus;
+
+          printf("after check 4 checkmates \n");
           if (res.returned == 1)
           {
             gtk_entry_set_text(needed->Ori_Coord, "");
@@ -639,11 +652,14 @@ void click4move(GtkButton *button, gpointer user_data)
             gtk_label_set_text(needed->Info, "New Turn");
             return;}
           // Update board
+          printf("before updated board \n");
           update_board(needed->constr);
     } // end switch
 
+    printf("before white player turn\n");
     if (needed->player_turn == WHITETURN) { whiteplayerturn(needed->player1,needed->player2, needed->turn);} // Prints who's turn it is
     else{ blackplayerturn(needed->player1, needed->player2, needed->turn); }
+    printf("after turn \n");
     gtk_label_set_text(needed->Info, "Please select the chess piece you want to move (ex: A3)");
 
 }

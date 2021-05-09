@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "Local1.c"
+#include "added_functions4local.c"
 #ifndef MAINPAGE_C
 #define MAINPAGE_C
 
@@ -31,6 +32,10 @@ GtkEntry * Ori_Coord;
 // Entry for new coordinates
 GtkEntry * New_Coord;
 struct for_clicked *move_str;
+// Button for Withdraw
+GtkButton* WithdrawB;
+// Button for Stalemate
+GtkButton* StalemateB;
 
 
 //____Global_Initialization___
@@ -216,7 +221,7 @@ void save_pl2(GtkButton *button, gpointer user_data)
     // Start Game
     struct to_play *playing = user_data;
     init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
-    printf("init [ok] \n");
+    
   }
 }
 
@@ -516,6 +521,10 @@ int main (int argc, char *argv[])
     GtkButton * click_coordinates = GTK_BUTTON(gtk_builder_get_object(builder, "click_coordinates"));
     gtk_button_set_image(click_coordinates,gtk_image_new_from_file ("Images/save.png"));
 
+    // withdraw
+    WithdrawB = GTK_BUTTON(gtk_builder_get_object(builder, "withdraw"));
+    StalemateB = GTK_BUTTON(gtk_builder_get_object(builder, "StalemateB"));
+
     // Create widgets -> button board
     struct construction constr;
     constr.board = init_board();
@@ -621,12 +630,26 @@ int main (int argc, char *argv[])
     g_signal_connect(game_v1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // Draw Chessboard
     g_signal_connect(area, "draw", G_CALLBACK(on_draw), &constr);
-    // Structure for click
+
+    // Structure for Movements
     move_str = malloc(sizeof(struct for_clicked));
     move_str->Ori_Coord = Ori_Coord;
     move_str->New_Coord = New_Coord;
     move_str->constr = constr;
+
+    // Structure for Stalemate and Withdraw
+    struct added_F *stale_n_withdraw = malloc(sizeof(struct added_F));
+    stale_n_withdraw->player_turn = move_str->player_turn;
+    stale_n_withdraw->pl1 = pl1;
+    stale_n_withdraw->pl2 = pl2;
+    stale_n_withdraw->Window = game_v1;
+
     g_signal_connect(click_coordinates, "clicked", G_CALLBACK(click4move), move_str);
+    // Goes to withdraw function
+    g_signal_connect(WithdrawB, "clicked", G_CALLBACK(withdraw_2), stale_n_withdraw);
+    // Goes to Stalemate function
+    g_signal_connect(StalemateB, "clicked", G_CALLBACK(stalemate_2), stale_n_withdraw);
+
 
     //___________ Version 2 _________________________________________________________
     // Got to second version

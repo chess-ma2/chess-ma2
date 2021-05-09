@@ -673,6 +673,34 @@
           </packing>
         </child>
         <child>
+          <object class="GtkButton" id="StalemateB">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Stalemate</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+          </object>
+          <packing>
+            <property name="x">100</property>
+            <property name="y">600</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="withdraw">
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Withdraw</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+          </object>
+          <packing>
+            <property name="x">200</property>
+            <property name="y">600</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkButton" id="click_coordinates">
             <property name="width-request">50</property>
             <property name="height-request">50</property>
