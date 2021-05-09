@@ -20,12 +20,12 @@
 
 struct MCTS_Node *find_the_child(struct Piece *board, int color_team, struct MCTS_Node *node)
 {
-  node = first_node(board, node);
-  node = expand_childs(node, board, color_team);
+  node = first_node(board, node, color_team);
+  node = expand_childs(node, board);
 
   for(int i = 0 ; i < 1000 ; i++)
     {
-      node = select_action(node, board, color_team);
+      node = select_action(node, color_team);
     }
 
   return chosen_best(node);

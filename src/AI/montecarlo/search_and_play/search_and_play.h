@@ -19,7 +19,7 @@
  * @details go down to a leaf of the tree
  */
 
-struct MCTS_Node *select_action(struct MCTS_Node *node, struct Piece *board, int color);
+struct MCTS_Node *select_action(struct MCTS_Node *node, int color);
 
 /**
  * @author Marie
@@ -35,7 +35,7 @@ struct MCTS_Node *select(struct MCTS_Node *node);
  * @details continue a game to a winning ou equality issue
  */
 
-struct MCTS_Node *roll_out(struct MCTS_Node *node, struct Piece *board, int color_team);
+struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team);
 
 /**
  * @author Marie
