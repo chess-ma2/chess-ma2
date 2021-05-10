@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "Local1.c"
+#include "Local1_init.c"
 #include "added_functions4local.c"
 #ifndef MAINPAGE_C
 #define MAINPAGE_C
@@ -43,6 +44,8 @@ GtkButton* StalemateB;
 struct Player *pl1;
 // The player structure
 struct Player *pl2;
+// Player Turn
+enum turn *player_turn;
 
 
 //______ First Player ________
@@ -221,7 +224,7 @@ void save_pl2(GtkButton *button, gpointer user_data)
     // Start Game
     struct to_play *playing = user_data;
     init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
-    
+
   }
 }
 
@@ -632,14 +635,17 @@ int main (int argc, char *argv[])
     g_signal_connect(area, "draw", G_CALLBACK(on_draw), &constr);
 
     // Structure for Movements
+    player_turn = malloc(sizeof(enum turn));
+    * player_turn = WHITETURN;
     move_str = malloc(sizeof(struct for_clicked));
     move_str->Ori_Coord = Ori_Coord;
     move_str->New_Coord = New_Coord;
     move_str->constr = constr;
+    move_str->player_turn = player_turn;
 
     // Structure for Stalemate and Withdraw
     struct added_F *stale_n_withdraw = malloc(sizeof(struct added_F));
-    stale_n_withdraw->player_turn = move_str->player_turn;
+    stale_n_withdraw->player_turn = player_turn;
     stale_n_withdraw->pl1 = pl1;
     stale_n_withdraw->pl2 = pl2;
     stale_n_withdraw->Window = game_v1;

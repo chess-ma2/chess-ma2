@@ -14,7 +14,7 @@
 
 // @struct Needed for Withdraw and Stalemate Subfunction
 struct added_F{
-    enum turn player_turn;
+    enum turn *player_turn;
     struct Player *pl1;
     struct Player *pl2;
     GtkWidget *Window;
