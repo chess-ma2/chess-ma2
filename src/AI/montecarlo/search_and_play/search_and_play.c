@@ -18,7 +18,7 @@
  * @details go down to a leaf of the tree
  */
 
-struct MCTS_Node *select_action(struct MCTS_Node *node, struct Piece *board, int color)
+struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
 {
   node->terminus = 0;
 
@@ -27,19 +27,11 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, struct Piece *board, int
       node = select(node);
     }
 
-  printf("je suis choisi\n");
-
-  print_node(node);
-
-  printf("stop\n");
-
   struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
-
-  printf("stop\n");
   
-  final = roll_out(node, board, color);
+  final = roll_out(node, color);
 
-  printf("stop\n");
+  print_node(final);
   
   return final; 
 }
@@ -87,35 +79,28 @@ struct MCTS_Node *select(struct MCTS_Node *node)
  * @details continue a game to a winning ou equality issue
  */
 
-struct MCTS_Node *roll_out(struct MCTS_Node *node, struct Piece *board, int color_team)
-{
-
-  print_node(node);
-  
+struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
+{  
   struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
 
-  node = expand_childs(node, board, color_team);
+  node = expand_childs(node, node->board);
 
-  print_node_and_child(node); 
+  final = node; 
 
   while(node->terminus == 0)
     {
-      
+      final = expand_childs(final, final->board); 
+      final = winning_Node(node); 
 
-      printf("coucou\n");
-      
-      node = winning_Node(node); 
-
-      if( node == NULL)
+      if( final == NULL)
 	{
-	  node = random_choose(node); 
+	  final = random_choose(node); 
 	}
-
-      //print_node(node); 
-	  
+      node = final;
+      print_node(final); 
     }
   
-  final = update_value(node, node->value); 
+  final = update_value(final, final->value); 
   return final; 
 
 }
@@ -151,7 +136,6 @@ struct MCTS_Node *winning_Node(struct MCTS_Node *node)
     {
       if(node->child[i].AKing_status == CHECKMATE)
 	{
-	  print_node(&node->child[i]);
 	  return &node->child[i]; 
 	}
     }
@@ -169,8 +153,6 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
   int nb_child = node->nb_child;
 
   int random = (rand() % (nb_child-1));
-
-  print_node(&node->child[random]);
 
   return &node->child[random];
 }
@@ -206,8 +188,6 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 	    }
 	}
     }
-
-  print_node(best);
   
   return best; 
 }

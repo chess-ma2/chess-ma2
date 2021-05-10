@@ -28,6 +28,12 @@ int main()
 
   print_node_and_child(node);
 
+  if(node->nb_child != 0)
+    {
+      node = &node->child[0];
+      expand_childs( node, node->board); 
+    } 
+
   free(node); 
 
   return 0; 
