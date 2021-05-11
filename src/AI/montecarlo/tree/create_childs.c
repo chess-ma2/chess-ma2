@@ -11,6 +11,7 @@
 #include <string.h>
 #include "create_childs.h"
 #include "../../../common/c/rules/check_and_pat.h"
+#include "mcts.h"
 
 
 
@@ -52,7 +53,7 @@ int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
       board2[i].color = board[i].color;
     }
 
-  board2 = pieceMove(x, y, x_des, y_des, board2);
+  board2 = pieceMove_AI(x, y, x_des, y_des, board2);
 
   struct coordonates_king *kingplace = malloc(sizeof(struct coordonates_king));
   kingplace = king_position( board2, color_team, kingplace);
@@ -372,13 +373,9 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
   y_des = y ;
 
   if( isValidMove( x, y, x_des, y_des, board) == 1)
-    {
-
-      printf("the move is possible\n");
-      
+    {   
       if(isInCheck(board, color_team, x, y, x_des, y_des) == 0)
 	{
-	  printf("il n'y a pas d'échecs\n");
 	  struct coordonates_moves *move = malloc(sizeof(struct coordonates_moves));
 	  move->x = x;
 	  move->y = y;

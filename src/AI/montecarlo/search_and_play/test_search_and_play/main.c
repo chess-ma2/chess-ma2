@@ -55,9 +55,9 @@ int main()
       printf("DEBUT DE LA RECHERCHE FAITE PAR L'IA \n\n");
   
       struct MCTS_Node *node = malloc(sizeof(struct MCTS_Node));
-      node = first_node(board, node);
-      node = expand_childs(node, board, 1);
-      node = select_action(node, board, 1) ;
+      node = first_node(board, node, 1);
+      node = expand_childs(node, board);
+      node = select_action(node, 1) ;
       
     }
 

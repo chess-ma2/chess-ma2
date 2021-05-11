@@ -28,6 +28,7 @@ struct MCTS_Node
   int terminus;
   
   int AI;
+  int color_player; 
 
   int nb_child; 
 
@@ -59,13 +60,22 @@ struct MCTS_Node
 
 struct MCTS_Node *create_tree(Piece *board, int color); //not good
 
+
+/**
+ * @author Marie
+ * @date Start 22/04/2021
+ * @details special move function for AI
+ */
+
+struct Piece *pieceMove_AI(int x, int y, int des_x, int des_y, struct Piece *board);
+
 /**
  * @author Marie
  * @date Start 22/04/2021
  * @details create the fisrt node with the good args
  */
 
-struct MCTS_Node *first_node(Piece *board, struct MCTS_Node *first);
+struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first, int color);
 
 /**
  * @author Marie
@@ -73,7 +83,7 @@ struct MCTS_Node *first_node(Piece *board, struct MCTS_Node *first);
  * @details create childs of the father/node with the good args
  */
 
-struct MCTS_Node *expand_childs(struct MCTS_Node *node, Piece *board, int color_team);
+struct MCTS_Node *expand_childs(struct MCTS_Node *node, Piece *board);
 
 /**
  * @author Marie
