@@ -22,6 +22,12 @@ int main()
 {
   struct Piece *board = init_board();
 
+  board[4].type = NONE;
+  board[4].color = 0;
+  board[12].type = PAWN;
+  board[12].color = 1;
+
+
   int color_of_IA = 1;
 
   struct MCTS_Node *node = create_tree(board, color_of_IA);

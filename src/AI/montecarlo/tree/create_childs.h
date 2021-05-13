@@ -26,7 +26,8 @@ struct coordonates_moves
   int x;
   int y;
   int x_des;
-  int y_des; 
+  int y_des;
+  struct Piece *board; 
 };
 
 

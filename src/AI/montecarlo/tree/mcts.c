@@ -115,14 +115,15 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
   if(pat( a_place_king->x_king , a_place_king->y_king , board))
     {
       node->AKing_status = PAT;
-       node->leaf = 1;
+      node->leaf = 1;
     }
 
   if(check_mat( a_place_king->x_king , a_place_king->y_king , advers_color_team  , board))
     {
       node->AKing_status = CHECKMATE;
       node->leaf = 1;
-      node->terminus = 1 ; 
+      node->terminus = 1 ;
+      node->value = 1;
     }
 
   struct tab *list_for_child = malloc(sizeof(struct tab));
@@ -155,18 +156,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
 
   for(int i = 0; i < index; i++)
     {
-
-      struct Piece * board2 = calloc(8*8, sizeof(struct Piece));
-
       struct MCTS_Node *child = malloc(sizeof(struct MCTS_Node));
-
-      for( int i = 0; i < 64; i++)
-	{
-	  board2[i].type = board[i].type;
-	  board2[i].color = board[i].color;
-	}
-
-      board2 = pieceMove_AI(list_of_moves[i].x , list_of_moves[i].y , list_of_moves[i].x_des  , list_of_moves[i].y_des , board2);
       
       child->leaf = 1;
       child->terminus = 0;
@@ -177,7 +167,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
       child->nb_visit = 0;
       child->value = 0;
       child->father = node;
-      child->board = board2;
+      child->board = list_of_moves[i].board;
       child->AKing_status = NOTHING;
       child->x = list_of_moves[i].x;
       child->y = list_of_moves[i].y;

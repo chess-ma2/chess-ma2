@@ -31,7 +31,7 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
   
   final = roll_out(node, color);
 
-  print_node(final);
+  print_node_and_child(final);
   
   return final; 
 }
@@ -53,8 +53,9 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 
       if( node->child[i].nb_visit != 0)
 	{
-	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + c * (sqrtf((logf(node->nb_visit + 1))/node->child[i].nb_visit)); 
+	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + c * (sqrtf((logf(node->nb_visit + 1))/node->child[i].nb_visit));
 	}
+      
       else if (node->child[i].nb_visit == 0)
 	{
 	  float nb = 0;
@@ -82,23 +83,38 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 {  
   struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
-
   node = expand_childs(node, node->board);
 
   final = node; 
 
-  while(node->terminus == 0)
+  while(final->terminus == 0)
     {
-      final = expand_childs(final, final->board); 
-      final = winning_Node(node); 
 
-      if( final == NULL)
+      if (!iskings(final))
 	{
-	  final = random_choose(node); 
+	  break; 
 	}
-      node = final;
-      print_node(final); 
+      
+      if (is2kings(final))
+	{
+	  final = chose_for2kings(final);
+	  break; 
+	}
+      
+      node = final; 
+
+      if( final->nb_child != 0)
+	{
+	  final = winning_Node(node); 
+
+	  if( final == NULL)
+	    {
+	      final = random_choose(node); 
+	    }
+	}
+      final = expand_childs(final, final->board);
     }
+
   
   final = update_value(final, final->value); 
   return final; 
@@ -152,7 +168,12 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
 {
   int nb_child = node->nb_child;
 
-  int random = (rand() % (nb_child-1));
+  if (nb_child == 1)
+    {
+      return 0; 
+    }
+
+  int random = (rand() % (nb_child));; 
 
   return &node->child[random];
 }
@@ -190,4 +211,111 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
     }
   
   return best; 
+}
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details chosen node for the situation of just the two king are on the plate
+ */
+
+struct MCTS_Node *chose_for2kings(struct MCTS_Node *node)
+{
+
+  int advers_color_team = 0;
+  int AI_or_not = node->AI;
+  int AI_new_child = 0; 
+
+  if( node->color_player == 0)
+    {
+      advers_color_team = 1;
+    }
+
+  if(AI_or_not == 1)
+    {
+      AI_new_child = 0; 
+    }
+
+  if(AI_or_not == 0)
+    {
+      AI_new_child = 1; 
+    }
+  
+  node->nb_child = 1;
+  node->child = NULL;
+
+  struct MCTS_Node *new_child = malloc(sizeof(struct MCTS_Node));
+
+  new_child->leaf = 1;
+  new_child->terminus = 1;
+  new_child->AI = AI_new_child;
+  new_child->color_player = advers_color_team;  
+  new_child->nb_child = 0;
+  new_child->child = NULL;
+  new_child->nb_visit = 0;
+  new_child->value = 0;
+  new_child->father = node;
+  new_child->board = node->board;
+  new_child->AKing_status = NOTHING;
+  new_child->x = -1;
+  new_child->y = -1;
+  new_child->x_des = -1;
+  new_child->y_des = -1;
+
+  node->child = new_child;
+    
+
+  return new_child; 
+}
+
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details say if just the two kings are one the place
+ */
+
+int is2kings(struct MCTS_Node *node)
+{
+  struct Piece *board = node->board;
+
+   for(int y = 0; y < 8; y++)
+    {
+      for( int x = 0; x < 8; x++)
+	{
+	  if(board[y*8+x].type != KING)
+	    {
+	      return 0; 
+	    }
+	}
+    }
+
+   return 1;
+}
+
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details are the kings on the plate ?
+ */
+
+int iskings(struct MCTS_Node *node)
+{
+
+  int i = 0; 
+  struct Piece *board = node->board;
+
+   for(int y = 0; y < 8; y++)
+    {
+      for( int x = 0; x < 8; x++)
+	{
+	  if(board[y*8+x].type == KING)
+	    {
+	      i +=1;
+	    }
+	}
+    }
+
+   return i == 2;
 }

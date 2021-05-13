@@ -23,6 +23,9 @@
 
 struct coordonates_king *king_position(Piece *board, int color_team, struct coordonates_king *kingplace)
 {
+  kingplace->x_king = 0;
+  kingplace->y_king = 0;
+  
   for(int y = 0; y < 8; y++)
     {
       for( int x = 0; x < 8; x++)
@@ -105,6 +108,28 @@ struct tab *possible_moves(Piece *board, int color_team)
   return struct_list_of_moves; 
 }
 
+
+/**
+ * @author Marie
+ * @date Start 16/04/2021
+ * @details create the new board
+ */
+
+struct Piece *new_board(Piece *board, int x, int y, int x_des, int y_des)
+{
+  struct Piece * board2 = calloc(8*8, sizeof(struct Piece));
+
+  for( int i = 0; i < 64; i++)
+    {
+      board2[i].type = board[i].type;
+      board2[i].color = board[i].color;
+    }
+
+  board2 = pieceMove_AI(x , y , x_des  , y_des , board2);
+
+  return board2; 
+}  
+
 /**
  * @author Marie
  * @date Start 16/04/2021
@@ -130,9 +155,58 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
-      
+	      move->board = new_board(board, x,y, x_des, y_des);
 	      list_of_moves[index] = *move;
 	      index += 1; 
+
+	      if(y_des == 0 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
+  
 	    }
 	}
 	 
@@ -148,9 +222,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	      if(y_des == 0 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    } 
 	}
       x_des = x-1 ;
@@ -165,9 +289,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	      if(y_des == 0 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    }
 	}
       x_des = x+1 ;
@@ -182,9 +356,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	      if(y_des == 0 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    }
 	}
     }
@@ -203,9 +427,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	      if(y_des == 7 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    }
 	}
       x_des = x ;
@@ -220,9 +494,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	       if(y_des == 7 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    } 
 	}
       x_des = x-1 ;
@@ -237,9 +561,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	       if(y_des == 7 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    } 
 	}
       x_des = x+1 ;
@@ -254,9 +628,59 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
 	      move->y = y;
 	      move->x_des = x_des; 
 	      move->y_des = y_des;
+	      move->board = new_board(board, x,y, x_des, y_des);
       
 	      list_of_moves[index] = *move;
-	      index += 1; 
+	      index += 1;
+
+	      
+	       if(y_des == 7 )
+		{
+		  struct coordonates_moves *move1 = malloc(sizeof(struct coordonates_moves));
+		  move1->x = x;
+		  move1->y = y;
+		  move1->x_des = x_des; 
+		  move1->y_des = y_des;
+		  Piece *board2 = new_board(board, x,y, x_des, y_des);
+		  board2[y_des*8 + x_des].type = 5;
+		  move1->board = board2;
+		  list_of_moves[index] = *move1;
+		  index += 1;
+
+		  struct coordonates_moves *move2 = malloc(sizeof(struct coordonates_moves));
+		  move2->x = x;
+		  move2->y = y;
+		  move2->x_des = x_des; 
+		  move2->y_des = y_des;
+		  Piece *board3 = new_board(board, x,y, x_des, y_des);
+		  board3[y_des*8 + x_des].type = 4;
+		  move2->board = board3;
+		  list_of_moves[index] = *move2;
+		  index += 1;
+
+		  struct coordonates_moves *move3 = malloc(sizeof(struct coordonates_moves));
+		  move3->x = x;
+		  move3->y = y;
+		  move3->x_des = x_des; 
+		  move3->y_des = y_des;
+		  Piece *board4 = new_board(board, x,y, x_des, y_des);
+		  board4[y_des*8 + x_des].type = 3;
+		  move3->board = board4;
+		  list_of_moves[index] = *move3;
+		  index += 1;
+
+		  struct coordonates_moves *move4 = malloc(sizeof(struct coordonates_moves));
+		  move4->x = x;
+		  move4->y = y;
+		  move4->x_des = x_des; 
+		  move4->y_des = y_des;
+		  Piece *board5 = new_board(board, x,y, x_des, y_des);
+		  board5[y_des*8 + x_des].type = 2;
+		  move4->board = board5;
+		  list_of_moves[index] = *move4;
+		  index += 1; 
+		  
+		}
 	    }
 	}
     }
@@ -309,6 +733,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -327,6 +752,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -345,6 +771,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -363,6 +790,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -381,6 +809,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -399,6 +828,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -415,6 +845,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
       move->y = y;
       move->x_des = x_des; 
       move->y_des = y_des;
+      move->board = new_board(board, x,y, x_des, y_des);
       
       list_of_moves[index] = *move;
       index += 1; 
@@ -432,6 +863,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -469,6 +901,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -487,6 +920,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -505,6 +939,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -523,6 +958,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -541,6 +977,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -559,6 +996,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -577,6 +1015,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -595,6 +1034,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
 	  move->y = y;
 	  move->x_des = x_des; 
 	  move->y_des = y_des;
+	  move->board = new_board(board, x,y, x_des, y_des);
       
 	  list_of_moves[index] = *move;
 	  index += 1; 
@@ -633,6 +1073,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -650,6 +1091,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;
@@ -676,6 +1118,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -693,6 +1136,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;
@@ -719,6 +1163,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -736,6 +1181,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;
@@ -762,6 +1208,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -779,6 +1226,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;
@@ -823,6 +1271,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -840,6 +1289,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -867,6 +1317,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -884,6 +1335,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;
@@ -911,6 +1363,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -928,6 +1381,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;
@@ -955,6 +1409,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 	      move->y = y;
 	      move->x_des = par_x; 
 	      move->y_des = par_y;
+	      move->board = new_board(board, x,y, par_x, par_y);
       
 	      list_of_moves[index] = *move;
 	      index += 1;
@@ -972,6 +1427,7 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 		  move->y = y;
 		  move->x_des = par_x; 
 		  move->y_des = par_y;
+		  move->board = new_board(board, x,y, par_x, par_y);
       
 		  list_of_moves[index] = *move;
 		  index += 1;

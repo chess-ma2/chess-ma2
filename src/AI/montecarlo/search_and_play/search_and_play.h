@@ -68,4 +68,31 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node);
 
 struct MCTS_Node *chosen_best(struct MCTS_Node *node); 
 
+
+
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details chosen node for the situation of just the two king are on the plate
+ */
+
+struct MCTS_Node *chose_for2kings(struct MCTS_Node *node);
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details say if just the two kings are one the place
+ */
+
+int is2kings(struct MCTS_Node *node);
+
+/**
+ * @author Marie
+ * @date Start 15/04/2021
+ * @details are the kings on the plate ?
+ */
+
+int iskings(struct MCTS_Node *node);
+
 #endif
