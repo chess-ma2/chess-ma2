@@ -86,14 +86,13 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board,int color
     return 0;
 }
 
-struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
+void find_chess_moves_pawn(Piece* board, int x, int y, int color, struct tab * table)
 {
-    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
-    table->moves=malloc(sizeof(struct Moves));
+    table->moves = malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves* moves=malloc(sizeof(struct Moves));
     table->numberofmoves=0;
+
     //CHECK INTIAL PLACE +2
     if ((color==0 && y==1)|| (color==1 && y==6))
     {
@@ -101,10 +100,11 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
         {
             if (!testCHECK(x, y, x, y+2-4*color,board,color))
             {
-            moves->x_pos = x;
-            moves->y_pos = y+2-4*color;
-            global_moves[number] = *moves;
+            table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+            global_moves[number].x_pos = x;
+            global_moves[number].y_pos = y+2-4*color;
             number++;
+
             }
         }
     }
@@ -113,9 +113,9 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x, y+1-2*color,board,color))
         {
-        moves->x_pos = x;
-        moves->y_pos = y+1-2*color;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y+1-2*color;
         number++;
         }
     }
@@ -125,9 +125,9 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+1, y+1-2*color,board,color))
         {
-        moves->x_pos = x+1;
-        moves->y_pos = y+1-2*color;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+1;
+        global_moves[number].y_pos = y+1-2*color;
         number++;
         }
     }
@@ -137,25 +137,23 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-1, y+1-2*color, board,color))
         {
-        moves->x_pos = x-1;
-        moves->y_pos = y+1-2*color;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-1;
+        global_moves[number].y_pos = y+1-2*color;
         number++;
         }
     }
-    free(moves);
+    //free(moves);
     table->numberofmoves=number;
-    return table;
 }
 
-struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
+void find_chess_moves_knight(Piece* board,  int x,  int y, int color, struct tab * table)
 {
     //display_board_special(board);
-    struct tab* table= malloc(sizeof(struct tab));
+
     int number=0;
-    table->moves=malloc(sizeof(struct Moves));
+    table->moves = malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves * moves =malloc(sizeof(struct Moves));
     table->numberofmoves=0;
 
     //shape * dest
@@ -164,9 +162,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 
     if ((is_obstacle(x+1,y-2,board,color) ||  is_free(x+1,y-2,board)) && out_of_bounds(x+1,y-2) && !testCHECK(x, y, x+1, y-2, board,color))
     {
-        moves->x_pos = x+1;
-        moves->y_pos = y-2;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+1;
+        global_moves[number].y_pos = y-2;
         number++;
     }
 
@@ -176,9 +174,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
 
     if ((is_obstacle(x-1,y-2,board,color) ||  is_free(x-1,y-2,board)) && out_of_bounds(x-1,y-2) && !testCHECK(x, y, x-1, y-2, board,color))
     {
-        moves->x_pos = x-1;
-        moves->y_pos = y-2;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-1;
+        global_moves[number].y_pos = y-2;
         number++;
     }
 
@@ -187,10 +185,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //                 x
     if ((is_obstacle(x-2,y-1,board,color) || is_free(x-2,y-1,board)) && out_of_bounds(x-2,y-1) && !testCHECK(x, y, x-2, y-1, board,color))
     {
-
-        moves->x_pos = x-2;
-        moves->y_pos = y-1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-2;
+        global_moves[number].y_pos = y-1;
         number++;
     }
 
@@ -199,9 +196,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //      x
     if ((is_obstacle(x+2,y-1,board,color) ||  is_free(x+2,y-1,board)) && out_of_bounds(x+2,y-1) && !testCHECK(x, y, x+2, y-1, board,color))
     {
-        moves->x_pos = x+2;
-        moves->y_pos = y-1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+2;
+        global_moves[number].y_pos = y-1;
         number++;
     }
 
@@ -211,9 +208,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //      * dest
     if ((is_obstacle(x+1,y+2,board,color) ||  is_free(x+1,y+2,board)) && out_of_bounds(x+1,y+2) && !testCHECK(x, y, x+1, y+2,board,color))
     {
-        moves->x_pos = x+1;
-        moves->y_pos = y+2;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+1;
+        global_moves[number].y_pos = y+2;
         number++;
     }
 
@@ -223,9 +220,9 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //      dest
     if ((is_obstacle(x-1,y+2,board,color) ||  is_free(x-1,y+2,board)) && out_of_bounds(x-1,y+2) && !testCHECK(x, y, x-1, y+2, board,color))
     {
-        moves->x_pos = x-1;
-        moves->y_pos = y+2;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-1;
+        global_moves[number].y_pos = y+2;
         number++;
     }
 
@@ -236,10 +233,10 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     {
         if (is_obstacle(x+2,y+1,board,color) ||  is_free(x+2,y+1,board))
         {
-        moves->x_pos = x+2;
-        moves->y_pos = y+1;
-        global_moves[number] = *moves;
-        number++;
+          table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+          global_moves[number].x_pos = x+2;
+          global_moves[number].y_pos = y+1;
+          number++;
         }
     }
 
@@ -248,107 +245,97 @@ struct tab* find_chess_moves_knight(Piece* board,  int x,  int y,int color)
     //        dest * *
     if ((is_obstacle(x-2,y+1,board,color)|| is_free(x-2,y+1,board)) && out_of_bounds(x-2,y+1) && !testCHECK(x, y, x-2, y+1, board,color))
     {
-        moves->x_pos = x-2;
-        moves->y_pos = y+1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-2;
+        global_moves[number].y_pos = y+1;
         number++;
     }
 
-    free(moves);
-    printf("number is %i \n", number);
     table->numberofmoves=number;
-    return table;
 }
 
-struct tab* find_chess_moves_king(Piece* board, int x, int y,int color)
+void find_chess_moves_king(Piece* board, int x, int y, int color, struct tab * table)
 {
-    struct tab* table= malloc(sizeof(struct tab));
-    int number=0;
-    table->moves=malloc(sizeof(struct Moves));
+
+    int number = 0;
+    table->moves = malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves* moves= malloc(sizeof(struct Moves));
+
     //to do check 9 moves possible
     //^
     if ((is_obstacle(x,y-1,board,color) || is_free(x,y-1,board)) && out_of_bounds(x,y-1) && !testCHECK(x, y, x, y-1, board,color))
     {
-        moves->x_pos = x;
-        moves->y_pos = y-1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y-1;
         number++;
     }
     //v
     if ((is_obstacle(x,y+1,board,color) || is_free(x,y+1,board)) && out_of_bounds(x,y+1) && !testCHECK(x, y, x, y+1, board,color))
     {
-        moves->x_pos = x;
-        moves->y_pos = y+1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y+1;
         number++;
     }
     //>
     if ((is_obstacle(x+1,y,board,color) || is_free(x+1,y,board)) && out_of_bounds(x+1,y) && !testCHECK(x, y, x+1, y, board,color))
     {
-        moves->x_pos = x+1;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+1;
+        global_moves[number].y_pos = y;
         number++;
     }
     //<
     if ((is_obstacle(x-1,y,board,color) || is_free(x-1,y,board)) && out_of_bounds(x-1,y) && !testCHECK(x, y, x-1, y,board,color))
     {
-        moves->x_pos = x-1;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-1;
+        global_moves[number].y_pos = y;
         number++;
     }
     //^>
     if ((is_obstacle(x+1,y-1,board,color) || is_free(x+1,y-1,board)) && out_of_bounds(x+1,y-1) && !testCHECK(x, y, x+1, y-1,board,color))
     {
-        moves->x_pos = x+1;
-        moves->y_pos = y-1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+1;
+        global_moves[number].y_pos = y-1;
         number++;
     }
     //v>
     if ((is_obstacle(x+1,y+1,board,color) || is_free(x+1,y+1,board)) && out_of_bounds(x+1,y+1) && !testCHECK(x, y, x+1, y+1, board,color))
     {
-        moves->x_pos = x+1;
-        moves->y_pos = y+1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+1;
+        global_moves[number].y_pos = y+1;
         number++;
     }
     //^<
     if ((is_obstacle(x-1,y-1,board,color) || is_free(x-1,y-1,board)) && out_of_bounds(x-1,y-1) && !testCHECK(x, y, x-1, y-1,board,color))
     {
-        moves->x_pos = x-1;
-        moves->y_pos = y-1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-1;
+        global_moves[number].y_pos = y-1;
         number++;
     }
 
     //v<
     if ((is_obstacle(x-1,y+1,board,color) || is_free(x-1,y+1,board)) && out_of_bounds(x-1,y+1) && !testCHECK(x, y, x-1, y+1, board,color))
     {
-        moves->x_pos = x-1;
-        moves->y_pos = y+1;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-1;
+        global_moves[number].y_pos = y+1;
         number++;
     }
-
-
-    free(moves);
     table->numberofmoves=number;
-    return table;
 }
 
 
-struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
+void find_chess_moves_rook(Piece* board, int x, int y, int color, struct tab * table)
 {
-
-    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
     table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves* moves= malloc(sizeof(struct Moves));;
     int xmv=1; //x movement
     int ymv=1; //y movement
 
@@ -357,18 +344,19 @@ struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+xmv, y, board,color))
         {
-            moves->x_pos = x+xmv;
-            moves->y_pos = y;
-            global_moves[number] = *moves;
+            table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+            global_moves[number].x_pos = x+xmv;
+            global_moves[number].y_pos = y;
             number++;
         }
         xmv++;
     }
     if (is_obstacle(x+xmv,y,board,color) && !testCHECK(x, y, x+xmv, y, board,color) && out_of_bounds(x+xmv,y))
     {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+        // no number here
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y;
     }
     //<<<<<move
     xmv=1;
@@ -376,37 +364,38 @@ struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-xmv, y, board,color))
         {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
-        number++;
+          table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+          global_moves[number].x_pos = x-xmv;
+          global_moves[number].y_pos = y;
+          number++;
         }
         xmv++;
     }
     if (is_obstacle(x-xmv,y,board,color) && out_of_bounds(x-xmv,y) && !testCHECK(x, y, x-xmv, y, board,color))
     {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+      // no number here
+      table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+      global_moves[number].x_pos = x-xmv;
+      global_moves[number].y_pos = y;
     }
     //^^^^^move
     while (is_free(x,y+ymv,board) && out_of_bounds(x,y+ymv))
     {
         if (!testCHECK(x, y, x, y+ymv, board,color))
         {
-        moves->x_pos = x;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
-        number++;
+          table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+          global_moves[number].x_pos = x;
+          global_moves[number].y_pos = y+ymv;
+          number++;
         }
         ymv++;
     }
 
     if (is_obstacle(x,y+ymv,board,color) && !testCHECK(x, y, x, y+ymv, board,color) && out_of_bounds(x,y+ymv))
     {
-        moves->x_pos = x;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+      table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+      global_moves[number].x_pos = x;
+      global_moves[number].y_pos = y+ymv;
     }
     //vvvvvmove
     ymv=1;
@@ -414,32 +403,29 @@ struct tab* find_chess_moves_rook(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x, y-ymv, board,color))
         {
-        moves->x_pos = x;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y-ymv;
         number++;
         }
         ymv++;
     }
     if (is_obstacle(x,y-ymv,board,color) && out_of_bounds(x,y-ymv) && !testCHECK(x, y, x, y-ymv, board,color))
     {
-        moves->x_pos = x;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y-ymv;
     }
-    free(moves);
+
     table->numberofmoves=number;
-    return table;
 }
 
 
-struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
+void find_chess_moves_bishop(Piece* board, int x, int y, int color, struct tab * table)
 {
-    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
     table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves* moves= malloc(sizeof(struct Moves));;
     int xmv=1; //x movement
     int ymv=1; //y movement
     //^>
@@ -447,19 +433,19 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+xmv, y+ymv,board,color))
         {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
-        number++;
+          table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+          global_moves[number].x_pos = x + xmv;
+          global_moves[number].y_pos = y+ymv;
+          number++;
         }
         xmv++;
         ymv++;
     }
     if (is_obstacle(x+xmv,y+ymv,board,color) && out_of_bounds(x+xmv,y+ymv) && !testCHECK(x, y, x+xmv, y+ymv,board,color))
     {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y+ymv;
     }
     //^<
     xmv=1;
@@ -469,19 +455,19 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-xmv, y+ymv, board,color))
         {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
-        number++;
+          table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+          global_moves[number].x_pos = x - xmv;
+          global_moves[number].y_pos = y+ymv;
+          number++;
         }
         xmv++;
         ymv++;
     }
     if (is_obstacle(x-xmv,y+ymv,board,color) && out_of_bounds(x+xmv,y+ymv) && !testCHECK(x, y, x-xmv, y+ymv, board,color))
     {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y+ymv;
     }
     //v>
     xmv=1;
@@ -490,9 +476,9 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+xmv, y-ymv, board,color))
         {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y-ymv;
         number++;
         }
         xmv++;
@@ -500,9 +486,9 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
     }
     if (is_obstacle(x+xmv,y-ymv,board,color) && out_of_bounds(x+xmv,y+ymv) && !testCHECK(x, y, x+xmv, y-ymv, board,color))
     {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y-ymv;
     }
     //v<
     xmv=1;
@@ -511,9 +497,9 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-xmv, y-ymv, board,color))
         {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y-ymv;
-            global_moves[number] = *moves;
+            table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+            global_moves[number].x_pos = x-xmv;
+            global_moves[number].y_pos = y-ymv;
             number++;
         }
         xmv++;
@@ -521,23 +507,18 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y,int color)
     }
     if (is_obstacle(x-xmv,y-ymv,board,color) && !testCHECK(x, y, x-xmv, y-ymv, board,color) && out_of_bounds(x-xmv,y-ymv))
     {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y-ymv;
     }
-    free(moves);
     table->numberofmoves=number;
-    return table;
 }
 
-struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
+void find_chess_moves_queen(Piece* board, int x, int y, int color, struct tab * table)
 {
-
-    struct tab* table= malloc(sizeof(struct tab));
     int number=0;
     table->moves=malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    struct Moves* moves= malloc(sizeof(struct Moves));;
     int xmv=1; //x movement
     int ymv=1; //y movement
 
@@ -549,18 +530,18 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+xmv, y, board,color))
         {
-            moves->x_pos = x+xmv;
-            moves->y_pos = y;
-            global_moves[number] = *moves;
-            number++;
+          table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+          global_moves[number].x_pos = x+xmv;
+          global_moves[number].y_pos = y;
+          number++;
         }
         xmv++;
     }
     if (is_obstacle(x+xmv,y,board,color) && !testCHECK(x, y, x+xmv, y, board,color) && out_of_bounds(x+xmv,y))
     {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y;
     }
     //<<<<<move
     xmv=1;
@@ -568,27 +549,27 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-xmv, y, board,color))
         {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y;
         number++;
         }
         xmv++;
     }
     if (is_obstacle(x-xmv,y,board,color) && out_of_bounds(x-xmv,y) && !testCHECK(x, y, x-xmv, y, board,color))
     {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y;
     }
     //^^^^^move
     while (is_free(x,y+ymv,board) && out_of_bounds(x,y+ymv))
     {
         if (!testCHECK(x, y, x, y+ymv, board,color))
         {
-        moves->x_pos = x;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y+ymv;
         number++;
         }
         ymv++;
@@ -596,9 +577,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
 
     if (is_obstacle(x,y+ymv,board,color) && !testCHECK(x, y, x, y+ymv, board,color) && out_of_bounds(x,y+ymv))
     {
-        moves->x_pos = x;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y+ymv;
     }
     //vvvvvmove
     ymv=1;
@@ -606,18 +587,18 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x, y-ymv, board,color))
         {
-        moves->x_pos = x;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y-ymv;
         number++;
         }
         ymv++;
     }
     if (is_obstacle(x,y-ymv,board,color) && out_of_bounds(x,y-ymv) && !testCHECK(x, y, x, y-ymv, board,color))
     {
-        moves->x_pos = x;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x;
+        global_moves[number].y_pos = y-ymv;
     }
 
     //BISHOP's moves
@@ -630,9 +611,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+xmv, y+ymv,board,color))
         {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y+ymv;
         number++;
         }
         xmv++;
@@ -640,9 +621,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     }
     if (is_obstacle(x+xmv,y+ymv,board,color) && out_of_bounds(x+xmv,y+ymv) && !testCHECK(x, y, x+xmv, y+ymv,board,color))
     {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y+ymv;
     }
     //^<
     xmv=1;
@@ -652,9 +633,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-xmv, y+ymv, board,color))
         {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y+ymv;
         number++;
         }
         xmv++;
@@ -662,9 +643,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     }
     if (is_obstacle(x-xmv,y+ymv,board,color) && out_of_bounds(x+xmv,y+ymv) && !testCHECK(x, y, x-xmv, y+ymv, board,color))
     {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y+ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y+ymv;
     }
     //v>
     xmv=1;
@@ -673,9 +654,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x+xmv, y-ymv, board,color))
         {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x+xmv;
+        global_moves[number].y_pos = y-ymv;
         number++;
         }
         xmv++;
@@ -683,9 +664,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     }
     if (is_obstacle(x+xmv,y-ymv,board,color) && out_of_bounds(x+xmv,y-ymv) && !testCHECK(x, y, x+xmv, y-ymv, board,color))
     {
-        moves->x_pos = x+xmv;
-        moves->y_pos = y-ymv;
-            global_moves[number] = *moves;
+            table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+            global_moves[number].x_pos = x+xmv;
+            global_moves[number].y_pos = y-ymv;
     }
     //v<
     xmv=1;
@@ -694,9 +675,9 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     {
         if (!testCHECK(x, y, x-xmv, y-ymv, board,color))
         {
-        moves->x_pos = x-xmv;
-        moves->y_pos = y-ymv;
-            global_moves[number] = *moves;
+            table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+            global_moves[number].x_pos = x-xmv;
+            global_moves[number].y_pos = y-ymv;
             number++;
         }
         xmv++;
@@ -704,15 +685,12 @@ struct tab* find_chess_moves_queen(Piece* board, int x, int y,int color)
     }
     if (is_obstacle(x-xmv,y-ymv,board,color) && out_of_bounds(x-xmv,y-ymv) && !testCHECK(x, y, x-xmv, y-ymv, board,color))
     {
-
-        moves->x_pos = x-xmv;
-        moves->y_pos = y-ymv;
-        global_moves[number] = *moves;
+        table->moves = (struct Moves *) realloc( table->moves, (number + 1) * sizeof(struct Moves));
+        global_moves[number].x_pos = x-xmv;
+        global_moves[number].y_pos = y-ymv;
     }
 
-    free(moves);
     table->numberofmoves=number;
-    return table;
 }
 
 //End safety Guard

@@ -10,14 +10,20 @@
 #include "../../common/c/rules/plate.c"
 #include "../../common/c/game/added_functions.c"
 #include "MINImove.c"
+#include "queue.c"
 
 // Structure function ____________________________
 struct node {
-  struct Piece *board;
   int x;
   int y;
   int score;
   int nb_children;
+  struct Piece *board;
+  int MiniMax; // 0 is Mini and 1 is Maxi(white)
+  struct currentpiece *currentW;
+  int nbWhite;
+  struct currentpiece *currentB;
+  int nbBlack;
   struct node *children;
 };
 
@@ -32,23 +38,10 @@ struct finalmove{
     int ydes;
 };
 
-struct queue {
-  struct node *Node;
-  struct queue *next;
-};
 
 // Function section _______________________________
 // Position evaluation function
 int getVal(struct Piece current);
-
-// Enqueue
-struct queue * enqueue(struct node *to_insert, struct queue *Q);
-
-// Dequeue
-struct node * dequeue(struct queue *Q);
-
-// Free Queue
-void free_queue(struct queue *Queue);
 
 // Subfunction: prints a node -dfs
 //void __print(struct node *Node);
@@ -59,14 +52,17 @@ void print_tree_dot(struct tree *Tree);
 // Function: prints a tree structure (almost pretty print)
 void pretty_print(struct tree *Tree);
 
-//Gets score for a chess piece on board (with coef)
+// Gets score for a chess piece on board (with coef)
 int getScore(struct currentpiece current);
 
+// Copies a board
+void copyboard(struct Piece *src, struct Piece *dst);
+
 // Creates node - bfs
-struct node * create_node(struct currentpiece *current_List, int i, int depth, struct Piece *board);
+struct node * create_node(struct currentpiece *current_List, int i, int nb_White, struct currentpiece *current_List_black, int nb_black, int depth, struct Piece *board);
 
 // Creates Tree for MiniMax
-struct tree * create_tree(struct Piece *board, enum turn player_turn, struct currentpiece *current_List, int nb_List, int depth);
+struct tree * create_tree(struct Piece *board, enum turn player_turn, struct currentpiece *current_ListW, int nb_ListW, struct currentpiece *current_ListB, int nb_ListB, int depth);
 
 int get_min_from_list(int nb_children,struct node *children);
 

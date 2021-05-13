@@ -22,8 +22,9 @@ int main()
 {
     struct Piece* board = init_board();
     struct currentpiece *current_List = create_whiteList();
+    struct currentpiece *current_ListB = create_blackList();
     display_board_special(board);
-    struct tree * Tree = create_tree(board, WHITETURN, current_List, 16, 2);
+    struct tree * Tree = create_tree(board, WHITETURN, current_List, 16,current_ListB, 16,  2);
     pretty_print(Tree);
     free_tree(Tree);
     //free(board);

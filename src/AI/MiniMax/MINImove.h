@@ -122,7 +122,7 @@ int testCHECK(int xinit, int yinit, int xtest, int ytest, Piece* board, int colo
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct tab* find_chess_moves_pawn(Piece* board, int x, int y, int color);
+void find_chess_moves_pawn(Piece* board, int x, int y, int color, struct tab * table);
 
 /**
  * @author Marine
@@ -136,7 +136,7 @@ struct tab* find_chess_moves_pawn(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct tab* find_chess_moves_knight(Piece* board, int x, int y, int color);
+void find_chess_moves_knight(Piece* board, int x, int y, int color, struct tab * table);
 
 /**
  * @author Antoine & Marie
@@ -150,7 +150,7 @@ struct tab* find_chess_moves_knight(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct tab* find_chess_moves_king(Piece* board, int x, int y, int color);
+void find_chess_moves_king(Piece* board, int x, int y, int color, struct tab * table);
 
 
 /**
@@ -165,7 +165,7 @@ struct tab* find_chess_moves_king(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct tab* find_chess_moves_bishop(Piece* board, int x, int y, int color);
+void find_chess_moves_bishop(Piece* board, int x, int y, int color, struct tab * table);
 
 /**
  * @author Marine
@@ -179,7 +179,7 @@ struct tab* find_chess_moves_bishop(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct tab* find_chess_moves_rook(Piece* board, int x, int y, int color);
+void find_chess_moves_rook(Piece* board, int x, int y, int color, struct tab * table);
 
 /**
  * @author Marine
@@ -193,7 +193,7 @@ struct tab* find_chess_moves_rook(Piece* board, int x, int y, int color);
  *
  * @return array of size of param counter, with destination coordinates
  */
-struct tab* find_chess_moves_queen(Piece* board, int x, int y, int color);
+void find_chess_moves_queen(Piece* board, int x, int y, int color, struct tab * table);
 
 //End safety Guard
 #endif
