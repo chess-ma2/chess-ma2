@@ -13,19 +13,6 @@
 #include "queue.c"
 
 // Structure function ____________________________
-struct node {
-  int x;
-  int y;
-  int score;
-  int nb_children;
-  struct Piece *board;
-  int MiniMax; // 0 is Mini and 1 is Maxi(white)
-  struct currentpiece *currentW;
-  int nbWhite;
-  struct currentpiece *currentB;
-  int nbBlack;
-  struct node *children;
-};
 
 struct tree{
   struct node *root;
