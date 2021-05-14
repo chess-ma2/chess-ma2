@@ -133,7 +133,7 @@ void find_chess_moves_pawn(Piece* board, int x, int y, int color, struct tab * t
     }
 
     //CHECK EAT MOVE left diag
-    if (out_of_bounds(x-1,y+1-2*color) && !testCHECK(x, y, x-1, y+1-2*color, board,color))
+    if (out_of_bounds(x-1,y+1-2*color) && is_obstacle(x, y, x-1, y+1-2*color,board,color))
     {
         if (!testCHECK(x, y, x-1, y+1-2*color, board,color))
         {
