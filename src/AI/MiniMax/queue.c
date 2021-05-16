@@ -58,7 +58,7 @@ struct node * dequeue(struct queue *Q) {
     before = index;
     index = index->next;
   }
-  printf("out of while index next node is %i%i\n", index->next->Node->x, index->next->Node->y);
+
   if (before != NULL) {
     before->next = NULL;
     before->last = 1;
@@ -71,6 +71,7 @@ struct node * dequeue(struct queue *Q) {
   }
 
   nb_queue--;
+  //printf("is %i%i\n", data->x,data->y);
   return data;
 }
 
@@ -81,25 +82,27 @@ struct node * dequeue(struct queue *Q) {
 */
 void free_queue(struct queue *Q)
 {
+  /*
   //printf(" 2 \n");
-  if (Q->Node == NULL) { // No element
+  if (Q->Node == NULL || nb_queue == 0) { // No element
     free(Q);
-    //printf("before 3 \n");
     return;
   }
 
   struct queue *index = Q;
   while(index->last != 1) // Get last
   { struct queue *del = index;
-    //printf("before 2 \n");
     free(del);
-    //printf("before 2 \n");
     index = index->next;
-    //printf("after 2 \n");
   }
 
   nb_queue = 0;
-  free(index);
+  free(index);*/
+  if (Q) {
+    free(Q);
+    nb_queue = 0;
+    Q = NULL;
+  }
   printf("queue freed [ok]\n");
 }
 
