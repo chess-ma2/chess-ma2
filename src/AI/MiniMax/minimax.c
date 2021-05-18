@@ -55,10 +55,10 @@ struct tree * update_values(struct tree * T, int color, int depth)
     struct node * root = T->root;
     if (color==BLACK)
     {
-        get_min_from_list(root->nb_children, root->children);
+        get_min_from_list(root->nb_children, root->childn1);
     }
     else{
-        get_max_from_list(root->nb_children,root->children);
+        get_max_from_list(root->nb_children,root->childn1);
     }
     return T;
 }
