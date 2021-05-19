@@ -32,13 +32,6 @@ int main()
 
   srand(time(NULL));
   
-  // int x = 0; 
-  //int y = 0;
-  //int des_x = 0;
-  //int des_y = 0;
-
-  enum turn player_turn = WHITETURN; // team's turn
-  
   struct Piece *board = init_board(); //positionate de pieces one the piece cf funtion on plate.c
 
   //---------------------------------------------------------------------------------------------------------
@@ -47,19 +40,13 @@ int main()
 
   //-------------------------------------START OF THE GAME---------------------------------------------------
   
-
-  if (player_turn == WHITETURN)
-    {
-      printf("\n\n");
+  printf("\n\n");
   
-      printf("DEBUT DE LA RECHERCHE FAITE PAR L'IA \n\n");
+  struct MCTS_Node *node = malloc(sizeof(struct MCTS_Node));
+  node = first_node(board, node, 1);
+  node = expand_childs(node, board);
+  node = select_action(node, 0);
   
-      struct MCTS_Node *node = malloc(sizeof(struct MCTS_Node));
-      node = first_node(board, node, 1);
-      node = expand_childs(node, board);
-      node = select_action(node, 1) ;
-      
-    }
 
 
   free(board);
