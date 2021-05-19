@@ -23,7 +23,6 @@ int main()
     struct Piece* board = init_board();
     struct currentpiece *current_List = create_whiteList();
     struct currentpiece *current_ListB = create_blackList();
-    display_board_special(board);
     struct tree * Tree = create_tree(board, WHITETURN, current_List, 16,current_ListB, 16,  2);
     pretty_print(Tree, 2);
     //print_test_2levels(Tree);
@@ -47,8 +46,6 @@ int main()
     printf("prtinfROOKok\n");
     printmoves(find_chess_moves_queen( board, x, y, color));
     printf("prtinfQUEENok\n");*/
-
-    free(board);
 
 
   return 0;
