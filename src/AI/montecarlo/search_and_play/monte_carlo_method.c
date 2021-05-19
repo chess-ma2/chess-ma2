@@ -23,7 +23,7 @@ struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_N
   node = first_node(board, node, color_team);
   node = expand_childs(node, board);
 
-  for(int i = 0 ; i < 50 ; i++)
+  for(int i = 0 ; i < 1000 ; i++)
     {
       node = select_action(node, color_team);
     }

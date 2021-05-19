@@ -111,7 +111,7 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 	    }
 	}
       final = expand_childs(final, final->board);
-      print_node(final); 
+      
     }
 
   
