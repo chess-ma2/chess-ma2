@@ -58,7 +58,7 @@ struct MCTS_Node
  * @details create the tree with the first node and all the childs
  */
 
-struct MCTS_Node *create_tree(Piece *board, int color); //not good
+struct MCTS_Node *create_mcts(Piece *board, int color); //not good
 
 
 /**

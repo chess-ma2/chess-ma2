@@ -13,7 +13,7 @@
 #include "mcts.h"
 #include "create_childs.h"
 #include "../../../common/c/rules/pieces.h"
-#include "../../../common/c/rules/check_and_pat.h"
+#include "check_and_pat_for_AI.h"
 
 
 /**
@@ -22,7 +22,7 @@
  * @details create the tree with the first node and all the childs
  */
 
-struct MCTS_Node *create_tree(struct Piece *board, int color) //not good
+struct MCTS_Node *create_mcts(struct Piece *board, int color) //not good
 {
   struct MCTS_Node *first = malloc(sizeof(struct MCTS_Node));
   first = first_node(board , first, color);
@@ -112,13 +112,13 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
   struct coordonates_king *a_place_king = malloc(sizeof(struct coordonates_king));
   a_place_king = king_position(board, advers_color_team, a_place_king);
 
-  if(pat( a_place_king->x_king , a_place_king->y_king , board))
+  if(pat_AI( a_place_king->x_king , a_place_king->y_king , board))
     {
       node->AKing_status = PAT;
       node->leaf = 1;
     }
 
-  if(check_mat( a_place_king->x_king , a_place_king->y_king , advers_color_team  , board))
+  if(check_mat_AI(a_place_king->x_king , a_place_king->y_king , advers_color_team  , board))
     {
       node->AKing_status = CHECKMATE;
       node->leaf = 1;
