@@ -10,10 +10,10 @@
 #include <string.h>
 #include <time.h>
 #include "../../../common/c/rules/plate.h"
-#include "../../../common/c/rules/check_and_pat.h"
 #include "../tree/create_childs.h"
 #include "../search_and_play/monte_carlo_method.h"
 #include "../tree/mcts.h"
+#include "../../../common/c/rules/check_and_pat.h"
 
 
 
@@ -58,6 +58,11 @@ int main()
   
   struct Piece *board = init_board(); //positionate de pieces one the piece cf funtion on plate.c
 
+  struct MCTS_Node *tree_game = malloc(sizeof(struct MCTS_Node));
+  tree_game = create_tree(board, 0, tree_game);
+
+  printf("arbre done\n");
+
   //---------------------------------------------------------------------------------------------------------
 
   display(board); //display the first board with any movements
@@ -81,9 +86,19 @@ int main()
 	  printf("\n\n");
   
 	  printf("L'intelligence artificielle est entrain de jouer : \n");
-  
+
+	  tree_game = select_good_node(board, tree_game);
+
+	  print_node_and_child(tree_game); 
+	  
+	  tree_game = chosen_best(tree_game);
+
+	  //print_node(tree_game); 
+
+	  printf("selec tthe best node move to play \n");
+
 	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves));
-	  coordonates = coordonates_by_mc(board, 0, coordonates);
+	  coordonates = coordonates_by_mc(board, 0, coordonates, tree_game);
 
 	  x = coordonates->x + 1;
 	  y = coordonates->y + 1;

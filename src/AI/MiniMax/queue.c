@@ -39,7 +39,7 @@ struct queue * enqueue(struct node *to_insert, struct queue *Q) {
  * @details Dequeue
 */
 struct node * dequeue(struct queue *Q) {
-  if (Q->Node == NULL)
+  if (Q->Node == NULL || nb_queue == 0 )
     return NULL;
 
     if (Q->last == 1) {
@@ -49,7 +49,7 @@ struct node * dequeue(struct queue *Q) {
     }
 
   struct queue *index = Q;
-  //printf("index node is %i%i\n", index->Node->x,index->Node->y);
+  //printf("index node is %i\n", index->Node->score);
 
 
   struct queue *before = NULL;
@@ -57,6 +57,7 @@ struct node * dequeue(struct queue *Q) {
   {
     before = index;
     index = index->next;
+    //printf("index next node is %i\n", index->Node->score);
   }
 
   if (before != NULL) {

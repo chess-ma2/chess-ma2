@@ -27,7 +27,7 @@ int getVal(struct Piece current);
 void print_tree_dot(struct tree *Tree);
 
 // Function: prints a tree structure (almost pretty print)
-void pretty_print(struct tree *Tree);
+void pretty_print(struct tree *Tree, int depth);
 
 // Gets score for a chess piece on board (with coef)
 int getScore(struct currentpiece current);

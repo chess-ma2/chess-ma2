@@ -21,7 +21,7 @@
  * @details fonction which create the tree, training, and find the "best" child
  */
 
-struct MCTS_Node *find_the_child(struct Piece *board, int color_team, struct MCTS_Node *node); 
+struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_Node *node); 
 
 /**
  * @author Marie
@@ -29,6 +29,14 @@ struct MCTS_Node *find_the_child(struct Piece *board, int color_team, struct MCT
  * @details return the coordonates of the best child
  */
 
-struct coordonates_moves *coordonates_by_mc(struct Piece *board, int color_team, struct coordonates_moves *chosen_coordonates); 
+struct coordonates_moves *coordonates_by_mc(struct Piece *board, int color_team, struct coordonates_moves *chosen_coordonates, struct MCTS_Node *node); 
+
+/**
+ * @author Marie
+ * @date Start 27/04/2021
+ * @details return the coordonates of the best child
+ */
+
+struct MCTS_Node *select_good_node(struct Piece *board, struct MCTS_Node *node);
 
 #endif

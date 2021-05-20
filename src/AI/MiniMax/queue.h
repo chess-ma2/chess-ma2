@@ -17,7 +17,8 @@ struct node {
   int nbWhite;
   struct currentpiece *currentB;
   int nbBlack;
-  struct node *children;
+  struct node *childn1;
+  struct node *next;
 };
 
 

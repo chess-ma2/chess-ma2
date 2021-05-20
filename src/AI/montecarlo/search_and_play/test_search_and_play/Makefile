@@ -11,9 +11,9 @@ LDLIBS =  -lm
 
 all: main
 
-main :  ../monte_carlo_method.o  ../search_and_play.o ../../tree/mcts.o ../../tree/create_childs.o  ../../../../common/c/rules/pieces.o ../../../../common/c/rules/check_and_pat.o ../../../../common/c/rules/plate.o
+main :  ../monte_carlo_method.o  ../search_and_play.o ../../tree/mcts.o ../../tree/create_childs.o  ../../../../common/c/rules/pieces.o ../../tree/check_and_pat_for_AI.o ../../../../common/c/rules/plate.o
 
-main/.o: ../monte_carlo_method.h  ../search_and_play.h ../../tree/mcts.h ../../tree/create_childs.h  ../../../../common/c/rules/pieces.h ../../../../common/c/rules/check_and_pat.h ../../../../common/c/rules/plate.h 
+main/.o: ../monte_carlo_method.h  ../search_and_play.h ../../tree/mcts.h ../../tree/create_childs.h  ../../../../common/c/rules/pieces.h ../../tree/check_and_pat_for_AI.h ../../../../common/c/rules/plate.h 
 
 clean:
 	${RM} ../*.o
