@@ -10,10 +10,10 @@
 #include <string.h>
 #include <time.h>
 #include "../../../common/c/rules/plate.h"
+#include "../../../common/c/rules/check_and_pat.h"
 #include "../tree/create_childs.h"
 #include "../search_and_play/monte_carlo_method.h"
 #include "../tree/mcts.h"
-#include "../../../common/c/rules/check_and_pat.h"
 
 
 
