@@ -6,6 +6,8 @@
 #define QUEUE_H
 
 struct node {
+  int xbeg;
+  int ybeg;
   int x;
   int y;
   int score;

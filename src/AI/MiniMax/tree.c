@@ -239,6 +239,8 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
 
   // Define parent
   struct node *parent = malloc(sizeof(struct node));
+  parent->xbeg = -1;
+  parent->ybeg = -1;
   parent->x = current_List[i].x;
   parent->y = current_List[i].y;
   parent->score = getScore(current_List[i]);
@@ -357,6 +359,8 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
         new->next = malloc(sizeof(struct node));
 
         // Get position
+        new->ybeg = currentL[c].y*8;
+        new->xbeg = currentL[c].x;
         new->x = pos[i].x_pos;
         new->y = pos[i].y_pos;
 

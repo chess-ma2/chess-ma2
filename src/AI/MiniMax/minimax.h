@@ -25,12 +25,14 @@ struct finalmove{
 
 // Function section _______________________________
 
-int get_min_from_list(int nb_children,struct node *children);
+int get_min(int nb_children,struct node *children);
 
-int get_max_from_list(int nb_children,struct node *children);
+int get_max(int nb_children,struct node *children);
 
-struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int nb_List, int depth);
+struct finalmove * get_move (struct tree * T);
 
-struct tree * update_value (struct tree * T, int color, int depth);
+struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth, struct tree * T);
+
+struct node * update_values (struct node * T);
 
 #endif
