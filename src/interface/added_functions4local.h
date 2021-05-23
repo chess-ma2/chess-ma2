@@ -18,6 +18,7 @@ struct added_F{
     struct Player *pl1;
     struct Player *pl2;
     GtkWidget *Window;
+    GtkWidget *EndWindow;
 };
 
 // Function for Withdraw
@@ -30,6 +31,8 @@ void stalemate_dialog (GtkDialog *dialog,
 
 // Function for Stalemate
 void stalemate_2(GtkButton *button, gpointer user_data);
+
+void init_added_structures(struct Player *player1, struct Player *player2, struct added_F *needed, GtkWidget *EndWindow);
 
 
 #endif

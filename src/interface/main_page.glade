@@ -4,7 +4,11 @@
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkWindow" id="LoginAccount">
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">Login to your account</property>
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
     <child>
       <object class="GtkFixed">
         <property name="visible">True</property>
@@ -66,6 +70,7 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="relief">none</property>
             <property name="receives-default">True</property>
           </object>
         </child>
@@ -113,8 +118,11 @@
   </object>
   <object class="GtkWindow" id="LoginAccount2">
     <property name="can-focus">False</property>
+    <property name="resizable">True</property>
     <property name="window-position">center</property>
     <property name="gravity">east</property>
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
     <child>
       <object class="GtkFixed">
         <property name="visible">True</property>
@@ -214,6 +222,7 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="relief">none</property>
             <property name="receives-default">True</property>
           </object>
           <packing>
@@ -224,9 +233,11 @@
     </child>
   </object>
   <object class="GtkWindow" id="NewPL1_W1">
-    <property name="width-request">600</property>
-    <property name="height-request">1000</property>
+  <property name="width-request">400</property>
+  <property name="height-request">700</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">New Player n°1</property>
     <child>
       <object class="GtkFixed">
@@ -253,9 +264,9 @@
             <property name="width-request">50</property>
             <property name="height-request">50</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="can-focus">False</property>
             <property name="receives-default">True</property>
-            <property name="relief">half</property>
+            <property name="relief">none</property>
           </object>
           <packing>
             <property name="x">17</property>
@@ -272,7 +283,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">233</property>
+            <property name="y">180</property>
           </packing>
         </child>
         <child>
@@ -288,7 +299,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">165</property>
+            <property name="y">125</property>
           </packing>
         </child>
         <child>
@@ -301,7 +312,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">421</property>
+            <property name="y">331</property>
           </packing>
         </child>
         <child>
@@ -317,7 +328,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">346</property>
+            <property name="y">276</property>
           </packing>
         </child>
         <child>
@@ -330,7 +341,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">615</property>
+            <property name="y">490</property>
           </packing>
         </child>
         <child>
@@ -347,7 +358,7 @@
           </object>
           <packing>
             <property name="x">60</property>
-            <property name="y">548</property>
+            <property name="y">420</property>
           </packing>
         </child>
         <child>
@@ -357,10 +368,11 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
+            <property name="relief">none</property>
           </object>
           <packing>
             <property name="x">456</property>
-            <property name="y">798</property>
+            <property name="y">650</property>
           </packing>
         </child>
         <child>
@@ -375,17 +387,19 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">200</property>
-            <property name="y">700</property>
+            <property name="x">50</property>
+            <property name="y">650</property>
           </packing>
         </child>
       </object>
     </child>
   </object>
   <object class="GtkWindow" id="NewPL2_W1">
-    <property name="width-request">600</property>
-    <property name="height-request">1000</property>
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">New Player n°2</property>
     <child>
       <object class="GtkFixed">
@@ -414,7 +428,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="relief">half</property>
+            <property name="relief">none</property>
           </object>
           <packing>
             <property name="x">17</property>
@@ -431,7 +445,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">233</property>
+            <property name="y">180</property>
           </packing>
         </child>
         <child>
@@ -447,7 +461,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">165</property>
+            <property name="y">125</property>
           </packing>
         </child>
         <child>
@@ -460,7 +474,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">421</property>
+            <property name="y">331</property>
           </packing>
         </child>
         <child>
@@ -476,7 +490,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">346</property>
+            <property name="y">276</property>
           </packing>
         </child>
         <child>
@@ -489,7 +503,7 @@
           </object>
           <packing>
             <property name="x">100</property>
-            <property name="y">615</property>
+            <property name="y">490</property>
           </packing>
         </child>
         <child>
@@ -505,8 +519,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">100</property>
-            <property name="y">548</property>
+            <property name="x">60</property>
+            <property name="y">420</property>
           </packing>
         </child>
         <child>
@@ -515,11 +529,12 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="relief">none</property>
             <property name="receives-default">False</property>
           </object>
           <packing>
             <property name="x">456</property>
-            <property name="y">798</property>
+            <property name="y">650</property>
           </packing>
         </child>
         <child>
@@ -534,8 +549,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">200</property>
-            <property name="y">700</property>
+            <property name="x">50</property>
+            <property name="y">650</property>
           </packing>
         </child>
       </object>
@@ -545,10 +560,14 @@
     <property name="width-request">1000</property>
     <property name="height-request">800</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">Game</property>
     <child>
       <object class="GtkFixed" id="paned1">
         <property name="visible">True</property>
+        <property name="halign">center</property>
+        <property name="valign">center</property>
         <property name="can-focus">True</property>
         <child>
           <object class="GtkDrawingArea" id="area">
@@ -575,7 +594,7 @@
           </object>
           <packing>
             <property name="x">15</property>
-            <property name="y">700</property>
+            <property name="y">500</property>
           </packing>
         </child>
         <child>
@@ -591,7 +610,7 @@
           </object>
           <packing>
             <property name="x">500</property>
-            <property name="y">700</property>
+            <property name="y">660</property>
           </packing>
         </child>
         <child>
@@ -606,7 +625,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">50</property>
+            <property name="x">60</property>
             <property name="y">20</property>
           </packing>
         </child>
@@ -679,10 +698,11 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Stalemate</property>
             <property name="can-focus">True</property>
+            <property name="relief">half</property>
             <property name="receives-default">False</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">500</property>
             <property name="y">600</property>
           </packing>
         </child>
@@ -693,10 +713,11 @@
             <property name="visible">True</property>
             <property name="label" translatable="yes">Withdraw</property>
             <property name="can-focus">True</property>
+            <property name="relief">half</property>
             <property name="receives-default">False</property>
           </object>
           <packing>
-            <property name="x">200</property>
+            <property name="x">600</property>
             <property name="y">600</property>
           </packing>
         </child>
@@ -707,10 +728,10 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="relief">half</property>
+            <property name="relief">none</property>
           </object>
           <packing>
-            <property name="x">800</property>
+            <property name="x">830</property>
             <property name="y">480</property>
           </packing>
         </child>
@@ -754,6 +775,8 @@
     <property name="height-request">700</property>
     <property name="visible">True</property>
     <property name="can-focus">False</property>
+    <property name="resizable">True</property>
+    <property name="window-position">center</property>
     <property name="title" translatable="yes">Chess ma²</property>
     <child>
       <object class="GtkFixed">
@@ -836,8 +859,10 @@
   </object>
   <object class="GtkWindow" id="window1_version_PL2">
     <property name="width-request">400</property>
+    <property name="resizable">True</property>
     <property name="height-request">700</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
     <property name="title" translatable="yes">Player 2</property>
     <child>
       <object class="GtkFixed">
@@ -880,7 +905,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="relief">half</property>
+            <property name="relief">none</property>
           </object>
           <packing>
             <property name="x">17</property>
@@ -908,6 +933,8 @@
     <property name="width-request">400</property>
     <property name="height-request">700</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">Player 1</property>
     <child>
       <object class="GtkFixed">
@@ -950,7 +977,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="relief">half</property>
+            <property name="relief">none</property>
           </object>
           <packing>
             <property name="x">17</property>
@@ -978,6 +1005,8 @@
     <property name="width-request">400</property>
     <property name="height-request">700</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">1 vs 1 via server</property>
     <child>
       <object class="GtkFixed">
@@ -1006,6 +1035,8 @@
     <property name="width-request">400</property>
     <property name="height-request">700</property>
     <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
     <property name="title" translatable="yes">1 vs computer</property>
     <child>
       <object class="GtkFixed">
@@ -1025,6 +1056,64 @@
           <packing>
             <property name="x">56</property>
             <property name="y">71</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="Game_Over">
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
+    <property name="can-focus">False</property>
+    <property name="resizable">True</property>
+    <property name="window-position">center</property>
+    <property name="title" translatable="yes">Game Over</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Do you wish to play again or quit Chess ma²?</property>
+            <attributes>
+              <attribute name="size" value="27008"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">56</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="play_again">
+            <property name="label" translatable="yes">Back to main menu</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">254</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="exit_game">
+            <property name="label" translatable="yes">Quit Chess ma²</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">348</property>
           </packing>
         </child>
       </object>

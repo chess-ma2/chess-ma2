@@ -37,6 +37,9 @@ struct for_clicked *move_str;
 GtkButton* WithdrawB;
 // Button for Stalemate
 GtkButton* StalemateB;
+struct added_F *added_struct;
+// End of game window
+GtkWidget* Game_Over;
 
 
 //____Global_Initialization___
@@ -153,29 +156,13 @@ void save_pl1(GtkButton *button, gpointer user_data)
 {
   // New Player subfunction into .db
   struct Player *res = New_player_v1(Name_Entry1, Email_Entry1, Password_Entry1, Create_account1_yes, NewPL1_W1, LoginAccount);
-
   if (res != NULL) {
     pl1 = res;
-
     // Show transition window
     transition_page(NewPL1_W1, window1_version_PL2);
-    //gtk_widget_show(transition1);
-    //gtk_widget_hide(NewPL1_W1);
   }
 }
 
-// _____ TRANSITION ____________________________________________________________
-/*
- * @author Anna
- * @date 15/04/2021
- * @details From transition window to player n2's window
-
-void go_2_player2(GtkButton *button, gpointer user_data)
-{
-  // Show general window for Player 2 (login or new)
-  gtk_widget_show(window1_version_PL2);
-  gtk_widget_hide(transition1);
-}*/
 
 // _____ Player 2 ____________________________________________________________
 /*
@@ -219,11 +206,14 @@ void save_pl2(GtkButton *button, gpointer user_data)
 
   if (res != NULL) {
     pl2 = res;
+    gtk_window_fullscreen(GTK_WINDOW(game_v1));
     gtk_widget_hide(NewPL2_W1);
     gtk_widget_show(game_v1);
     // Start Game
     struct to_play *playing = user_data;
-    init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
+    move_str->Window = game_v1;
+    init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
+    init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
 
   }
 }
@@ -269,7 +259,7 @@ void connect1(GtkButton *button, gpointer user_data)
 void back_from_login1(GtkButton *button, gpointer user_data)
 {
     gtk_widget_show(window1st_v_1);
-    gtk_widget_hide(LoginAccount);
+    gtk_widget_hide(Game_Over);
 }
 
 //____________________________________________________________________________
@@ -295,10 +285,12 @@ void connect2(GtkButton *button, gpointer user_data)
     if (pl2!=NULL)
     {
         gtk_widget_show(game_v1); // Show GAME
-        printf("ici\n");
+        gtk_window_fullscreen(GTK_WINDOW(game_v1));
         // _________ Play Game _______________
         struct to_play *playing = user_data;
-        init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str);
+        move_str->Window = game_v1;
+        init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
+        init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
     }
     else
     {
@@ -316,6 +308,17 @@ void back_from_login2(GtkButton *button, gpointer user_data)
 {
     gtk_widget_show(window1_version_PL2);
     gtk_widget_hide(LoginAccount2);
+}
+
+/*
+ * @author Anna
+ * @date 23/05/2021
+ * @details Back to main menu from first version of game
+ */
+void playagain(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window1);
+    gtk_widget_hide(window1);
 }
 
 
@@ -531,14 +534,27 @@ int main (int argc, char *argv[])
     // Create widgets -> button board
     struct construction constr;
     constr.board = init_board();
+    // Create board and put into fixed
     constr.ImageBoard = malloc(64 * sizeof(GtkWidget));
     constr.fixed = fixed;
+    int x_co = 56; //original coordinates
+    int y_co = 90; //original coordinates
 
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
       constr.ImageBoard[i*8+j] = gtk_image_new();
+      gtk_widget_set_size_request (constr.ImageBoard[i*8+j],60,60);
+      gtk_fixed_put (constr.fixed, constr.ImageBoard[i*8+j], x_co + 15, y_co + 15);
+      x_co += 60;
       }
+      x_co = 56;
+      y_co += 60;
     }
+
+    // End of game
+    Game_Over = GTK_WIDGET(gtk_builder_get_object(builder, "Game_Over"));
+    GtkButton * play_again = GTK_BUTTON(gtk_builder_get_object(builder, "play_again"));
+    GtkButton * exit_game = GTK_BUTTON(gtk_builder_get_object(builder, "exit_game"));
 
 
     // __________________________________________________________________________________
@@ -644,17 +660,21 @@ int main (int argc, char *argv[])
     move_str->player_turn = player_turn;
 
     // Structure for Stalemate and Withdraw
-    struct added_F *stale_n_withdraw = malloc(sizeof(struct added_F));
-    stale_n_withdraw->player_turn = player_turn;
-    stale_n_withdraw->pl1 = pl1;
-    stale_n_withdraw->pl2 = pl2;
-    stale_n_withdraw->Window = game_v1;
+    added_struct = malloc(sizeof(struct added_F));
+    added_struct->player_turn = player_turn;
+    added_struct->Window = game_v1;
 
     g_signal_connect(click_coordinates, "clicked", G_CALLBACK(click4move), move_str);
     // Goes to withdraw function
-    g_signal_connect(WithdrawB, "clicked", G_CALLBACK(withdraw_2), stale_n_withdraw);
+    g_signal_connect(WithdrawB, "clicked", G_CALLBACK(withdraw_2), added_struct);
     // Goes to Stalemate function
-    g_signal_connect(StalemateB, "clicked", G_CALLBACK(stalemate_2), stale_n_withdraw);
+    g_signal_connect(StalemateB, "clicked", G_CALLBACK(stalemate_2), added_struct);
+
+    // End of Game
+    // Destroys .exe when window is closed
+    g_signal_connect(Game_Over, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(play_again, "clicked", G_CALLBACK(playagain), NULL);
+    g_signal_connect(exit_game, "clicked", G_CALLBACK(exitgame), NULL);
 
 
     //___________ Version 2 _________________________________________________________

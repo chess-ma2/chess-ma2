@@ -90,6 +90,8 @@ struct for_clicked{
   enum king_status white_kingstatus;
   enum king_status black_kingstatus;
   struct construction constr;
+  GtkWidget *EndWindow;
+  GtkWidget *Window;
 };
 
 // Players___________________________________________________________________
@@ -114,16 +116,13 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data);
 // Prints rules
 void printRulesLabel(GtkLabel *Rules);
 
-// Prints white player's turn
-void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
-
-// Prints bacl player's turn
-void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn);
+// Prints who's turn it is
+void playerturn_print(enum turn *player_turn, struct Player *player1, struct Player *player2, GtkLabel *turn);
 
 // Main Game Init function
-void init_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed);
+void init_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed, GtkWidget *EndWindow);
 
-// Updates board images after a move or creates board 
+// Updates board images after a move or creates board
 void update_board(struct construction constr);
 
 #endif

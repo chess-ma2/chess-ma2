@@ -32,18 +32,19 @@ void withdraw_2(GtkButton *button, gpointer user_data)
     {
         //Player 2 wins
         char *name_lost = getNAME(pl1->email);
-        char *lost_sentence = (" lost by resignation");
+        char *lost_sentence = " lost by resignation";
         strcat(name_lost, lost_sentence);
-        strcpy(name_lost, lost);
+        lost = name_lost;
         char *name_won = getNAME(pl2->email);
-        char *won_sentence =(" wins! Congrats to the ");
+        strcat(name_won, " wins! Congrats to the ");
+        //char *won_sentence =" wins! Congrats to the ";
         if (*player_turn == WHITETURN) {
-          strcat(won_sentence, "black team!\n");
+          strcat(name_won, "black team!\n");
         }
         else{
-          strcat(won_sentence,"white team!\n");
+          strcat(name_won,"white team!\n");
         }
-        strcpy(won_sentence, won);
+        won = name_won;
         update_victory(pl2->email);
         update_loss(pl1->email);
       }
@@ -51,18 +52,18 @@ void withdraw_2(GtkButton *button, gpointer user_data)
       {
         //Player 1 wins
         char *name_lost = getNAME(pl2->email);
-        char *lost_sentence = (" lost by resignation");
+        char *lost_sentence = " lost by resignation";
         strcat(name_lost, lost_sentence);
-        strcpy(name_lost, lost);
+        lost = name_lost;
         char *name_won = getNAME(pl1->email);
-        char *won_sentence =(" wins! Congrats to the ");
+        strcat(name_won, " wins! Congrats to the ");
         if (*player_turn == WHITETURN) {
-          strcat(won_sentence, "black team!\n");
+          strcat(name_won, "black team!\n");
         }
         else{
-          strcat(won_sentence,"white team!\n");
+          strcat(name_won,"white team!\n");
         }
-        strcpy(won_sentence, won);
+        won = name_won;
         update_victory(pl1->email);
         update_loss(pl2->email);
       }
@@ -78,6 +79,10 @@ void withdraw_2(GtkButton *button, gpointer user_data)
       gtk_window_set_title(GTK_WINDOW(dialog), "End of game");
       gtk_dialog_run(GTK_DIALOG(dialog));
       gtk_widget_destroy(dialog);
+      gtk_widget_hide(res->Window);
+      gtk_widget_show(res->EndWindow);
+
+
 }
 
 /*
@@ -93,23 +98,24 @@ void stalemate_dialog (GtkDialog *dialog,
   struct added_F *res = user_data;
 
   // If the button clicked gives response "Login" == OK (response_id being -5)
+  // Get current name
+  char *current_name = "";
+  if((* res->player_turn == WHITETURN && res->pl1->team_color == 1) || (* res->player_turn == BLACKTURN && res->pl1->team_color == 0))
+  {
+    current_name = getNAME(res->pl1->email);
+  }
+  else
+  {
+    current_name = getNAME(res->pl2->email);
+  }
+
   if (response_id == GTK_RESPONSE_OK)
   {
-    // Stalemate Accepted
-    char *accepted = "";
-    if(* res->player_turn == WHITETURN)
-    {
-      if(res->pl1->team_color == 1)
-        strcpy(accepted, strcat(getNAME(res->pl1->email), " (Black) accepted the stalemate, it's a draw!"));
-      else
-        strcpy(accepted, strcat(getNAME(res->pl2->email), " (Black) accepted the stalemate, it's a draw!"));
-   }
-   else{
-     if(res->pl1->team_color == 0)
-     strcpy(accepted, strcat(getNAME(res->pl1->email), " (White) accepted the stalemate, it's a draw!"));
-   else
-     strcpy(accepted, strcat(getNAME(res->pl2->email), " (White) accepted the stalemate, it's a draw!"));
-   }
+    if (* res->player_turn == WHITETURN)
+      strcat(current_name, " (Black) accepted the stalemate, it's a draw!");
+    else
+      strcat(current_name,  " (White) accepted the stalemate, it's a draw!");
+
    update_victory(res->pl1->email);
    update_victory(res->pl2->email);
 
@@ -118,43 +124,31 @@ void stalemate_dialog (GtkDialog *dialog,
             GTK_DIALOG_DESTROY_WITH_PARENT,
             GTK_MESSAGE_INFO,
             GTK_BUTTONS_OK,
-            "%s",accepted);
+            "%s",current_name);
   gtk_window_set_title(GTK_WINDOW(dialog_accept), "End of game");
   gtk_dialog_run(GTK_DIALOG(dialog_accept));
   gtk_widget_destroy(dialog_accept);
+  gtk_widget_show(res->EndWindow);
+  gtk_widget_hide(res->Window);
+
   }
   else
   {
     char *info = "";
-    if(* res->player_turn == WHITETURN)
-    {
-      if(res->pl1->team_color == 1)
-      {strcpy(info, strcat(getNAME(res->pl1->email), " (Black) refuses so the game continues."));}
-      else
-      {strcpy(info, strcat(getNAME(res->pl2->email), " (Black) refuses so the game continues."));}
-
-      * res->player_turn = BLACKTURN;
-   }
-   else{
-     if(res->pl1->team_color == 0)
-     {strcpy(info, strcat(getNAME(res->pl1->email), " (White) refuses so the game continues."));}
-     else
-     {strcpy(info, strcat(getNAME(res->pl2->email), " (White) refuses so the game continues."));}
-     * res->player_turn = WHITETURN;
-   }
+    if (* res->player_turn == WHITETURN)
+      strcat(current_name,  " (Black) refuses so the game continues.");
+    else
+      strcat(current_name,  " (White) refuses so the game continues.");
    GtkWidget *dialog_info;
    dialog_info = gtk_message_dialog_new(GTK_WINDOW(res->Window),
             GTK_DIALOG_DESTROY_WITH_PARENT,
             GTK_MESSAGE_INFO,
             GTK_BUTTONS_OK,
-            "%s",info);
+            "%s",current_name);
   gtk_window_set_title(GTK_WINDOW(dialog_info), "The show must go on");
   gtk_dialog_run(GTK_DIALOG(dialog_info));
   gtk_widget_destroy(dialog_info);
   }
-
-  gtk_widget_destroy (GTK_WIDGET (dialog));
-
 }
 
 
@@ -171,26 +165,19 @@ void stalemate_2(GtkButton *button, gpointer user_data)
   struct Player *pl1 = usrdata->pl1;
   struct Player *pl2 = usrdata->pl2;
 
-
   // Ask for stalemate
   char *asks = "";
+  if((* player_turn == WHITETURN && pl1->team_color == 0) || (*player_turn == BLACKTURN && pl1->team_color == 1))
+    asks = getNAME(pl1->email);
+  else
+    asks = getNAME(pl2->email);
+
   if(*player_turn == WHITETURN)
-    {
-      if(pl1->team_color == 0)
-        { char *name_lost = getNAME(pl1->email);
-          strcpy(asks, strcat(name_lost, " (White) is asking for a stalemate."));}
-      else
-      { char *name_lost = getNAME(pl2->email);
-        strcpy(asks, strcat(name_lost, " (White) is asking for a stalemate."));}
-    }
-  else{
-      if(pl1->team_color == 1)
-        { char *name_lost = getNAME(pl1->email);
-          strcpy(asks, strcat(name_lost, " (Black) is asking for a stalemate."));}
-      else
-      {char *name_lost = getNAME(pl2->email);
-        strcpy(asks, strcat(name_lost, " (Black) is asking for a stalemate."));}
-    }
+    strcat(asks, " (White) is asking for a stalemate.");
+  else
+    strcat(asks, " (Black) is asking for a stalemate.");
+
+
   // GTK Dialog to ask for stalemate
   GtkWidget *dialog;
   dialog = GTK_WIDGET (gtk_message_dialog_new (GTK_WINDOW(usrdata->Window),
@@ -208,8 +195,17 @@ gtk_dialog_add_buttons (GTK_DIALOG (dialog),
                         "Yes", GTK_RESPONSE_OK,
                         "No", GTK_RESPONSE_CANCEL,
                         NULL);
+// Connect to function for gtk dialog
 g_signal_connect(GTK_DIALOG (dialog), "response", G_CALLBACK(stalemate_dialog), usrdata);
 gtk_dialog_run (GTK_DIALOG (dialog));
+gtk_widget_destroy (GTK_WIDGET (dialog));
 }
+
+void init_added_structures(struct Player *player1, struct Player *player2, struct added_F *needed, GtkWidget *EndWindow)
+{
+  needed->pl1 = player1;
+  needed->pl2 = player2;
+  needed->EndWindow = EndWindow;
+  }
 
 #endif

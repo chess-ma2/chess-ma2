@@ -62,6 +62,17 @@ void win_update(GtkLabel *Info, struct Player *pl1, struct Player *pl2, enum tur
   }
 }
 
+
+/*
+ * @author Anna
+ * @date 23/05/2021
+ * @details Quit Game
+ */
+void exitgame(GtkButton *button, gpointer user_data)
+{
+    gtk_main_quit();
+}
+
 /*
  * @author Anna
  * @date 25/04/2021
@@ -72,7 +83,7 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
   int x_kingb, int y_kingb, int x_kingw, int y_kingw, int des_x, int des_y,
    struct Player *pl1, struct Player *pl2, GtkLabel *Info)
   {
-    int returned = 0;
+    int returned = 0; // Return 0 if no change has been done
     //___________________________ Black team's turn
     if(*player_turn == BLACKTURN)
       {
@@ -89,7 +100,8 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
           {
             update_victory(pl1->email);
             update_loss(pl2->email);
-            char *name = getNAME(pl1->email);
+            char *name = "";
+            strcpy(name, pl1->name);
             char *white = " (Black), won this game well done!";
             strcat(name, white);
             gtk_label_set_text(Info, name);
@@ -98,12 +110,13 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
           {
             update_victory(pl2->email);
             update_loss(pl1->email);
-            char *name = getNAME(pl2->email);
+            char *name="";
+            strcpy(name, pl2->name);
             char *white = " (Black), won this game well done!";
             strcat(name, white);
             gtk_label_set_text(Info, name);
           }
-          returned = 1;
+          returned = 1; // End of game
         }
         *player_turn = WHITETURN;
       }
@@ -122,7 +135,8 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
           {
             update_victory(pl1->email);
             update_loss(pl2->email);
-            char *name = getNAME(pl1->email);
+            char *name = "";
+            strcpy(name, pl1->name);
             char *white = " (White), won this game well done!";
             strcat(name, white);
             gtk_label_set_text(Info, name);
@@ -131,7 +145,8 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
           {
             update_victory(pl2->email);
             update_loss(pl1->email);
-            char *name = getNAME(pl2->email);
+            char *name = "";
+            strcpy(name, pl2->name);
             char *white = " (White), won this game well done!";
             strcat(name, white);
             gtk_label_set_text(Info, name);
@@ -164,10 +179,7 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
 void click4move(GtkButton *button, gpointer user_data)
 {
   struct for_clicked *needed = user_data;
-  if (*needed->player_turn == WHITETURN) { whiteplayerturn(needed->player1,needed->player2, needed->turn);} // Prints who's turn it is
-  else{ blackplayerturn(needed->player1, needed->player2, needed->turn); }
 
-  printf("got user data \n");
   if (needed->white_kingstatus == CHECKMATE || needed->black_kingstatus == CHECKMATE) {
     if (needed->white_kingstatus == CHECKMATE) {
       win_update(needed->Info, needed->player1, needed->player2, BLACKTURN);
@@ -176,8 +188,6 @@ void click4move(GtkButton *button, gpointer user_data)
       win_update(needed->Info, needed->player1, needed->player2, WHITETURN);
     }
   }
-
-  printf("checkmate tested \n");
 
   // Get Coordinates
   char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
@@ -209,6 +219,8 @@ void click4move(GtkButton *button, gpointer user_data)
     gtk_entry_set_text(needed->Ori_Coord, "");
     gtk_entry_set_text(needed->New_Coord, "");
     gtk_label_set_text(needed->Info, "New Turn");
+    playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
+    return;
   }
   //Other chess piece movements
   int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->constr.board); //movement is possible
@@ -230,14 +242,13 @@ void click4move(GtkButton *button, gpointer user_data)
       case 1:
           // Check if there are any chess pieces on destination coordinates and if so remove them from list
           // AND modifies in List coordinates of the chess piece that's moved
-          printf("possible \n");
+
           if (*needed->player_turn == WHITETURN) {
             needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentW, needed->nbWhite); }
           else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentB, needed->nbBlack); }
 
           //Move chess piece
           needed->constr.board = pieceMove(x-1 , y-1, des_x-1, des_y-1, needed->constr.board);
-          printf("moved \n");
 
         //________ King ____________
           if(needed->constr.board[(y-1)*8+(x-1)].color == WHITE && needed->constr.board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
@@ -256,9 +267,10 @@ void click4move(GtkButton *button, gpointer user_data)
 
           //___________________________
           // Impossible move
-          if((*needed->player_turn == BLACKTURN && piece_to_place(needed->x_kingb, needed->y_kingb, needed->constr.board) == 1 )
+          if((*needed->player_turn == BLACKTURN && piece_to_place(needed->x_kingb, needed->y_kingb, needed->constr.board) == 1 ) // is in check around
           || (*needed->player_turn == WHITETURN && piece_to_place(needed->x_kingw, needed->y_kingw, needed->constr.board) == 1))
             {
+              printf("impossible \n");
               needed->constr.board = pieceMove(des_x-1, des_y-1, x-1, y-1, needed->constr.board);
               gtk_label_set_text(needed->Info, "Impossible to move the king as checkmate would be unavoidable\n");
 
@@ -272,10 +284,10 @@ void click4move(GtkButton *button, gpointer user_data)
               // NEXT TURN
               gtk_entry_set_text(needed->Ori_Coord, "");
               gtk_entry_set_text(needed->New_Coord, "");
-              gtk_label_set_text(needed->Info, "New Turn");
-            }
-
-          printf("not impossible \n");
+            //  gtk_label_set_text(needed->Info, "New Turn \n Please select the chess piece you want to move (ex: A3)");
+            //  playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
+            //  return;
+          }
 
           // Check for checkmates _________________________________________
           struct checking res = check4checkmates_2(needed->player_turn, needed->constr.board, needed->white_kingstatus,
@@ -285,25 +297,23 @@ void click4move(GtkButton *button, gpointer user_data)
           needed->white_kingstatus = res.white_kingstatus;
           needed->black_kingstatus = res.black_kingstatus;
 
-          printf("after check 4 checkmates \n");
+
           if (res.returned == 1)
           {
+            printf("check mate\n");
             gtk_entry_set_text(needed->Ori_Coord, "");
             gtk_entry_set_text(needed->New_Coord, "");
-            gtk_label_set_text(needed->Info, "New Turn");
-            return;}
+            gtk_widget_show(needed->EndWindow);
+            gtk_widget_hide(needed->Window);
+          }
+
           // Update board
-          printf("before updated board \n");
           update_board(needed->constr);
     } // end switch
-
-    printf("before white player turn\n");
-    //if (*needed->player_turn == WHITETURN) { whiteplayerturn(needed->player1,needed->player2, needed->turn);} // Prints who's turn it is
-    //else{ blackplayerturn(needed->player1, needed->player2, needed->turn); }
-    printf("after turn \n");
-    //printf("board is 0x%08x, player 1 is 0x%08x, player 2 is 0x%08x\n",needed->constr.board,  needed->player1, needed->player2);
-    gtk_label_set_text(needed->Info, "Please select the chess piece you want to move (ex: A3)");
-
+    gtk_entry_set_text(needed->Ori_Coord, "");
+    gtk_entry_set_text(needed->New_Coord, "");
+    playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
+    
 }
 
 

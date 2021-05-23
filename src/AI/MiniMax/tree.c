@@ -387,9 +387,6 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
         //display_board_special(new->board);
 
         // Add to children
-        //nb_children++;
-        //children = (struct node *) realloc(children, (nb_children + 1) * sizeof(struct node));
-        //children[nb_children] = *new;
         if (nb_children == 0) {
           index->childn1 = new;
         }
@@ -403,14 +400,12 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
           get_index->next = new;
         }
         nb_children++;
-        // Debug print
 
         // 6)
         if (new->depth < depth) {
          Q = enqueue(new, Q);
         }
 
-        //printf("Node value is x=%iy=%i\n",   Q->Node->x,  Q->Node->y);
         }
         free(moves->moves);
         free(moves);
@@ -421,22 +416,6 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
     printf("____________________________________________________________________________\n");
 
     index->nb_children = nb_children;
-    //index->children = &children;
-    printf("nb of children is %i\n", nb_children);
-    printf("index is %i%i \n", index->x,index->y);
-    if (nb_children > 0) {
-      printf("child is x%iy%i score %i\n", index->childn1->x,index->childn1->y,index->childn1->score);
-      struct node *child_indexing = index->childn1;
-      for (size_t i = 1; i < index->nb_children; i++) {
-        child_indexing = child_indexing->next;
-        printf("child next is x%iy%i score %i\n", child_indexing->x,child_indexing->y,child_indexing->score);
-      }
-    }
-    //if (index->depth + 1== depth) {
-    //  free_queue(Q);
-    //  nb_queue=0;
-    //  return parent;
-    //}
           }
       printf("return \n");
       free_queue(Q);
