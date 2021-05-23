@@ -46,9 +46,8 @@ int main()
   node = first_node(board, node, 1);
   node = expand_childs(node, board);
   node = select_action(node, 0);
+  print_node_and_child(node);
   
-
-
   free(board);
 
   return 0; //end of the main function

@@ -110,8 +110,14 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 	      final = random_choose(node); 
 	    }
 	}
+      
       final = expand_childs(final, final->board);
-      print_node(final); 
+      print_node(node); 
+      
+      if(final->nb_child == 0)
+	{
+	  break; 
+	}
     }
 
   
@@ -197,20 +203,12 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 
   if( node->nb_child != 0)
     {
-
-      printf("1\n");
        
       best = &node->child[0];
-
-      printf("1\n");
       
       float best_value =  (node->child[0].value)/(float)(node->child[0].nb_visit);
 
-      printf("1\n");
-
       float inter = 0.0;
-
-      printf("1\n");
 
       for(int i = 1; i < node->nb_child ; i++)
 	{
@@ -218,8 +216,6 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 	  if(node->child[i].nb_visit != 0)
 	    { 
 	      inter = (node->child[i].value)/(float)(node->child[i].nb_visit);
-
-	      printf("1\n");
 
 	      if(inter > best_value)
 		{
@@ -303,7 +299,7 @@ int is2kings(struct MCTS_Node *node)
     {
       for( int x = 0; x < 8; x++)
 	{
-	  if(board[y*8+x].type != KING)
+	  if(board[y*8+x].type != KING || board[y*8+x].type != NONE )
 	    {
 	      return 0; 
 	    }

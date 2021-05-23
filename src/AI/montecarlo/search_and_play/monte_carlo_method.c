@@ -23,9 +23,10 @@ struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_N
   node = first_node(board, node, color_team);
   node = expand_childs(node, board);
 
-  for(int i = 0 ; i < 50 ; i++)
+  for(int i = 0 ; i < 5000 ; i++)
     {
       node = select_action(node, color_team);
+      
     }
 
   return node;
@@ -60,8 +61,6 @@ struct coordonates_moves *coordonates_by_mc(struct Piece *board, int color_team,
 
 struct MCTS_Node *select_good_node(struct Piece *board, struct MCTS_Node *node)
 {
-
-  print_node( node);
   
   for( int i = 0; i < node->nb_child; i++)
     {
