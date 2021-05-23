@@ -529,7 +529,9 @@ int main (int argc, char *argv[])
 
     // withdraw
     WithdrawB = GTK_BUTTON(gtk_builder_get_object(builder, "withdraw"));
+    gtk_button_set_image(WithdrawB, gtk_image_new_from_file ("Images/Withdraw.png"));
     StalemateB = GTK_BUTTON(gtk_builder_get_object(builder, "StalemateB"));
+    gtk_button_set_image(StalemateB, gtk_image_new_from_file ("Images/Stalemate.png"));
 
     // Create widgets -> button board
     struct construction constr;

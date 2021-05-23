@@ -28,7 +28,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">170</property>
+            <property name="x">70</property>
             <property name="y">40</property>
           </packing>
         </child>
@@ -38,13 +38,13 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Mail:</property>
+            <property name="label" translatable="yes">Your Email:</property>
             <attributes>
               <attribute name="size" value="17000"/>
             </attributes>
           </object>
           <packing>
-            <property name="x">150</property>
+            <property name="x">100</property>
             <property name="y">140</property>
           </packing>
         </child>
@@ -54,13 +54,13 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Password:</property>
+            <property name="label" translatable="yes">Your password:</property>
             <attributes>
               <attribute name="size" value="17000"/>
             </attributes>
           </object>
           <packing>
-            <property name="x">160</property>
+            <property name="x">100</property>
             <property name="y">300</property>
           </packing>
         </child>
@@ -76,27 +76,27 @@
         </child>
         <child>
           <object class="GtkEntry" id="email3">
-            <property name="width-request">100</property>
+            <property name="width-request">200</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="placeholder-text" translatable="yes">your email</property>
           </object>
           <packing>
-            <property name="x">160</property>
+            <property name="x">100</property>
             <property name="y">200</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="password3">
-            <property name="width-request">100</property>
+            <property name="width-request">200</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="placeholder-text" translatable="yes">your secret password</property>
           </object>
           <packing>
-            <property name="x">160</property>
+            <property name="x">100</property>
             <property name="y">360</property>
           </packing>
         </child>
@@ -105,6 +105,7 @@
             <property name="width-request">100</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
+            <property name="relief">none</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
           </object>
@@ -118,6 +119,7 @@
   </object>
   <object class="GtkWindow" id="LoginAccount2">
     <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Login to your account</property>
     <property name="resizable">True</property>
     <property name="window-position">center</property>
     <property name="gravity">east</property>
@@ -141,8 +143,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">150</property>
-            <property name="y">7</property>
+            <property name="x">70</property>
+            <property name="y">40</property>
           </packing>
         </child>
         <child>
@@ -151,40 +153,40 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Mail:</property>
+            <property name="label" translatable="yes">Your Email:</property>
             <attributes>
               <attribute name="size" value="17000"/>
             </attributes>
           </object>
           <packing>
-            <property name="x">150</property>
-            <property name="y">50</property>
+            <property name="x">100</property>
+            <property name="y">140</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="email4">
-            <property name="width-request">100</property>
+            <property name="width-request">200</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="placeholder-text" translatable="yes">your email</property>
           </object>
           <packing>
-            <property name="x">150</property>
-            <property name="y">120</property>
+            <property name="x">100</property>
+            <property name="y">200</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="password4">
-            <property name="width-request">100</property>
+            <property name="width-request">200</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="placeholder-text" translatable="yes">your secret password</property>
           </object>
           <packing>
-            <property name="x">150</property>
-            <property name="y">300</property>
+            <property name="x">100</property>
+            <property name="y">360</property>
           </packing>
         </child>
         <child>
@@ -193,14 +195,14 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Password:</property>
+            <property name="label" translatable="yes">Your password:</property>
             <attributes>
               <attribute name="size" value="17000"/>
             </attributes>
           </object>
           <packing>
-            <property name="x">150</property>
-            <property name="y">240</property>
+            <property name="x">100</property>
+            <property name="y">300</property>
           </packing>
         </child>
         <child>
@@ -209,10 +211,11 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="relief">none</property>
             <property name="receives-default">False</property>
           </object>
           <packing>
-            <property name="x">150</property>
+            <property name="x">200</property>
             <property name="y">500</property>
           </packing>
         </child>
@@ -242,10 +245,12 @@
     <child>
       <object class="GtkFixed">
         <property name="visible">True</property>
+        <property name="halign">center</property>
+        <property name="valign">center</property>
         <property name="can-focus">False</property>
         <child>
           <object class="GtkLabel">
-            <property name="width-request">259</property>
+            <property name="width-request">100</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -255,8 +260,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">172</property>
-            <property name="y">26</property>
+            <property name="x">112</property>
+            <property name="y">36</property>
           </packing>
         </child>
         <child>
@@ -269,7 +274,7 @@
             <property name="relief">none</property>
           </object>
           <packing>
-            <property name="x">17</property>
+            <property name="x">30</property>
             <property name="y">17</property>
           </packing>
         </child>
@@ -282,7 +287,7 @@
             <property name="placeholder-text" translatable="yes">your name</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">180</property>
           </packing>
         </child>
@@ -298,7 +303,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">125</property>
           </packing>
         </child>
@@ -311,7 +316,7 @@
             <property name="placeholder-text" translatable="yes">your email</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">331</property>
           </packing>
         </child>
@@ -327,7 +332,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">276</property>
           </packing>
         </child>
@@ -340,7 +345,7 @@
             <property name="placeholder-text" translatable="yes">your secret password</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">490</property>
           </packing>
         </child>
@@ -357,7 +362,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">60</property>
+            <property name="x">0</property>
             <property name="y">420</property>
           </packing>
         </child>
@@ -371,8 +376,8 @@
             <property name="relief">none</property>
           </object>
           <packing>
-            <property name="x">456</property>
-            <property name="y">650</property>
+            <property name="x">366</property>
+            <property name="y">580</property>
           </packing>
         </child>
         <child>
@@ -387,7 +392,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">50</property>
+            <property name="x">10</property>
             <property name="y">650</property>
           </packing>
         </child>
@@ -417,8 +422,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">172</property>
-            <property name="y">26</property>
+            <property name="x">112</property>
+            <property name="y">36</property>
           </packing>
         </child>
         <child>
@@ -431,7 +436,7 @@
             <property name="relief">none</property>
           </object>
           <packing>
-            <property name="x">17</property>
+            <property name="x">30</property>
             <property name="y">17</property>
           </packing>
         </child>
@@ -444,7 +449,7 @@
             <property name="placeholder-text" translatable="yes">your name</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">180</property>
           </packing>
         </child>
@@ -460,7 +465,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">125</property>
           </packing>
         </child>
@@ -473,7 +478,7 @@
             <property name="placeholder-text" translatable="yes">your email</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">331</property>
           </packing>
         </child>
@@ -489,7 +494,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">276</property>
           </packing>
         </child>
@@ -502,7 +507,7 @@
             <property name="placeholder-text" translatable="yes">your secret password</property>
           </object>
           <packing>
-            <property name="x">100</property>
+            <property name="x">40</property>
             <property name="y">490</property>
           </packing>
         </child>
@@ -519,7 +524,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">60</property>
+            <property name="x">0</property>
             <property name="y">420</property>
           </packing>
         </child>
@@ -533,8 +538,8 @@
             <property name="receives-default">False</property>
           </object>
           <packing>
-            <property name="x">456</property>
-            <property name="y">650</property>
+            <property name="x">366</property>
+            <property name="y">580</property>
           </packing>
         </child>
         <child>
@@ -594,7 +599,7 @@
           </object>
           <packing>
             <property name="x">15</property>
-            <property name="y">500</property>
+            <property name="y">600</property>
           </packing>
         </child>
         <child>
@@ -609,8 +614,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">500</property>
-            <property name="y">660</property>
+            <property name="x">550</property>
+            <property name="y">560</property>
           </packing>
         </child>
         <child>
@@ -644,7 +649,7 @@
           </object>
           <packing>
             <property name="x">600</property>
-            <property name="y">100</property>
+            <property name="y">200</property>
           </packing>
         </child>
         <child>
@@ -657,7 +662,7 @@
           </object>
           <packing>
             <property name="x">600</property>
-            <property name="y">200</property>
+            <property name="y">300</property>
           </packing>
         </child>
         <child>
@@ -675,7 +680,7 @@
           </object>
           <packing>
             <property name="x">600</property>
-            <property name="y">300</property>
+            <property name="y">400</property>
           </packing>
         </child>
         <child>
@@ -688,51 +693,51 @@
           </object>
           <packing>
             <property name="x">600</property>
-            <property name="y">400</property>
+            <property name="y">500</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="StalemateB">
-            <property name="width-request">100</property>
+            <property name="width-request">200</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Stalemate</property>
+            <!--property name="label" translatable="yes">Stalemate</property-->
             <property name="can-focus">True</property>
-            <property name="relief">half</property>
-            <property name="receives-default">False</property>
-          </object>
-          <packing>
-            <property name="x">500</property>
-            <property name="y">600</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="withdraw">
-            <property name="width-request">100</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">Withdraw</property>
-            <property name="can-focus">True</property>
-            <property name="relief">half</property>
+            <property name="relief">none</property>
             <property name="receives-default">False</property>
           </object>
           <packing>
             <property name="x">600</property>
-            <property name="y">600</property>
+            <property name="y">30</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="withdraw">
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <!--property name="label" translatable="yes">Withdraw</property-->
+            <property name="can-focus">True</property>
+            <property name="relief">none</property>
+            <property name="receives-default">False</property>
+          </object>
+          <packing>
+            <property name="x">820</property>
+            <property name="y">30</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="click_coordinates">
-            <property name="width-request">50</property>
-            <property name="height-request">50</property>
+            <property name="width-request">40</property>
+            <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="relief">none</property>
           </object>
           <packing>
-            <property name="x">830</property>
-            <property name="y">480</property>
+            <property name="x">950</property>
+            <property name="y">580</property>
           </packing>
         </child>
         <child>
@@ -822,7 +827,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">68</property>
+            <property name="x">100</property>
             <property name="y">243</property>
           </packing>
         </child>
@@ -836,7 +841,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">70</property>
+            <property name="x">100</property>
             <property name="y">332</property>
           </packing>
         </child>
@@ -850,7 +855,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">70</property>
+            <property name="x">100</property>
             <property name="y">422</property>
           </packing>
         </child>
@@ -952,7 +957,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">56</property>
+            <property name="x">70</property>
             <property name="y">71</property>
           </packing>
         </child>
@@ -1078,9 +1083,10 @@
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Do you wish to play again or quit Chess ma²?</property>
+            <property name="label" translatable="yes">Do you wish to play again
+      or quit Chess ma²?</property>
             <attributes>
-              <attribute name="size" value="27008"/>
+              <attribute name="size" value="25008"/>
             </attributes>
           </object>
           <packing>
@@ -1098,7 +1104,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">50</property>
+            <property name="x">100</property>
             <property name="y">254</property>
           </packing>
         </child>
@@ -1112,7 +1118,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">50</property>
+            <property name="x">100</property>
             <property name="y">348</property>
           </packing>
         </child>
