@@ -259,7 +259,7 @@ void connect1(GtkButton *button, gpointer user_data)
 void back_from_login1(GtkButton *button, gpointer user_data)
 {
     gtk_widget_show(window1st_v_1);
-    gtk_widget_hide(Game_Over);
+    gtk_widget_hide(LoginAccount);
 }
 
 //____________________________________________________________________________
@@ -290,6 +290,7 @@ void connect2(GtkButton *button, gpointer user_data)
         struct to_play *playing = user_data;
         move_str->Window = game_v1;
         init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
+        printf("pl1 %s pl2 %s \n", move_str->player1->name,move_str->player2->name);
         init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
     }
     else
@@ -317,8 +318,9 @@ void back_from_login2(GtkButton *button, gpointer user_data)
  */
 void playagain(GtkButton *button, gpointer user_data)
 {
+    gtk_widget_hide(Game_Over);
     gtk_widget_show(window1);
-    gtk_widget_hide(window1);
+
 }
 
 

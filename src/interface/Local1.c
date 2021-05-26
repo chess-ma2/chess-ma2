@@ -75,13 +75,92 @@ void exitgame(GtkButton *button, gpointer user_data)
 
 /*
  * @author Anna
+ * @date 25/05/2021
+ * @details Black Team wins
+*/
+void blackT_Wins(struct Player *pl1, struct Player *pl2, GtkLabel *Info, GtkWidget *Window,GtkWidget *Window2)
+{
+  char *name = malloc(700 *sizeof(char));
+  if(pl1->team_color == 1)
+  {
+    update_victory(pl1->email);
+    update_loss(pl2->email);
+    strcpy(name, pl1->name);
+  }
+  else
+  {
+    update_victory(pl2->email);
+    update_loss(pl1->email);
+    strcpy(name, pl2->name);
+  }
+  char *black = " (Black), won this game well done!";
+  strcat(name, black);
+  gtk_label_set_text(Info, name);
+
+  GtkWidget *dialog;
+  dialog = gtk_message_dialog_new(GTK_WINDOW(Window),
+        GTK_DIALOG_DESTROY_WITH_PARENT,
+        GTK_MESSAGE_INFO,
+        GTK_BUTTONS_OK,
+        "End of game, the winnner is the black team");
+  gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",name);
+  gtk_window_set_title(GTK_WINDOW(dialog), "End of game");
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  gtk_widget_destroy(dialog);
+  free(name);
+  gtk_widget_show(Window2);
+  gtk_widget_hide(Window);
+}
+
+
+/*
+ * @author Anna
+ * @date 25/05/2021
+ * @details White Team wins
+*/
+void whiteT_Wins(struct Player *pl1, struct Player *pl2, GtkLabel *Info, GtkWidget *Window,GtkWidget *Window2)
+{
+  char *name = malloc(700 *sizeof(char));
+  if(pl1->team_color == 0)
+  {
+    update_victory(pl1->email);
+    update_loss(pl2->email);
+    strcpy(name, pl1->name);
+  }
+  else
+  {
+    update_victory(pl2->email);
+    update_loss(pl1->email);
+    strcpy(name, pl2->name);
+  }
+  char *white = " (White), won this game well done!";
+  strcat(name, white);
+  gtk_label_set_text(Info, name);
+  GtkWidget *dialog;
+  dialog = gtk_message_dialog_new(GTK_WINDOW(Window),
+        GTK_DIALOG_DESTROY_WITH_PARENT,
+        GTK_MESSAGE_INFO,
+        GTK_BUTTONS_OK,
+        "End of game, the winnner is the white team");
+  gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",name);
+  gtk_window_set_title(GTK_WINDOW(dialog), "End of game");
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  gtk_widget_destroy(dialog);
+  free(name);
+  gtk_widget_show(Window2);
+  gtk_widget_hide(Window);
+  printf("end of white team wins \n");
+}
+
+/*
+ * @author Anna
  * @date 25/04/2021
  * @details Subfunction that checks for checkmates
 */
 struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
   enum king_status white_kingstatus, enum king_status black_kingstatus,
   int x_kingb, int y_kingb, int x_kingw, int y_kingw, int des_x, int des_y,
-   struct Player *pl1, struct Player *pl2, GtkLabel *Info)
+   struct Player *pl1, struct Player *pl2, GtkLabel *Info , GtkWidget *Window,GtkWidget *Window2)
   {
     int returned = 0; // Return 0 if no change has been done
     //___________________________ Black team's turn
@@ -95,27 +174,9 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
         if (kingcheck_place(x_kingb, y_kingb, des_x-1, des_y-1, board) == 0)
           black_kingstatus = NOTHING;
 
-        if (check_mat(x_kingw, y_kingw, WHITE,  board)== 1) {
-          if(pl1->team_color == 1)
-          {
-            update_victory(pl1->email);
-            update_loss(pl2->email);
-            char *name = "";
-            strcpy(name, pl1->name);
-            char *white = " (Black), won this game well done!";
-            strcat(name, white);
-            gtk_label_set_text(Info, name);
-          }
-          else
-          {
-            update_victory(pl2->email);
-            update_loss(pl1->email);
-            char *name="";
-            strcpy(name, pl2->name);
-            char *white = " (Black), won this game well done!";
-            strcat(name, white);
-            gtk_label_set_text(Info, name);
-          }
+        //if (check_mat(x_kingw, y_kingw, WHITE,  board)== 1) {
+        if(white_kingstatus == CHECK){
+          blackT_Wins(pl1, pl2,Info,Window,Window2);
           returned = 1; // End of game
         }
         *player_turn = WHITETURN;
@@ -124,35 +185,18 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
       {
         if (kingcheck_place( x_kingb, y_kingb, des_x-1, des_y-1, board) == 1) {
           black_kingstatus = CHECK;
-          printf("Checkmate for the black king \n");
+          gtk_label_set_text(Info,"Checkmate for the black king \n");
         }
 
         if (kingcheck_place( x_kingw, y_kingw, des_x-1, des_y-1, board) == 0)
           white_kingstatus = NOTHING;
 
-        if (check_mat(x_kingb, y_kingb, BLACK, board)== 1) {
-          if(pl1->team_color == 0)
-          {
-            update_victory(pl1->email);
-            update_loss(pl2->email);
-            char *name = "";
-            strcpy(name, pl1->name);
-            char *white = " (White), won this game well done!";
-            strcat(name, white);
-            gtk_label_set_text(Info, name);
-          }
-          else
-          {
-            update_victory(pl2->email);
-            update_loss(pl1->email);
-            char *name = "";
-            strcpy(name, pl2->name);
-            char *white = " (White), won this game well done!";
-            strcat(name, white);
-            gtk_label_set_text(Info, name);
-          }
+        //if (check_mat(x_kingb, y_kingb, BLACK, board)== 1) {
+        if(black_kingstatus == CHECK){
+          whiteT_Wins(pl1, pl2,Info,Window,Window2);
           returned = 1;
         }
+
         *player_turn = BLACKTURN;
       }
 
@@ -164,7 +208,7 @@ struct checking check4checkmates_2(enum turn *player_turn, struct Piece *board,
         returned = 1;
       }
 
-  struct checking res = { WHITETURN, white_kingstatus, black_kingstatus, returned };
+  struct checking res = { *player_turn, white_kingstatus, black_kingstatus, returned };
   return res;
   }
 
@@ -180,14 +224,14 @@ void click4move(GtkButton *button, gpointer user_data)
 {
   struct for_clicked *needed = user_data;
 
-  if (needed->white_kingstatus == CHECKMATE || needed->black_kingstatus == CHECKMATE) {
+  /*if (needed->white_kingstatus == CHECKMATE || needed->black_kingstatus == CHECKMATE) {
     if (needed->white_kingstatus == CHECKMATE) {
       win_update(needed->Info, needed->player1, needed->player2, BLACKTURN);
     }
     else{
       win_update(needed->Info, needed->player1, needed->player2, WHITETURN);
     }
-  }
+  }*/
 
   // Get Coordinates
   char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
@@ -205,7 +249,7 @@ void click4move(GtkButton *button, gpointer user_data)
   //____________________________________ Game settings _____________________________________________________________
   //Rock
   struct res_rock res = rock_sub(* needed->player_turn, needed->constr.board, needed->white_kingstatus,
-    needed->black_kingstatus, needed->white_rock, needed->black_rock,needed-> x_kingb,
+    needed->black_kingstatus, needed->white_rock, needed->black_rock,needed->x_kingb,
     needed->y_kingb, needed->x_kingw, needed->y_kingw, x, y, des_x, des_y);
 
   * needed->player_turn = res.player_turn;
@@ -267,10 +311,11 @@ void click4move(GtkButton *button, gpointer user_data)
 
           //___________________________
           // Impossible move
+
           if((*needed->player_turn == BLACKTURN && piece_to_place(needed->x_kingb, needed->y_kingb, needed->constr.board) == 1 ) // is in check around
           || (*needed->player_turn == WHITETURN && piece_to_place(needed->x_kingw, needed->y_kingw, needed->constr.board) == 1))
             {
-              printf("impossible \n");
+
               needed->constr.board = pieceMove(des_x-1, des_y-1, x-1, y-1, needed->constr.board);
               gtk_label_set_text(needed->Info, "Impossible to move the king as checkmate would be unavoidable\n");
 
@@ -284,15 +329,15 @@ void click4move(GtkButton *button, gpointer user_data)
               // NEXT TURN
               gtk_entry_set_text(needed->Ori_Coord, "");
               gtk_entry_set_text(needed->New_Coord, "");
-            //  gtk_label_set_text(needed->Info, "New Turn \n Please select the chess piece you want to move (ex: A3)");
-            //  playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
-            //  return;
+              gtk_label_set_text(needed->Info, "New Turn \n Please select the chess piece you want to move (ex: A3)");
+              playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
+              return;
           }
 
           // Check for checkmates _________________________________________
           struct checking res = check4checkmates_2(needed->player_turn, needed->constr.board, needed->white_kingstatus,
              needed->black_kingstatus, needed->x_kingb, needed->y_kingb, needed->x_kingw, needed->y_kingw,
-             des_x, des_y,  needed->player1, needed->player2, needed->Info);
+             des_x, des_y,  needed->player1, needed->player2, needed->Info, needed->Window, needed->EndWindow);
 
           needed->white_kingstatus = res.white_kingstatus;
           needed->black_kingstatus = res.black_kingstatus;
@@ -300,11 +345,12 @@ void click4move(GtkButton *button, gpointer user_data)
 
           if (res.returned == 1)
           {
-            printf("check mate\n");
             gtk_entry_set_text(needed->Ori_Coord, "");
             gtk_entry_set_text(needed->New_Coord, "");
+            //gtk_window_unfullscreen(GTK_WINDOW(needed->Window));
             gtk_widget_show(needed->EndWindow);
             gtk_widget_hide(needed->Window);
+            return;
           }
 
           // Update board
@@ -313,7 +359,7 @@ void click4move(GtkButton *button, gpointer user_data)
     gtk_entry_set_text(needed->Ori_Coord, "");
     gtk_entry_set_text(needed->New_Coord, "");
     playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
-    
+
 }
 
 

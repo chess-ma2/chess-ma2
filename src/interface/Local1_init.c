@@ -237,7 +237,7 @@ void playerturn_print(enum turn *player_turn, struct Player *player1, struct Pla
   if(*player_turn == WHITETURN)
   {
     if (player1->team_color == 1)
-      infoo = player2->name;
+      strcpy(infoo, player2->name);
     strcat(infoo, " ,it's your turn to play (White)");
   }
   else
@@ -268,10 +268,10 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
   int nbBlack = 16;
 
   //kings'positions to know if check or checkmat
-  int x_kingw = 4;
-  int y_kingw = 0;
   int x_kingb = 4;
-  int y_kingb = 7;
+  int y_kingb = 0;
+  int x_kingw = 4;
+  int y_kingw = 7;
   enum rock white_rock = CAN_ROCK;
   enum rock black_rock = CAN_ROCK;
   enum king_status white_kingstatus = NOTHING;

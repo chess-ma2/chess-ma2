@@ -25,49 +25,44 @@ void withdraw_2(GtkButton *button, gpointer user_data)
   enum turn *player_turn = res->player_turn;
   struct Player *pl1 = res->pl1;
   struct Player *pl2 = res->pl2;
-  char *won = "";
-  char *lost = "";
+  char *won = malloc(700 * sizeof(char));
+  char *lost = malloc(700 * sizeof(char));
 
   if( (*player_turn == WHITETURN && pl1->team_color == 0 ) || (*player_turn == BLACKTURN && pl1->team_color == 1))
     {
         //Player 2 wins
-        char *name_lost = getNAME(pl1->email);
+        strcpy(lost, pl1->name);
         char *lost_sentence = " lost by resignation";
-        strcat(name_lost, lost_sentence);
-        lost = name_lost;
-        char *name_won = getNAME(pl2->email);
-        strcat(name_won, " wins! Congrats to the ");
+        strcat(lost, lost_sentence);
+        strcpy(won, pl2->name);
+        strcat(won, " wins! Congrats to the ");
         //char *won_sentence =" wins! Congrats to the ";
         if (*player_turn == WHITETURN) {
-          strcat(name_won, "black team!\n");
+          strcat(won, "black team!\n");
         }
         else{
-          strcat(name_won,"white team!\n");
+          strcat(won,"white team!\n");
         }
-        won = name_won;
         update_victory(pl2->email);
         update_loss(pl1->email);
       }
     else
       {
         //Player 1 wins
-        char *name_lost = getNAME(pl2->email);
+        strcpy(lost, pl2->name);
         char *lost_sentence = " lost by resignation";
-        strcat(name_lost, lost_sentence);
-        lost = name_lost;
-        char *name_won = getNAME(pl1->email);
-        strcat(name_won, " wins! Congrats to the ");
+        strcat(lost, lost_sentence);
+        strcpy(won, pl1->name);
+        strcat(won, " wins! Congrats to the ");
         if (*player_turn == WHITETURN) {
-          strcat(name_won, "black team!\n");
+          strcat(won, "black team!\n");
         }
         else{
-          strcat(name_won,"white team!\n");
+          strcat(won,"white team!\n");
         }
-        won = name_won;
         update_victory(pl1->email);
         update_loss(pl2->email);
       }
-
       // Show Dialog to inform players
       GtkWidget *dialog;
       dialog = gtk_message_dialog_new(GTK_WINDOW(res->Window),
@@ -79,8 +74,11 @@ void withdraw_2(GtkButton *button, gpointer user_data)
       gtk_window_set_title(GTK_WINDOW(dialog), "End of game");
       gtk_dialog_run(GTK_DIALOG(dialog));
       gtk_widget_destroy(dialog);
+      //gtk_window_unfullscreen(GTK_WINDOW(res->Window));
       gtk_widget_hide(res->Window);
       gtk_widget_show(res->EndWindow);
+      free(won);
+      free(lost);
 
 
 }
@@ -99,14 +97,14 @@ void stalemate_dialog (GtkDialog *dialog,
 
   // If the button clicked gives response "Login" == OK (response_id being -5)
   // Get current name
-  char *current_name = "";
+  char *current_name = malloc(700 * sizeof(char));
   if((* res->player_turn == WHITETURN && res->pl1->team_color == 1) || (* res->player_turn == BLACKTURN && res->pl1->team_color == 0))
   {
-    current_name = getNAME(res->pl1->email);
+    strcpy(current_name, res->pl1->name);
   }
   else
   {
-    current_name = getNAME(res->pl2->email);
+    strcpy(current_name, res->pl2->name);
   }
 
   if (response_id == GTK_RESPONSE_OK)
@@ -128,13 +126,15 @@ void stalemate_dialog (GtkDialog *dialog,
   gtk_window_set_title(GTK_WINDOW(dialog_accept), "End of game");
   gtk_dialog_run(GTK_DIALOG(dialog_accept));
   gtk_widget_destroy(dialog_accept);
+  //gtk_window_unfullscreen(GTK_WINDOW(res->Window));
   gtk_widget_show(res->EndWindow);
   gtk_widget_hide(res->Window);
+  free(current_name);
 
   }
   else
   {
-    char *info = "";
+
     if (* res->player_turn == WHITETURN)
       strcat(current_name,  " (Black) refuses so the game continues.");
     else
@@ -148,6 +148,7 @@ void stalemate_dialog (GtkDialog *dialog,
   gtk_window_set_title(GTK_WINDOW(dialog_info), "The show must go on");
   gtk_dialog_run(GTK_DIALOG(dialog_info));
   gtk_widget_destroy(dialog_info);
+  free(current_name);
   }
 }
 
