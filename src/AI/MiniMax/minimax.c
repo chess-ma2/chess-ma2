@@ -18,8 +18,10 @@ int get_min(int nb_children,struct node *children)
         if ( children->score < min)
         {
             min = children->score;
+            printf("min is %i \n", min);
         }
         children = children->next;
+        printf("next score is is %i \n", children->score);
         nb_children--;
     }
     return min;
@@ -33,8 +35,10 @@ int get_max(int nb_children,struct node *children)
         if (children->score > max)
         {
             max = children->score;
+            printf("max is %i \n", max);
         }
         children = children->next;
+        printf("next score is is %i \n", children->score);
         nb_children--;
     }
     return max;
@@ -47,12 +51,12 @@ struct finalmove * get_move (struct tree * T)
     int color = root->MiniMax;
     int nb_children= root->nb_children;
     int idx=0;
-    
+
     if (color==1) //==blanc donc > 0 ?
     {
         idx = get_max( nb_children, root->childn1);
     }
-    
+
     else
     {
         idx = get_min( nb_children, root->childn1);
@@ -62,15 +66,19 @@ struct finalmove * get_move (struct tree * T)
     {
         root = root->next;
     }
+<<<<<<< HEAD
     display_board_special(root->board);
     printf("score = %i",root->score);
+=======
+
+>>>>>>> 30394d05003cf51e731380c92c956db10352644e
     final->x = root->xbeg;
     final->y = root->ybeg;
     final->xdes = root->x;
     final->ydes = root->y;
-    
+
     return final;
-    
+
 }
 
 struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth)
@@ -90,7 +98,8 @@ struct node * update_values(struct node * root)
 {
     //struct node * root = T->root;
     struct node * trans = malloc(sizeof(struct node));
-    trans= root->childn1;
+    trans = root->childn1;
+    printf("score is %i \n", trans->score);
     for (int i=0; i<root->nb_children; i++)
     {
         if (i!=0)

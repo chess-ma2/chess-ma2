@@ -224,51 +224,30 @@ void printRulesLabel(GtkLabel *Rules)
   gtk_label_set_text (Rules, rules);
 }
 
-/*
- * @author Anna
- * @date 01/05/2021
- * @details Prints white player's turn
-*/
-
-void whiteplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn)
-{
-  if (player1->team_color == 0) {
-    char *name = getNAME(player1->email);
-    char *white = " (White), it is your turn to play";
-    strcat(name, white);
-    gtk_label_set_text (turn, name);
-    return;
-  }
-  else
-  {
-    char *name = getNAME(player2->email);
-    char *white = " (White), it is your turn to play";
-    strcat(name, white);
-    gtk_label_set_text (turn, name);
-    return;
-  }
-}
 
 /*
  * @author Anna
  * @date 01/05/2021
- * @details Prints black player's turn
+ * @details Prints who's turn it is
 */
-void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *turn)
+void playerturn_print(enum turn *player_turn, struct Player *player1, struct Player *player2, GtkLabel *turn)
 {
-  if (player1->team_color == 1) {
-    char *name = getNAME(player1->email);
-    char *black = " (Black), it is your turn to play";
-    strcat(name, black);
-    gtk_label_set_text (turn, name);
+  char *infoo = malloc(700 * sizeof(char));
+  strcpy(infoo, player1->name);
+  if(*player_turn == WHITETURN)
+  {
+    if (player1->team_color == 1)
+      strcpy(infoo, player2->name);
+    strcat(infoo, " ,it's your turn to play (White)");
   }
   else
   {
-    char *name = getNAME(player2->email);
-    char *black = " (Black), it is your turn to play";
-    strcat(name, black);
-    gtk_label_set_text (turn, name);
+    if (player1->team_color == 0)
+        strcpy(infoo, player2->name);
+    strcat(infoo, " ,it's your turn to play (Black)");
   }
+  gtk_label_set_text(turn, infoo);
+  free(infoo);
 }
 
 /*
@@ -277,7 +256,7 @@ void blackplayerturn(struct Player *player1, struct Player *player2, GtkLabel *t
  * @details Main Game function (from version1 originaly)
 */
 
-void init_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed)
+void init_gtk(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed, GtkWidget *EndWindow)
 {
   //_______________ Variables
   // Current white chess pieces on chessboard
@@ -289,10 +268,10 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
   int nbBlack = 16;
 
   //kings'positions to know if check or checkmat
-  int x_kingw = 4;
-  int y_kingw = 0;
   int x_kingb = 4;
-  int y_kingb = 7;
+  int y_kingb = 0;
+  int x_kingw = 4;
+  int y_kingw = 7;
   enum rock white_rock = CAN_ROCK;
   enum rock black_rock = CAN_ROCK;
   enum king_status white_kingstatus = NOTHING;
@@ -312,19 +291,21 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
       player1->team_color = 1; // Player 1 is black
       player2->team_color = 0; // Player 2 is white
   }
-
+  player1->name = getNAME(player1->email);
+  player2->name = getNAME(player2->email);
   //____________________________________________________________________________
-  if (*needed->player_turn == WHITETURN) { whiteplayerturn(player1, player2, turn);} // Prints who's turn it is
-  else{ blackplayerturn(player1, player2, turn); }
+  playerturn_print(needed->player_turn, player1, player2, turn);
 
   // Show Board
   update_board(constr);
 
-  //struct for_clicked *needed = malloc(sizeof(struct for_clicked));
+  // Define needed variables
   needed->player1 = player1;
   needed->player2 = player2;
   needed->turn = turn;
   needed->Info = Info;
+
+  gtk_label_set_text(Info, "\n  Please select the chess piece you want to move (ex: A3)");
   needed->currentW = currentW;
   needed->nbWhite = nbWhite;
   needed->currentB = currentB;
@@ -337,7 +318,7 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
   needed->black_rock = black_rock;
   needed->white_kingstatus = white_kingstatus;
   needed->black_kingstatus = black_kingstatus;
-  printf("init [ok]\n");
+  needed->EndWindow = EndWindow;
   return;
 }
 
@@ -387,16 +368,12 @@ void update_board(struct construction constr){
 
       // Sets info on Image
       if (in != -1) {
-        printf("set image \n");
         gtk_image_set_from_file(GTK_IMAGE(constr.ImageBoard[i*8+j]), normal_images_cha[in]);
-        gtk_widget_set_size_request (constr.ImageBoard[i*8+j],60,60);
-        gtk_fixed_put (constr.fixed, constr.ImageBoard[i*8+j], x + 15, y + 15);
         gtk_widget_show(constr.ImageBoard[i*8+j]);
       }
       else
       {
-        printf("clear image \n");
-        //gtk_image_clear(GTK_IMAGE(constr.ImageBoard[i*8+j]));
+        gtk_image_set_from_file(GTK_IMAGE(constr.ImageBoard[i*8+j]), normal_images_cha[0]);
         gtk_widget_hide(constr.ImageBoard[i*8+j]);
       }
       x += width;
@@ -404,7 +381,6 @@ void update_board(struct construction constr){
     x = 56;
     y += height;
   }
-  printf("end of board \n");
 }
 
 #endif
