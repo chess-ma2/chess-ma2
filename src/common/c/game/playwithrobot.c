@@ -5,7 +5,7 @@
 
 #include "../../../client/c/network/game.c"
 #include "../data/process_board.c"
-#include "../rules/rules.c"
+//#include "../rules/rules.c"
 #include "../rules/pieces.c"
 #include "version1.c"
 #include "../rules/check_and_pat.c"
