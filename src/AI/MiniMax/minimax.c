@@ -66,12 +66,7 @@ struct finalmove * get_move (struct tree * T)
     {
         root = root->next;
     }
-<<<<<<< HEAD
-    display_board_special(root->board);
-    printf("score = %i",root->score);
-=======
-
->>>>>>> 30394d05003cf51e731380c92c956db10352644e
+    
     final->x = root->xbeg;
     final->y = root->ybeg;
     final->xdes = root->x;
@@ -81,12 +76,9 @@ struct finalmove * get_move (struct tree * T)
 
 }
 
-struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth)
+struct finalmove * get_right_move_ia(struct Piece *board,struct currentpiece *current_List, struct currentpiece *current_ListB, enum turn player_turn, int depth, int nbw,int nbb)
 {
-    //struct finalmove * final = malloc(sizeof(struct finalmove));
-    struct currentpiece *current_List = create_whiteList();
-    struct currentpiece *current_ListB = create_blackList();
-    struct tree * T = create_tree(board, WHITETURN, current_List, 16,current_ListB, 16,  depth);
+    struct tree * T = create_tree(board, player_turn, current_List, nbw,current_ListB, nbb,  depth);
     struct node * root = T->root;
     root = update_values(root);
     struct finalmove * move = get_move(T);

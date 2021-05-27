@@ -14,6 +14,10 @@
 #include "../../../database/functions_db.c"
 #include "../../../AI/MiniMax/minimax.c"
 
+#ifndef PLAYWITHROBOT_C
+#define PLAYWITHROBOT_C
+
+
 struct Player * makeRobot()
 {
     struct Player * robot= malloc( sizeof(struct Player));
@@ -118,7 +122,7 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
       }
       if (type==1)
       {
-        struct finalmove * move = get_right_move_ia(board,WHITETURN, 2);
+        struct finalmove * move = get_right_move_ia(board,currentW,currentB,WHITETURN, 2,nbWhite, nbBlack);
         x= move->x;
         y=move->y;
         des_y=move->ydes;
@@ -250,3 +254,5 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
     free(currentB);
     return 0;
 }
+
+#endif
