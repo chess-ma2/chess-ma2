@@ -31,7 +31,7 @@ int get_max(int nb_children,struct node *children);
 
 struct finalmove * get_move (struct tree * T);
 
-struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth, struct tree * T);
+struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth);
 
 struct node * update_values (struct node * T);
 

@@ -44,6 +44,6 @@ struct Move{
     int ydes;
 };
 
-int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot,int type);
+int playwrobot(struct Piece *board, struct Player *player1,int type);
 
 #endif

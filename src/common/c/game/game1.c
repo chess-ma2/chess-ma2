@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "../../../database/functions_db.c"
 #include "version1.c"
+#include "playwithrobot.c"
 
 #ifndef GAME1_C
 #define GAME1_C
@@ -36,24 +37,25 @@ int main()
     struct Player *player1 = Player1();
     printf("\n \n");
 
-    struct Player *player2 = Player2();
+    //struct Player *player2 = Player2();
 
     //___________________   Start Game   ________________________________
     struct Piece *board = init_board();
     display_board_special(board);
-    int res = play(board, player1, player2);
+    //int res = play(board, player1, player2);
+    playwrobot(board,player1, 1);
 
     //___________________   Free memory_   ________________________________
 
     free(player1->name);
     free(player1->email);
     free(player1);
-    free(player2->name);
-    free(player2->email);
-    free(player2);
+    //free(player2->name);
+    //free(player2->email);
+    //free(player2);
     free(board);
 
-    return res;
+    //return res;
 }
 
 #endif

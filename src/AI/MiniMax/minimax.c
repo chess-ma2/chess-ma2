@@ -46,7 +46,6 @@ struct finalmove * get_move (struct tree * T)
     struct node * root = T->root;
     int color = root->MiniMax;
     int nb_children= root->nb_children;
-    printf("ici?\n");
     int idx=0;
     
     if (color==1) //==blanc donc > 0 ?
@@ -58,14 +57,13 @@ struct finalmove * get_move (struct tree * T)
     {
         idx = get_min( nb_children, root->childn1);
     }
-    printf("la?\n");
     root = root -> childn1;
-    printf("here?\n");
     while (root->score != idx && root != NONE )
     {
         root = root->next;
     }
-    
+    display_board_special(root->board);
+    printf("score = %i",root->score);
     final->x = root->xbeg;
     final->y = root->ybeg;
     final->xdes = root->x;
@@ -75,15 +73,16 @@ struct finalmove * get_move (struct tree * T)
     
 }
 
-struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth, struct tree * T)
+struct finalmove * get_right_move_ia(struct Piece *board, enum turn player_turn, int depth)
 {
     //struct finalmove * final = malloc(sizeof(struct finalmove));
-
+    struct currentpiece *current_List = create_whiteList();
+    struct currentpiece *current_ListB = create_blackList();
+    struct tree * T = create_tree(board, WHITETURN, current_List, 16,current_ListB, 16,  depth);
     struct node * root = T->root;
-    printf("TEST\n");
     root = update_values(root);
-    printf("TEST\n");
     struct finalmove * move = get_move(T);
+    free(T);
     return move;
 }
 

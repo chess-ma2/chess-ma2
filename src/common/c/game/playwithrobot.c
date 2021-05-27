@@ -10,13 +10,26 @@
 #include "version1.c"
 #include "../rules/check_and_pat.c"
 #include "added_functions.c"
+#include "../../../database/create_db.c"
+#include "../../../database/functions_db.c"
+#include "../../../AI/MiniMax/minimax.c"
+
+struct Player * makeRobot()
+{
+    struct Player * robot= malloc( sizeof(struct Player));
+    robot->name = "robtherobot";
+    robot->email = "robychoux4052tropfortceminimax";
+    robot-> nb_won = 0;
+    robot-> nb_lost = 0;
+    robot->team_color = 1;
+    
+    return robot;
+}
 
 
 //using nearly anna and marie 's function but a little adaptation
-int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot,int type)
+int playwrobot(struct Piece *board, struct Player *player1, int type)
 {
-
-
   print_rules();
   //_______________ Variables
   int x = 0;
@@ -33,7 +46,7 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
   // Current black chess pieces on chessboard
   struct currentpiece *currentB = create_blackList();
   int nbBlack = 16;
-
+    struct Player *robot = makeRobot();
   //kings'positions to know if check or checkmat
 
   int x_kingw = 4;
@@ -105,21 +118,17 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
       }
       if (type==1)
       {
-        //struct Move * move= malloc(sizeof(int)*4);
-        //throw IA anna and marine with move in parameters
-        //move = throwrobot(board, move);
-        //x_char= move->xbeg;
-        //y=move->ybeg;
-        //x = ((int)x_char) - 64;
-        //des_x_char=move->xdes;
-        //des_y=move->ydes;
-        //des_x=((int)des_x_char) - 64;
+        struct finalmove * move = get_right_move_ia(board,WHITETURN, 2);
+        x= move->x;
+        y=move->y;
+        des_y=move->ydes;
+        des_x=move->xdes;
       }
       //for now putting the variables to withdraw to avoid pbms but will be removed later
-      x_char = 'W';
+      /*x_char = 'W';
       y = 0;
       des_x_char = 'W';
-      des_y = 0;
+      des_y = 0;*/
     }
 
       //__________________ Withdraw ______________________________________________________________________________________________
@@ -223,7 +232,7 @@ int playwrobot(struct Piece *board, struct Player *player1, struct Player *robot
           	    }
 
                 // Check for checkmates _________________________________________
-                struct checking res = check4checkmates( player_turn, board, white_kingstatus, black_kingstatus, x_kingb, y_kingb, x_kingw, y_kingw, des_x, des_y,  player1, player2);
+                struct checking res = check4checkmates( player_turn, board, white_kingstatus, black_kingstatus, x_kingb, y_kingb, x_kingw, y_kingw, des_x, des_y,  player1, robot);
                 player_turn = res.player_turn;
                 white_kingstatus = res.white_kingstatus;
                 black_kingstatus = res.black_kingstatus;
