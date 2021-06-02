@@ -24,7 +24,7 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
 
   while(node->leaf == 0)
     {
-      node = select(node);
+      node = selected(node);
     }
   
   node = roll_out(node, color);
@@ -38,7 +38,7 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
  * @details Select the "best" child with the exploration and the value
  */
 
-struct MCTS_Node *select(struct MCTS_Node *node)
+struct MCTS_Node *selected(struct MCTS_Node *node)
 {
   srand(time(NULL));
   
@@ -54,7 +54,7 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + (sqrtf(node->nb_visit + 1)/node->child[i].nb_visit) ;
 	}
       
-      else if (node->child[i].nb_visit == 0)
+      else 
 	{
 	  float nb = 0;
 	  nb =  (float)rand() / (float)RAND_MAX;
@@ -192,7 +192,7 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
       return 0; 
     }
 
-  int random = (rand() % (nb_child));; 
+  int random = (rand() % nb_child);; 
 
   return &node->child[random];
 }
