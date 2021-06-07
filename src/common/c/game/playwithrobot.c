@@ -22,7 +22,7 @@ struct Player * makeRobot()
     robot-> nb_won = 0;
     robot-> nb_lost = 0;
     robot->team_color = 1;
-    
+
     return robot;
 }
 
@@ -49,10 +49,10 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
     struct Player *robot = makeRobot();
   //kings'positions to know if check or checkmat
 
-  int x_kingw = 4;
-  int y_kingw = 0;
   int x_kingb = 4;
-  int y_kingb = 7;
+  int y_kingb = 0;
+  int x_kingw = 4;
+  int y_kingw = 7;
 
   enum turn player_turn = WHITETURN; // team's turn
   enum rock white_rock = CAN_ROCK;
@@ -61,17 +61,17 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
   enum king_status black_kingstatus = NOTHING;
 
   //___________________ Random to get which player starts
-  int starts = rand() % 2;
-  if (starts == 0)
-  {
+//  int starts = rand() % 2;
+//  if (starts == 0)
+/*  {
       player1->team_color = 0; // Player is white
       robot->team_color = 1; // robot is black
   }
   else
-  {
+  {*/
       player1->team_color = 1; // Player is black
       robot->team_color = 0; // robot is white
-  }
+//  }
   //_______________________________________________________________________________________________________________________________
 
 

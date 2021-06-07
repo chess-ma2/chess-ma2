@@ -66,12 +66,9 @@ struct finalmove * get_move (struct tree * T)
     {
         root = root->next;
     }
-<<<<<<< HEAD
+
     display_board_special(root->board);
     printf("score = %i",root->score);
-=======
-
->>>>>>> 30394d05003cf51e731380c92c956db10352644e
     final->x = root->xbeg;
     final->y = root->ybeg;
     final->xdes = root->x;
