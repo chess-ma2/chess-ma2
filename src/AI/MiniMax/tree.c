@@ -70,6 +70,30 @@ int getVal(struct Piece current)
 }
 
 
+void __print(struct node *index)
+{
+  printf("Score:%i x%iy%i nb %i depth %i ", index->score, index->x, index->y, index->nb_children, index->depth);
+  display_board_special(index->board);
+  if (index->nb_children) {
+    __print(index->childn1);
+  }
+  /*struct node *first = index->childn1;
+  for (int i = 0; i < index->nb_children; i++)
+  {
+    ////printf("        |          ");
+    __print(first);
+    first = first->next;
+  }*/
+
+  //printf("\n next");
+}
+
+void printdfs(struct tree *Tree)
+{
+  printf("Root is x%iy%i\n", Tree->root->x, Tree->root->y);
+  __print(Tree->root);
+  printf("\n\n");
+}
 
 void print_tree_dot(struct tree *Tree)
 {
@@ -84,12 +108,12 @@ void print_tree_dot(struct tree *Tree)
   while(nb_queue != 0)
   {
     struct node *index = dequeue(Q);
-    printf("%i ", index->score);
-    printf("%i -- %i\n", index->score, index->childn1->score);
+    //printf("%i ", index->score);
+    //printf("%i -- %i\n", index->score, index->childn1->score);
     struct node *child = index->childn1;
     for (int i = 1; i < index->nb_children; i++) {
       child = child->next;
-      printf("%i -- %i\n", index->score, child->score);
+      //printf("%i -- %i\n", index->score, child->score);
       Q = enqueue(child, Q);
     }
   }
@@ -112,13 +136,14 @@ void pretty_print(struct tree *Tree, int depth)
   {
     struct node *index = dequeue(Q);
     if (index == NULL) {
-      printf("not \n");
       free_queue(Q);
       nb_queue = 0;
       return;
     }
 
-    printf("Node Score= %i x=%i y=%i has %i nb of children \n", index->score,index->x,index->y,index->nb_children);
+    if (!(index->score == 0 && index->x == 0 && index->y == 0 && index->nb_children == 0)) {
+    printf("(%i)Node Score= %i x=%i y=%i has %i nb of children \n", index->depth, index->score,index->x,index->y,index->nb_children);
+      }
     if (index->nb_children > 0) {
 
     printf("-- (Score %i x=%i y=%i)\n", index->childn1->score,index->childn1->x,index->childn1->y);
@@ -254,7 +279,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
   parent->nbBlack = nb_black;
   parent->depth = 0;
   parent->childn1 = malloc(sizeof(struct node));
-  int Max = 1; // White
+  //int Max = 1; // White
 
   // enqueue parent
   Q = enqueue(parent, Q);
@@ -263,72 +288,69 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
   while(nb_queue != 0)
   {
 
-    printf("before dequeue \n");
+    //printf("before dequeue \n");
     // Dequeue to get current node to work on
     struct node *index = dequeue(Q);
     if (index == NULL) {
-      printf("NULL \n");
+      //printf("NULL \n");
       free_queue(Q);
       nb_queue=0;
       return parent;
     }
 
-    printf("\n\n\n");
-    printf("dequeue with %i x=%i and y=%i\n", index->score, index->x, index->y + 1);
-    display_board_special(index->board);
-    printf("                *             \n                *             \n                *             \n                *             \n");
+    //printf("\n\n\n depth %i \n", index->depth);
+    //printf("dequeue with %i x=%i and y=%i\n", index->score, index->x, index->y + 1);
+    //display_board_special(index->board);
+    //printf("                *             \n                *             \n                *             \n                *             \n");
 
     // Index for children
     int nb_children = 0;
-    //struct node *children = malloc(sizeof(struct node));
 
     // Get Max or Min mode to go through current chess pieces
     struct currentpiece *currentL = index->currentB;
     int currentNB = index->nbBlack;
-    if (index->MiniMax == 1) { // Mode Max à faire
-        printf("in Max mode \n");
+    if (index->MiniMax == 1) { // Max Mode (White)
         currentL = index->currentW;
         currentNB = index->nbWhite;
     }
-
+    //printf("hi \n");
     // Go through all current chess pieces
     for (int c = 0; c < currentNB; c++) {
-    //for (int c = 0; c < 3; c++) {
       //1) Get List of All possible pieces (piece + x + y)
-        //printf("%i out of %i\n", c, currentNB);
+        ////printf("%i out of %i\n", c, currentNB);
         struct tab * moves = malloc(sizeof(struct tab));;
-          printf("____________________________________________________________________________\n");
-          //printf("%i%i\n", currentL[c].x,currentL[c].y);
+          //printf("____________________________________________________________________________\n");
+          ////printf("%i%i\n", currentL[c].x,currentL[c].y);
 
       struct Piece *tmp = calloc(8*8, sizeof(struct Piece));;
       copyboard(index->board, tmp);
       switch (index->board[(currentL[c].y)*8 + currentL[c].x].type)
       {
-        case PAWN:printf("found pawn \n");
+        case PAWN://printf("found pawn \n");
             find_chess_moves_pawn(tmp, currentL[c].x, currentL[c].y, index->board[currentL[c].y*8 + currentL[c].x].color, moves);
             break;
         case BISHOP:
-            printf("found bishop \n");
+            //printf("found bishop \n");
             find_chess_moves_bishop(tmp, currentL[c].x, currentL[c].y, index->board[currentL[c].y*8 + currentL[c].x].color, moves);
             break;
         case KING:
-              printf("found king \n");
+              //printf("found king \n");
             find_chess_moves_king(tmp, currentL[c].x, currentL[c].y, index->board[currentL[c].y*8 + currentL[c].x].color, moves);
             break;
         case QUEEN:
-              printf("found queen \n");
+              //printf("found queen \n");
             find_chess_moves_queen(tmp, currentL[c].x, currentL[c].y, index->board[currentL[c].y*8 + currentL[c].x].color, moves);
             break;
         case KNIGHT:
-              printf("found knight \n");
+              //printf("found knight \n");
             find_chess_moves_knight(tmp, currentL[c].x, currentL[c].y, index->board[currentL[c].y*8 + currentL[c].x].color, moves);
             break;
         case ROOK:
-              printf("found rook \n");
+              //printf("found rook \n");
             find_chess_moves_rook(tmp, currentL[c].x, currentL[c].y, index->board[currentL[c].y*8 + currentL[c].x].color, moves);
             break;
         case NONE:
-              printf("NONE \n");
+              //printf("NONE \n");
               break;
         default:
             printf("error\n");
@@ -337,10 +359,14 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
       // Get possible moves
       struct Moves *pos = moves->moves;
 
-      printf("___________________ Children debug with %i children ________________________\n", moves->numberofmoves);
+    //  printf("___________________ Children debug with %i children ________________________\n", moves->numberofmoves);
 
+      int carry = 0;
       for (int i = 0; i < moves->numberofmoves; i++) {
+        //printf("pos x=%i y=%i \n", pos[i].x_pos, pos[i].y_pos);
+        if (pos[i].x_pos >= 0 && pos[i].y_pos >= 0 && pos[i].x_pos < 8 && pos[i].y_pos < 8) {
 
+        carry = 1;
         // Create new node
         struct node *new = malloc(sizeof(struct node));
 
@@ -363,6 +389,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
         new->xbeg = currentL[c].x;
         new->x = pos[i].x_pos;
         new->y = pos[i].y_pos;
+        //printf("pos x=%i y=%i \n", new->x, new->y);
 
         // Define if node is Max or Min mode
         new->MiniMax = 1;
@@ -372,13 +399,12 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
 
 
         // Before moving board -> change lists of current chess pieces on board
-        if (Max == 0) { // If max = if white
-          new->nbWhite = removedpiece(currentL[c].x - 1 ,currentL[c].y - 1, new->x -1, new->y -1, new->board, new->currentW, new->nbWhite); }
-        else { new->nbBlack = removedpiece(currentL[c].x - 1 ,currentL[c].y - 1, new->x -1, new->y -1, new->board, new->currentB, new->nbBlack); }
+        if (index->MiniMax == 1) { // If max = if white
+          new->nbBlack = removedpiece(currentL[c].x ,currentL[c].y, new->x, new->y, new->board, new->currentW, new->currentB, new->nbWhite,  new->nbBlack); }
+        else { new->nbWhite = removedpiece(currentL[c].x ,currentL[c].y, new->x, new->y, new->board, new->currentB, new->currentW, new->nbBlack, new->nbWhite); }
 
         // Change board to get board
         new->board= pieceMove_2(currentL[c].x, currentL[c].y, new->x, new->y, new->board);
-
         struct currentpiece current;
         current.x = new->x;
         current.y = new->y;
@@ -387,22 +413,22 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
 
         // Get score
         new->score = getScore(current);
-        printf("piece moved from x=%i, y=%i to x=%i, y=%i with %i from depth and score %i %i[ok]\n", currentL[c].x, currentL[c].y +1, new->x, new->y+1, new->score, new->depth,   new->score);
+        //printf("piece moved from x=%i, y=%i to x=%i, y=%i with %i from depth and score %i %i[ok]\n", currentL[c].x, currentL[c].y +1, new->x, new->y+1, new->score, new->depth,   new->score);
         //display_board_special(new->board);
-
-        // Add to children
+        // Add to children-
         if (nb_children == 0) {
           index->childn1 = new;
         }
         else{
           struct node *get_index = index->childn1;
-          //printf("child score is %i \n",get_index->score );
+          ////printf("child score is %i \n",get_index->score );
           for (int j = 1; j < nb_children ; j++) {
             get_index = get_index->next;
-          //  printf("child score looping is %i \n",get_index->score );
+          //  //printf("child score looping is %i \n",get_index->score );
           }
           get_index->next = new;
         }
+
         nb_children++;
 
         // 6)
@@ -411,18 +437,18 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
         }
 
         }
-        free(moves->moves);
+      }
+      if (moves) {
         free(moves);
-
-
+      }
     }
-    printf("all the children are now born \n");
-    printf("____________________________________________________________________________\n");
+    //printf("all the children are now born \n");
+    //printf("____________________________________________________________________________\n");
 
     index->nb_children = nb_children;
           }
-      printf("return \n");
-      free_queue(Q);
+      if (Q)
+      {free_queue(Q);}
       nb_queue=0;
       return parent;
 }
@@ -442,9 +468,9 @@ struct tree * create_tree(struct Piece *board, enum turn player_turn, struct cur
     //struct node *children = malloc(nb_ListW * sizeof(struct node));
     // First Depth -> all possibilities
     Tree->root = create_node(current_ListW, 0, nb_ListW, current_ListB, nb_ListB, depth, board);
-    printf("out of function \n");
+    //printf("out of function \n");
     //root->nb_children = nb_ListW;
-    printf("Tree created [ok] \n");
+    //printf("Tree created [ok] \n");
     return Tree;
 }
 

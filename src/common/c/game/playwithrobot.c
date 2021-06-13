@@ -5,7 +5,7 @@
 
 #include "../../../client/c/network/game.c"
 #include "../data/process_board.c"
-#include "../rules/rules.c"
+//#include "../rules/rules.c"
 #include "../rules/pieces.c"
 #include "version1.c"
 #include "../rules/check_and_pat.c"
@@ -14,13 +14,17 @@
 #include "../../../database/functions_db.c"
 #include "../../../AI/MiniMax/minimax.c"
 
+#ifndef PLAYWITHROBOT_C
+#define PLAYWITHROBOT_C
+
+
 struct Player * makeRobot()
 {
     struct Player * robot= malloc( sizeof(struct Player));
     robot->name = "robtherobot";
     robot->email = "robychoux4052tropfortceminimax";
-    robot-> nb_won = 0;
-    robot-> nb_lost = 0;
+    robot->nb_won = 0;
+    robot->nb_lost = 0;
     robot->team_color = 1;
 
     return robot;
@@ -46,7 +50,7 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
   // Current black chess pieces on chessboard
   struct currentpiece *currentB = create_blackList();
   int nbBlack = 16;
-    struct Player *robot = makeRobot();
+  struct Player *robot = makeRobot();
   //kings'positions to know if check or checkmat
 
   int x_kingb = 4;
@@ -60,18 +64,8 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
   enum king_status white_kingstatus = NOTHING;
   enum king_status black_kingstatus = NOTHING;
 
-  //___________________ Random to get which player starts
-//  int starts = rand() % 2;
-//  if (starts == 0)
-/*  {
-      player1->team_color = 0; // Player is white
-      robot->team_color = 1; // robot is black
-  }
-  else
-  {*/
-      player1->team_color = 1; // Player is black
-      robot->team_color = 0; // robot is white
-//  }
+  player1->team_color = 1; // Player is black
+  robot->team_color = 0; // robot is white
   //_______________________________________________________________________________________________________________________________
 
 
@@ -81,17 +75,10 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
 
       //HERE entering the parameters for local game
       // Print the name of who's turn it is _________________________________________________________________
-      if( player1->team_color == player_turn)
+      if(player_turn == BLACKTURN)
       {
         printNAME(player1->email);
-        if(player_turn == WHITETURN)
-        {
-          printf(" (White) ");
-        }
-        else
-        {
-          printf(" (Black) ");
-        }
+        printf(" (Black) ");
         printf(" it's your turn! \n\n");
 
 
@@ -106,30 +93,6 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
       printf("Please enter the new coordinates of the chess piece you want to move (ex: B1) : \n");
       scanf(" %c%d", &des_x_char, &des_y);
       des_x = ((int)des_x_char) - 64;
-
-    }
-    //HERE updating the parameters from robot
-    else
-    {
-      //throwing the functions of the different IA
-      if (type==0)
-      {
-        //throw IA marie and antoine
-      }
-      if (type==1)
-      {
-        struct finalmove * move = get_right_move_ia(board,WHITETURN, 2);
-        x= move->x;
-        y=move->y;
-        des_y=move->ydes;
-        des_x=move->xdes;
-      }
-      //for now putting the variables to withdraw to avoid pbms but will be removed later
-      /*x_char = 'W';
-      y = 0;
-      des_x_char = 'W';
-      des_y = 0;*/
-    }
 
       //__________________ Withdraw ______________________________________________________________________________________________
 
@@ -161,8 +124,7 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
       x = ((int)x_char) - 64;
 
       // It's not your piece to move
-      if((player_turn == WHITETURN && board[(y-1)*8+(x+1)].color == BLACK && board[(y-1)*8+(x+1)].type != NONE) ||
-            (player_turn == BLACKTURN && board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE))
+      if( board[(y-1)*8+(x+1)].color == WHITE && board[(y-1)*8+(x+1)].type != NONE)
 	    {
 	       printf(URED "\n That isn't your chess piece to move. \n" reset);
          continue;
@@ -195,10 +157,7 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
           // Check if there are any chess pieces on destination coordinates and if so remove them from list
           // AND modifies in List coordinates of the chess piece that's moved
 
-          if (player_turn == WHITETURN) {
-            nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentW, nbWhite); }
-          else { nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentB, nbBlack); }
-
+          nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, board, currentB, currentW, nbBlack, nbWhite);
           board = pieceMove(x-1 , y-1, des_x-1, des_y-1, board); // Move piece
 
 
@@ -215,22 +174,6 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
 
               //___________________________
 
-
-              // Impossible move
-          	  if((player_turn == BLACKTURN && piece_to_place(x_kingb, y_kingb, board) == 1 ) || (player_turn == WHITETURN && piece_to_place(x_kingw, y_kingw, board) == 1))
-          	    {  board = pieceMove(des_x-1, des_y-1, x-1, y-1, board);
-          	       printf("Impossible to move the king as checkmate would be unavoidable\n");
-
-          	      if(board[(y-1)*8+(x-1)].color == BLACK && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-          		    {   x_kingb = x - 1;
-          		        y_kingb = y - 1; }
-
-                 if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-                 {    x_kingw = x - 1;
-                      y_kingw = y - 1; }
-          	      continue;
-          	    }
-
                 // Check for checkmates _________________________________________
                 struct checking res = check4checkmates( player_turn, board, white_kingstatus, black_kingstatus, x_kingb, y_kingb, x_kingw, y_kingw, des_x, des_y,  player1, robot);
                 player_turn = res.player_turn;
@@ -241,12 +184,70 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
                   free(currentW);
                   free(currentB);
                   return 0;}
+
+    }
+  }
+    //HERE updating the parameters from robot
+    else
+    {
+      //throwing the functions of the different IA
+      if (type==0)
+      {
+        //throw IA marie and antoine
       }
+      if (type==1)
+      {
+
+        struct finalmove * move = get_right_move_ia(board,currentW,currentB,WHITETURN, 2,nbWhite, nbBlack);
+        x= move->x;
+        y=move->y;
+        des_y=move->ydes;
+        des_x=move->xdes;
+        printf("from x=%c y=%i to x=%c and y=%i\n", (char)(x +65), y + 1, (char)(des_x + 65), des_y+1 );
+      }
+      //for now putting the variables to withdraw to avoid pbms but will be removed later
+      //____________________________________ Game settings _____________________________________________________________
+      //Rock
+      struct res_rock res = rock_sub( player_turn, board, white_kingstatus, black_kingstatus, white_rock, black_rock, x_kingb, y_kingb, x_kingw, y_kingw, x, y, des_x, des_y);
+      player_turn = res.player_turn;
+      x_kingb = res.x_kingb;
+      y_kingb = res.y_kingb;
+      x_kingw = res.x_kingw;
+      y_kingw = res.y_kingw;
+
+      if (res.continuee == 1) {
+        continue;
+      }
+
+      nbBlack = removedpiece(x , y, des_x, des_y, board, currentW, currentB, nbWhite, nbBlack);
+      board = pieceMove(x, y, des_x, des_y, board); // Move piece
+
+      if(board[(y-1)*8+(x-1)].color == WHITE && board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
+        { x_kingw = des_x - 1;
+          y_kingw = des_y - 1;
+          white_rock = CANT_ROCK;}
+
+      struct checking res2 = check4checkmates( player_turn, board, white_kingstatus, black_kingstatus, x_kingb, y_kingb, x_kingw, y_kingw, des_x, des_y,  player1, robot);
+      player_turn = res2.player_turn;
+      white_kingstatus = res2.white_kingstatus;
+      black_kingstatus = res2.black_kingstatus;
+      if (res2.returned == 1)
+      {
+        free(currentW);
+        free(currentB);
+            return 0;}
+          }
       printf(reset);
       display_board_special(board); //print the board after modifications
+      //printf("white \n");
+      //printList(currentW,nbWhite);
+      //printf("black \n");
+      //printList(currentB,nbBlack);
 
     }
     free(currentW);
     free(currentB);
     return 0;
 }
+
+#endif

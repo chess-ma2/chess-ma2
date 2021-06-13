@@ -27,7 +27,7 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color);
  * @details Select the "best" child with the exploration and the value
  */
 
-struct MCTS_Node *select(struct MCTS_Node *node);
+struct MCTS_Node *selected(struct MCTS_Node *node);
 
 /**
  * @author Marie

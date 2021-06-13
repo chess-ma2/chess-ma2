@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <time.h>
 #include <math.h>
 #include "../tree/mcts.h"
 #include "search_and_play.h"
@@ -24,14 +24,12 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
 
   while(node->leaf == 0)
     {
-      node = select(node);
+      node = selected(node);
     }
-
-  struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
   
-  final = roll_out(node, color);
+  node = roll_out(node, color);
   
-  return final; 
+  return node; 
 }
 
 /**
@@ -40,8 +38,10 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
  * @details Select the "best" child with the exploration and the value
  */
 
-struct MCTS_Node *select(struct MCTS_Node *node)
+struct MCTS_Node *selected(struct MCTS_Node *node)
 {
+  srand(time(NULL));
+  
   struct MCTS_Node *select_Node = malloc(sizeof( struct MCTS_Node));
   float bestValue = -100000;
   float c = sqrtf(2.0);
@@ -51,10 +51,10 @@ struct MCTS_Node *select(struct MCTS_Node *node)
 
       if( node->child[i].nb_visit != 0)
 	{
-	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + c * (sqrtf((logf(node->nb_visit + 1))/node->child[i].nb_visit));
+	  node->child[i].value = (node->child[i].value/node->child[i].nb_visit) + (sqrtf(node->nb_visit + 1)/node->child[i].nb_visit) ;
 	}
       
-      else if (node->child[i].nb_visit == 0)
+      else 
 	{
 	  float nb = 0;
 	  nb =  (float)rand() / (float)RAND_MAX;
@@ -83,13 +83,17 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
   struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
   node = expand_childs(node, node->board);
 
-  final = node; 
+  final = node;
+
+  int i = 0; 
 
   while(final->terminus == 0)
     {
+      i += 1; 
 
       if (!iskings(final))
 	{
+	  final = chose_for2kings(final);
 	  break; 
 	}
       
@@ -110,12 +114,23 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 	      final = random_choose(node); 
 	    }
 	}
-      
       final = expand_childs(final, final->board);
-      print_node(node); 
-      
-      if(final->nb_child == 0)
+
+      if( final->nb_child == 0)
 	{
+	  final = chose_for2kings(final);
+	  break; 
+	}
+
+      if( final->father->board == final->board)
+	{
+	  final = chose_for2kings(final);
+	  break; 
+	}
+
+      if( i == 400)
+	{
+	  final = chose_for2kings(final);
 	  break; 
 	}
     }
@@ -138,12 +153,11 @@ struct MCTS_Node *update_value(struct MCTS_Node *node, float value)
     {
       node->nb_visit += 1;
       node->value = node->value + value;
-      value = value*0.9; 
       node = node->father; 
     }
 
   return node; 
-}
+ }
 
 /**
  * @author Marie
@@ -178,7 +192,7 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
       return 0; 
     }
 
-  int random = (rand() % (nb_child));; 
+  int random = (rand() % nb_child);; 
 
   return &node->child[random];
 }
@@ -192,40 +206,52 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
 
 struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 {
-  printf("1\n");
-  struct MCTS_Node *best = malloc(sizeof(struct MCTS_Node));
 
-  printf("1\n");
+  printf("%d\n" , node->nb_child); 
+
+  struct MCTS_Node *best = malloc(sizeof(struct MCTS_Node));
    
   best = node;
-
-  printf("1\n");
 
   if( node->nb_child != 0)
     {
        
       best = &node->child[0];
       
-      float best_value =  (node->child[0].value)/(float)(node->child[0].nb_visit);
+      float best_value = 0.00;
+
+      printf("%f\n" , best_value);
 
       float inter = 0.0;
 
-      for(int i = 1; i < node->nb_child ; i++)
+      for(int i = 0; i < node->nb_child ; i++)
 	{
 
 	  if(node->child[i].nb_visit != 0)
 	    { 
 	      inter = (node->child[i].value)/(float)(node->child[i].nb_visit);
 
+	      printf("%d\n", i);
+	      printf("%f\n" , node->child[i].value);
+	      printf("%f\n" , (float)node->child[i].nb_visit);
+	      printf("%f\n" , inter);
+	      
 	      if(inter > best_value)
 		{
+		  printf("%d\n" , i); 
 		  best = &node->child[i];
 		  best_value = inter; 
 		}
 	    }
 	}
     }
-  
+
+  else
+    {
+      return chose_for2kings(node);
+    }
+    
+  best->father = NULL; 
   return best; 
 }
 

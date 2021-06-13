@@ -89,21 +89,27 @@ int main()
 
 	  tree_game = select_good_node(board, tree_game);
 
+	  tree_game = update_tree(tree_game->board, tree_game->color_player, tree_game);
+
 	  print_node_and_child(tree_game); 
 	  
 	  tree_game = chosen_best(tree_game);
 
-	  //print_node(tree_game); 
-
-	  printf("selec tthe best node move to play \n");
-
 	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves));
 	  coordonates = coordonates_by_mc(board, 0, coordonates, tree_game);
 
-	  x = coordonates->x + 1;
-	  y = coordonates->y + 1;
-	  des_x = coordonates->x_des + 1;
-	  des_y = coordonates->y_des + 1;
+	  x = coordonates->x ;
+	  y = coordonates->y ;
+	  des_x = coordonates->x_des;
+	  des_y = coordonates->y_des;
+
+	  if( x != -1 && y != -1 && des_x != -1 && des_y != -1 )
+	    {
+	      x += 1 ;
+	      y += 1 ;
+	      des_x += 1;
+	      des_y += 1;
+	    }
 
 	  printf("%d      %d       %d       %d\n", x,y,des_x,des_y);
 	}

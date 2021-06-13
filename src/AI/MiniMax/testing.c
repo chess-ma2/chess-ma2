@@ -21,18 +21,18 @@ void printmoves (struct tab* moves)
 int main()
 {
     struct Piece* board = init_board();
-    //struct currentpiece *current_List = create_whiteList();
-    //struct currentpiece *current_ListB = create_blackList();
+    struct currentpiece *current_List = create_whiteList();
+    struct currentpiece *current_ListB = create_blackList();
     //struct tree * Tree = create_tree(board, WHITETURN, current_List, 16,current_ListB, 16,  2);
     //pretty_print(Tree, 2);
     //print_test_2levels(Tree);
-    printf("pretty print over \n");
+  //  printf("pretty print over \n");
     //free(board);
-    
-    struct finalmove * move = get_right_move_ia(board,WHITETURN, 2);
+
+    struct finalmove * move = get_right_move_ia(board,current_List,current_ListB,WHITETURN, 2, 16, 16);
     printf("origin x = %i\n origin y = %i \n dest x = %i \n dest y = %i\n",move->x, move->y+1,move->xdes,move->ydes+1);
-    
-    //free_tree(Tree);
+
+    free(board);
     /*int x=0;
     int y=6;
     int color = 1;//white

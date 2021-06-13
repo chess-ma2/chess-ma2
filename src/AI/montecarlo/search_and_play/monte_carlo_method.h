@@ -21,7 +21,15 @@
  * @details fonction which create the tree, training, and find the "best" child
  */
 
-struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_Node *node); 
+struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_Node *node);
+
+/**
+ * @author Marie
+ * @date Start 27/04/2021
+ * @details fonction which update the tree
+ */
+
+struct MCTS_Node *update_tree(struct Piece *board, int color_team, struct MCTS_Node *node);
 
 /**
  * @author Marie

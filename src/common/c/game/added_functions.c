@@ -137,22 +137,23 @@ struct currentpiece * create_blackList()
   return black;
 }
 
-int removedpiece(int x, int y, int des_x, int des_y, struct Piece *board, struct currentpiece *List, int nb_el)
+int removedpiece(int x, int y, int des_x, int des_y, struct Piece *board, struct currentpiece *ListStart, struct currentpiece *ListDes, int nb_el_start, int nb_el_end)
 {
+  //printf("piece is moving from x=%i y=%i to x=%iy=%i \n", x, y, des_x, des_y);
   if (board[des_y*8+des_x].type != NONE) { // If there's a piece where we're going at
     int found = 1; // found = 0 if piece in List
     int i = 0; // index
 
-    while( i < nb_el && found == 1)
-    { if (List[i].piece.type == board[des_y*8+des_x].type && List[i].x == des_x && List[i].y == des_y) {
+    while( i < nb_el_end && found == 1)
+    { if (ListDes[i].piece.type == board[des_y*8+des_x].type && ListDes[i].x == des_x && ListDes[i].y == des_y) {
         // Found so make this piece last in list before making it NULL
-        for (int j = i; j < nb_el - 1; j++) {
-          struct currentpiece tmp = List[j];
-          List[j] = List[j + 1];
-          List[j + 1] = tmp;
+        for (int j = i; j < nb_el_end; j++) {
+          struct currentpiece tmp = ListDes[j];
+          ListDes[j] = ListDes[j + 1];
+          ListDes[j + 1] = tmp;
         }
         //List[nb_el - 1] = NULL;
-        nb_el -= 1;
+        nb_el_end -= 1;
         found = 0;
       }
       i += 1;
@@ -161,15 +162,19 @@ int removedpiece(int x, int y, int des_x, int des_y, struct Piece *board, struct
   // Change in List current coordinates of piece now it's being moved
   int i = 0; // index
   int found = 1; // found in List
-  while (i < nb_el && found == 1) {
-    if (List[i].piece.type == board[y*8+x].type && List[i].x == x && List[i].y == y) { // found in List
-      List[i].x = des_x;
-      List[i].y = des_y; // Change coordinates
+  while (i < nb_el_start && found == 1) {
+    if (ListStart[i].piece.type == board[y*8+x].type && ListStart[i].x == x && ListStart[i].y == y) { // found in List
+      ListStart[i].x = des_x;
+      ListStart[i].y = des_y; // Change coordinates
       found = 0; // found
     }
     i += 1;
   }
-  return nb_el;
+  //printf("List for color \n");
+  for (size_t i = 0; i < nb_el_start; i++) {
+    //printf("x=%i y=%i\n", ListStart[i].x, ListStart[i].y);
+  }
+  return nb_el_end;
 }
 
 #endif
