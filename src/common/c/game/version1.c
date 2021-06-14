@@ -644,8 +644,7 @@ struct checking check4checkmates(enum turn player_turn, struct Piece *board,
         if (kingcheck_place( x_kingw, y_kingw, des_x-1, des_y-1, board) == 0)
           white_kingstatus = NOTHING;
 
-          printf("x king %i y king %i \n", x_kingb,y_kingb);
-          display_board_special(board);
+  
         if (check_mat(x_kingb, y_kingb, BLACK, board)== 1) {
           printf("white victory yay \n");
           whiteT_Vict(player1, player2);

@@ -83,22 +83,6 @@ struct node * dequeue(struct queue *Q) {
 */
 void free_queue(struct queue *Q)
 {
-  /*
-  //printf(" 2 \n");
-  if (Q->Node == NULL || nb_queue == 0) { // No element
-    free(Q);
-    return;
-  }
-
-  struct queue *index = Q;
-  while(index->last != 1) // Get last
-  { struct queue *del = index;
-    free(del);
-    index = index->next;
-  }
-
-  nb_queue = 0;
-  free(index);*/
   if (Q) {
     free(Q);
     nb_queue = 0;

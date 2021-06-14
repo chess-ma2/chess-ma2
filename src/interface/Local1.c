@@ -267,6 +267,8 @@ void click4move(GtkButton *button, gpointer user_data)
     return;
   }
   //Other chess piece movements
+  printf("from x=%c y=%i to x=%c and y=%i\n", (char)(x +65), y + 1, (char)(des_x + 65), des_y+1 );
+  printf("for valid move %i %i %i %i\n", x-1, y-1,des_x-1, des_y-1);
   int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->constr.board); //movement is possible
 
   switch(possible)
@@ -288,8 +290,8 @@ void click4move(GtkButton *button, gpointer user_data)
           // AND modifies in List coordinates of the chess piece that's moved
 
           if (*needed->player_turn == WHITETURN) {
-            needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentW, needed->nbWhite); }
-          else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentB, needed->nbBlack); }
+            needed->nbWhite = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentW, needed->currentB, needed->nbWhite, needed->nbBlack); }
+          else { needed->nbBlack = removedpiece(x-1 , y-1, des_x-1, des_y-1, needed->constr.board, needed->currentB, needed->currentW, needed->nbBlack, needed->nbWhite); }
 
           //Move chess piece
           needed->constr.board = pieceMove(x-1 , y-1, des_x-1, des_y-1, needed->constr.board);

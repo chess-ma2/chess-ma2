@@ -139,8 +139,10 @@ struct currentpiece * create_blackList()
 
 int removedpiece(int x, int y, int des_x, int des_y, struct Piece *board, struct currentpiece *ListStart, struct currentpiece *ListDes, int nb_el_start, int nb_el_end)
 {
-  //printf("piece is moving from x=%i y=%i to x=%iy=%i \n", x, y, des_x, des_y);
+  //printf("piece is moving from x=%c y=%i to x=%c y=%i \n", (char)(x +65), y + 1, (char)(des_x + 65), des_y+1 );
+  if (y < 8 && x < 8) {
   if (board[des_y*8+des_x].type != NONE) { // If there's a piece where we're going at
+  //  printf(" not none \n");
     int found = 1; // found = 0 if piece in List
     int i = 0; // index
 
@@ -170,11 +172,16 @@ int removedpiece(int x, int y, int des_x, int des_y, struct Piece *board, struct
     }
     i += 1;
   }
-  //printf("List for color \n");
-  for (size_t i = 0; i < nb_el_start; i++) {
-    //printf("x=%i y=%i\n", ListStart[i].x, ListStart[i].y);
-  }
+    }
+
   return nb_el_end;
+}
+
+void printList(struct currentpiece *L, int nb )
+{
+  for (int i = 0; i < nb; i++) {
+    printf("x=%cy%i\n",(char) (L[i].x + 65), L[i].y+1);
+  }
 }
 
 #endif

@@ -91,7 +91,7 @@ void find_chess_moves_pawn(Piece* board, int x, int y, int color, struct tab * t
     int number=0;
     table->moves = malloc(sizeof(struct Moves));
     struct Moves * global_moves = table->moves;
-    table->numberofmoves=0;
+    table->numberofmoves = 0;
 
     //CHECK INTIAL PLACE +2
     if ((color==0 && y==1)|| (color==1 && y==6))
