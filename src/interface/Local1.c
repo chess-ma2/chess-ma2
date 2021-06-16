@@ -224,15 +224,6 @@ void click4move(GtkButton *button, gpointer user_data)
 {
   struct for_clicked *needed = user_data;
 
-  /*if (needed->white_kingstatus == CHECKMATE || needed->black_kingstatus == CHECKMATE) {
-    if (needed->white_kingstatus == CHECKMATE) {
-      win_update(needed->Info, needed->player1, needed->player2, BLACKTURN);
-    }
-    else{
-      win_update(needed->Info, needed->player1, needed->player2, WHITETURN);
-    }
-  }*/
-
   // Get Coordinates
   char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
   char * new = (char *) gtk_entry_get_text(needed->New_Coord);

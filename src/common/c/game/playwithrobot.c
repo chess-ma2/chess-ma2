@@ -21,7 +21,7 @@
 struct Player * makeRobot()
 {
     struct Player * robot= malloc( sizeof(struct Player));
-    robot->name = "robtherobot";
+    robot->name = "MiniMaxAI";
     robot->email = "robychoux4052tropfortceminimax";
     robot->nb_won = 0;
     robot->nb_lost = 0;

@@ -4,6 +4,8 @@
 #include "Local1.c"
 #include "Local1_init.c"
 #include "added_functions4local.c"
+#include "thirdV_init.c"
+#include "thirdversion.c"
 #ifndef MAINPAGE_C
 #define MAINPAGE_C
 
@@ -92,9 +94,75 @@ GtkEntry * Password_Log2;
 // second version window
 GtkWidget* window2nd_v_1;
 
-//____________________ Third Window
+// ____________________ Third Window _______
+// ________ Player vs AI ___________________
 // third version window
 GtkWidget* window3rd_v_1;
+// Button for new player
+GtkWidget* new_player3_1;
+// Back n°1
+GtkWidget* back_3_1;
+// Button to log in
+GtkWidget* login_3_1;
+
+// ___________________________
+// New player
+GtkWidget* NewPL_3;
+// Back n°2
+GtkWidget* back_3_2;
+// Name
+GtkEntry* name3_1;
+// Email
+GtkEntry* email3_1;
+// Password
+GtkEntry* password3_1;
+// Lock
+GtkButton* lock_new_3_1;
+// Create account
+GtkLabel* create_account3_1_yes;
+
+// ___________________________
+//Login player
+GtkWidget* LoginAccount3_1;
+// Email
+GtkEntry* email3_2;
+// Password
+GtkEntry* password3_2;
+// Lock
+GtkButton* lock_new_3_2;
+// Back n°3
+GtkWidget* back_3_3;
+
+
+//____ GAME (Local) ____________
+// Main Page for GAME
+GtkWidget* game_v1;
+// Entry for original coordinates
+GtkEntry * Ori_Coord;
+// Entry for new coordinates
+GtkEntry * New_Coord;
+struct for_clicked *move_str;
+// Button for Withdraw
+GtkButton* WithdrawB;
+// Button for Stalemate
+GtkButton* StalemateB;
+struct added_F *added_struct;
+// End of game window
+GtkWidget* Game_Over;
+
+//____ GAME (Player vs AI) ____________
+struct for_clicked *move_str3;
+struct added_F *added_struct3;
+// Main Page for GAME
+GtkWidget* game_v3;
+// Entry for original coordinates
+GtkEntry * oriCOORD_3;
+// Entry for new coordinates
+GtkEntry * newCOORD_3;
+// Button for Withdraw
+GtkButton* withdraw_3;
+// Button for Stalemate
+GtkButton* StalemateB_3;
 
 
 //__________________________________________________________________
@@ -348,10 +416,11 @@ void back_from_second(GtkButton *button, gpointer user_data)
     gtk_widget_hide(window2nd_v_1);
 }
 
+
 //____________________________________________________________________________
 /*
  * @author Anna
- * @date 10/04/2021
+ * @date 16/06/2021
  * @details Show third version's window
  */
 void third_v_start(GtkButton *button, gpointer user_data)
@@ -362,7 +431,7 @@ void third_v_start(GtkButton *button, gpointer user_data)
 
  /*
   * @author Anna
-  * @date 10/04/2021
+  * @date 16/06/2021
   * @details Back to the mainpage
   */
 void back_from_third(GtkButton *button, gpointer user_data)
@@ -371,7 +440,93 @@ void back_from_third(GtkButton *button, gpointer user_data)
     gtk_widget_hide(window3rd_v_1);
 }
 
+/*
+  * @author Anna
+  * @date 16/06/2021
+  * @details Show new players window
+*/
+void new_player_3(GtkButton *button, gpointer user_data)
+{   gtk_widget_hide(window3rd_v_1);
+    gtk_widget_show(NewPL_3); }
 
+  /*
+   * @author Anna
+   * @date 14/06/2021
+   * @details Create new player for third version
+   */
+void save_pl3(GtkButton *button, gpointer user_data)
+{
+  // New Player subfunction into .db
+  struct Player *res = New_player_v1(name3_1, email3_1, password3_1, create_account3_1_yes, NewPL_3, LoginAccount3_1);
+  if (res != NULL) {
+    pl1 = res;
+    gtk_window_fullscreen(GTK_WINDOW(game_v3));
+    // _________ Play Game _______________
+    struct to_play *playing = user_data;
+    move_str->Window = game_v3;
+    init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
+    init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
+    gtk_widget_hide(NewPL_3);
+    gtk_widget_show(game_v3);
+  }
+}
+/*
+  * @author Anna
+  * @date 16/06/2021
+ * @details Show login window
+ */
+void to_login3_1(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(LoginAccount3_1);
+    gtk_widget_hide(window3rd_v_1);
+}
+/*
+ * @author Anna
+ * @date 16/06/2021
+ * @details Connect player to database
+ */
+void connect3_1(GtkButton *button, gpointer user_data)
+{
+
+    pl1 = findplayer(email3_2,password3_2);
+    if (pl2!=NULL)
+    {
+        gtk_widget_show(game_v3); // Show GAME
+        gtk_window_fullscreen(GTK_WINDOW(game_v3));
+        // _________ Play Game _______________
+        struct to_play *playing = user_data;
+        move_str->Window = game_v3;
+        init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
+        init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
+    }
+    else
+    {
+        gtk_widget_show(window3rd_v_1);
+    }
+        gtk_widget_hide(LoginAccount3_1);
+}
+
+ /*
+  * @author Anna
+  * @date 16/06/2021
+  * @details Back to the mainpage from login
+  */
+void back_from_login3_2(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window3rd_v_1);
+    gtk_widget_hide(LoginAccount3_1);
+}
+
+/*
+ * @author Anna
+ * @date 16/06/2021
+ * @details Back to the mainpage from new player
+ */
+void back_from_login3_1(GtkButton *button, gpointer user_data)
+{
+   gtk_widget_show(window3rd_v_1);
+   gtk_widget_hide(NewPL_3);
+}
 /*
  * @author Anna and Marine the queen
  * @date 10/04/2021
@@ -568,9 +723,98 @@ int main (int argc, char *argv[])
     GtkButton* second_version = GTK_BUTTON(gtk_builder_get_object(builder, "2ndVersion"));
 
 
+    // __________________________________________________________________________________
     //________ Version 3 _______
+    pl2 = makeRobot();
+
     // Button to get to third version
     GtkButton* third_version = GTK_BUTTON(gtk_builder_get_object(builder, "3rdVersion"));
+    // When clicked go to new player page
+    GtkButton* new_player3_1 = GTK_BUTTON(gtk_builder_get_object(builder, "new_player3_1"));
+    //login
+    GtkButton* login_3_1 = GTK_BUTTON(gtk_builder_get_object(builder,"login_3_1"));
+    // Back button
+    GtkButton* back_3_1 = GTK_BUTTON(gtk_builder_get_object(builder,"back_3_1"));
+    // ButtonImage to go back to mainpage
+    gtk_button_set_image(back_3_1, gtk_image_new_from_file ("Images/back.png"));
+
+    // new player Window
+    NewPL_3 = GTK_WIDGET(gtk_builder_get_object(builder, "NewPL_3"));
+
+    // login window
+    LoginAccount3_1 = GTK_WIDGET(gtk_builder_get_object(builder, "LoginAccount3_1"));
+
+    // Save new info about player
+    GtkButton* lock_new_3_2 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_new_3_2"));
+    GtkButton* lock_new_3_1 = GTK_BUTTON(gtk_builder_get_object(builder,"lock_new_3_1"));
+
+    // ButtonImage to go back to first version window
+    gtk_button_set_image(lock_new_3_2, gtk_image_new_from_file ("Images/save.png"));
+    gtk_button_set_image(lock_new_3_1, gtk_image_new_from_file ("Images/save.png"));
+
+    // Back to main page
+    GtkButton* back_3_2 = GTK_BUTTON(gtk_builder_get_object(builder, "back_3_2"));
+    GtkButton* back_3_3 = GTK_BUTTON(gtk_builder_get_object(builder, "back_3_3"));
+
+    gtk_button_set_image(back_3_3, gtk_image_new_from_file ("Images/back.png"));
+    gtk_button_set_image(back_3_2, gtk_image_new_from_file ("Images/back.png"));
+
+    // Label when info is saved
+    create_account3_1_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account3_1_yes"));
+
+    // Entry for name
+    name3_1 = GTK_ENTRY(gtk_builder_get_object(builder, "name3_1"));
+    // Entry for email
+    email3_1 = GTK_ENTRY(gtk_builder_get_object(builder, "email3_1"));
+    // Entry for password
+    password3_1 = GTK_ENTRY(gtk_builder_get_object(builder, "password3_1"));
+
+    //LOGIN ACCOUNT
+    //entry for mail
+    email3_2 = GTK_ENTRY(gtk_builder_get_object(builder,"email3_2"));
+    //entry for password
+    password3_2 = GTK_ENTRY(gtk_builder_get_object(builder,"password3_2"));
+
+    //  Game  _______________________________________________________________________
+    GtkDrawingArea* area_3 = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "area_3"));
+    game_v3 = GTK_WIDGET(gtk_builder_get_object(builder, "game_v3"));
+    GtkFixed *paned1_3 = GTK_FIXED(gtk_builder_get_object(builder, "paned1_3"));
+    GtkLabel *Info_3 = GTK_LABEL(gtk_builder_get_object(builder, "Info_3"));
+    GtkLabel *rulesL_3 = GTK_LABEL(gtk_builder_get_object(builder, "rulesL_3"));
+    printRulesLabel(rulesL_3);
+    GtkLabel *turn_3 = GTK_LABEL(gtk_builder_get_object(builder, "turn_3"));
+    oriCOORD_3 = GTK_ENTRY(gtk_builder_get_object(builder,"oriCOORD_3"));
+    newCOORD_3 = GTK_ENTRY(gtk_builder_get_object(builder,"newCOORD_3"));
+    GtkButton * click_coordinates_3 = GTK_BUTTON(gtk_builder_get_object(builder, "click_coordinates_3"));
+    gtk_button_set_image(click_coordinates_3, gtk_image_new_from_file ("Images/save.png"));
+
+    // withdraw
+    withdraw_3 = GTK_BUTTON(gtk_builder_get_object(builder, "withdraw_3"));
+    gtk_button_set_image(withdraw_3, gtk_image_new_from_file ("Images/Withdraw.png"));
+    StalemateB_3 = GTK_BUTTON(gtk_builder_get_object(builder, "StalemateB_3"));
+    gtk_button_set_image(StalemateB_3, gtk_image_new_from_file ("Images/Stalemate.png"));
+
+    // Create widgets -> button board
+    struct construction constr3;
+    constr3.board = init_board();
+    // Create board and put into fixed
+    constr3.ImageBoard = malloc(64 * sizeof(GtkWidget));
+    constr3.fixed = paned1_3;
+    x_co = 56; //original coordinates
+    y_co = 90; //original coordinates
+
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+      constr3.ImageBoard[i*8+j] = gtk_image_new();
+      gtk_widget_set_size_request (constr3.ImageBoard[i*8+j],60,60);
+      gtk_fixed_put (constr3.fixed, constr3.ImageBoard[i*8+j], x_co + 15, y_co + 15);
+      x_co += 60;
+      }
+      x_co = 56;
+      y_co += 60;
+    }
+
+
 
     //________________________________________________________________________________
     // Connects signal handlers.
@@ -688,10 +932,63 @@ int main (int argc, char *argv[])
     g_signal_connect(window2nd_v_1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     //___________ Version 3 _________________________________________________________
+    struct to_play playing3;
+    playing3.constr = constr3;
+    playing3.Rules = rulesL_3;
+    playing3.Info = Info_3;
+    playing3.turn = turn_3;
     // Got to third version
     g_signal_connect(third_version, "clicked", G_CALLBACK(third_v_start), NULL);
     // Destroys .exe when third version window is closed
     g_signal_connect(window3rd_v_1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+    // New Player
+    // Destroys .exe when new first player first version window is closed
+    g_signal_connect(NewPL_3, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Go back to mainpage
+    g_signal_connect(back_3_1, "clicked", G_CALLBACK(back_from_third), NULL);
+    // First Player is New player -> go to said page
+    g_signal_connect(new_player3_1, "clicked", G_CALLBACK(new_player_3), NULL);
+    // Back to first player of first window (new or login)
+    g_signal_connect(back_3_2, "clicked", G_CALLBACK(back_from_login3_1), NULL);
+    // Click on New Player 1 -> Save info and create player in db
+    g_signal_connect(lock_new_3_1, "clicked", G_CALLBACK(save_pl3),  &playing3);
+
+    // Login PLAYER
+    // Back to second player of first window (new or login)
+    g_signal_connect(back_3_2, "clicked", G_CALLBACK(back_from_login3_2), NULL);
+    // goes to login
+    g_signal_connect(login_3_1, "clicked", G_CALLBACK(to_login3_1), NULL);
+    // Destroys .exe when window is closed
+    g_signal_connect(LoginAccount3_1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+    g_signal_connect(lock_new_3_2, "clicked", G_CALLBACK(connect3_1),  &playing3);
+
+    // Game ___________________________________________________________
+    // Destroys .exe when game first version window is closed
+    g_signal_connect(game_v3, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Draw Chessboard
+    g_signal_connect(area_3, "draw", G_CALLBACK(on_draw), &constr3);
+
+    // Structure for Movements
+  //  player_turn = malloc(sizeof(enum turn));
+  //  * player_turn = WHITETURN;
+    move_str3 = malloc(sizeof(struct for_clicked));
+    move_str3->Ori_Coord = oriCOORD_3;
+    move_str3->New_Coord = newCOORD_3;
+    move_str3->constr = constr3;
+    move_str3->player_turn = player_turn;
+
+    // Structure for Stalemate and Withdraw
+    added_struct3 = malloc(sizeof(struct added_F));
+    added_struct3->player_turn = player_turn;
+    added_struct3->Window = game_v3;
+
+    g_signal_connect(click_coordinates_3, "clicked", G_CALLBACK(click4move_3), move_str3);
+    // Goes to withdraw function
+    g_signal_connect(withdraw_3, "clicked", G_CALLBACK(withdraw_2), added_struct3);
+    // Goes to Stalemate function
+    g_signal_connect(StalemateB_3, "clicked", G_CALLBACK(stalemate_2), added_struct3);
 
 
 

@@ -357,7 +357,7 @@ struct node * create_node(struct currentpiece *current_List, int i, int nb_White
       }
       free(tmp);
       // Get possible moves
-      struct Moves *pos = moves->moves;
+      struct MovesMini *pos = moves->moves;
 
     //  printf("___________________ Children debug with %i children ________________________\n", moves->numberofmoves);
 
