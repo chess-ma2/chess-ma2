@@ -16,12 +16,45 @@
 /*
  * @author Anna
  * @date 16/06/2021
+ * @details IA move for MiniMax
+*/
+
+void IA_move(struct for_clicked *needed)
+{
+  // Get move from IA
+  struct finalmove * move = get_right_move_ia(needed->constr.board,needed->currentW,needed->currentB, WHITETURN, 2, needed->nbWhite, needed->nbBlack);
+  int x = move->x;
+  int y = move->y;
+  int des_y = move->ydes;
+  int des_x = move->xdes;
+
+  // Move Piece and update lists
+  needed->nbBlack = removedpiece(x , y, des_x, des_y, needed->constr.board, needed->currentW, needed->currentB, needed->nbWhite, needed->nbBlack);
+  needed->constr.board = pieceMove(x, y, des_x, des_y, needed->constr.board); // Move piece
+
+  // Update board
+  update_board(needed->constr);
+  gtk_entry_set_text(needed->Ori_Coord, "");
+  gtk_entry_set_text(needed->New_Coord, "");
+
+  // Black player's turn to play
+  char *infoo = malloc(700 * sizeof(char));
+  strcpy(infoo, needed->player1->name);
+  strcat(infoo, " ,it's your turn to play (Black)");
+  gtk_label_set_text( needed->turn, infoo);
+  free(infoo);
+
+  *needed->player_turn = BLACKTURN;
+}
+
+/*
+ * @author Anna
+ * @date 16/06/2021
  * @details Main Game function (from version1 originaly)
 */
 
 void init_gtk3(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed, GtkWidget *EndWindow)
 {
-  printf("in init \n");
   //_______________ Variables
   // Current white chess pieces on chessboard
   struct currentpiece *currentW = create_whiteList();
@@ -49,10 +82,6 @@ void init_gtk3(struct Player *player1, struct Player *player2, struct constructi
   player1->name = getNAME(player1->email);
   player2->name = getNAME(player2->email);
   //____________________________________________________________________________
-  //playerturn_print(needed->player_turn, player1, player2, turn);
-
-  // Show Board
-  update_board(constr);
 
   // Define needed variables
   needed->player1 = player1;
@@ -74,33 +103,10 @@ void init_gtk3(struct Player *player1, struct Player *player2, struct constructi
   needed->white_kingstatus = white_kingstatus;
   needed->black_kingstatus = black_kingstatus;
   needed->EndWindow = EndWindow;
+  needed->constr = constr;
 
-  printf("ok \n");
-  update_board(constr);
-
-  struct finalmove * move = get_right_move_ia(constr.board,needed->currentW,needed->currentB,WHITETURN, 2,needed->nbWhite, needed->nbBlack);
-  int x = move->x;
-  int y = move->y;
-  int des_y = move->ydes;
-  int des_x = move->xdes;
-
-  needed->nbBlack = removedpiece(x , y, des_x, des_y, constr.board, needed->currentW, needed->currentB, needed->nbWhite, needed->nbBlack);
-  constr.board = pieceMove(x, y, des_x, des_y, constr.board); // Move piece
-
-  printf("hi \n");
-  // Update board
-  update_board(constr);
-  //update_board(constr);
-  gtk_entry_set_text(needed->Ori_Coord, "");
-  gtk_entry_set_text(needed->New_Coord, "");
-  char *infoo = malloc(700 * sizeof(char));
-  strcpy(infoo, player1->name);
-  strcat(infoo, " ,it's your turn to play (Black)");
-  gtk_label_set_text( needed->turn, infoo);
-  free(infoo);
-  //playerturn_print(needed->player_turn, needed->player1, needed->player2, needed->turn);
-  printf("end \n");
-  *needed->player_turn = BLACKTURN;
+  // IA first move
+  IA_move(needed);
 
   return;
 }

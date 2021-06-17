@@ -149,7 +149,6 @@ void whiteT_Wins(struct Player *pl1, struct Player *pl2, GtkLabel *Info, GtkWidg
   free(name);
   gtk_widget_show(Window2);
   gtk_widget_hide(Window);
-  printf("end of white team wins \n");
 }
 
 /*
@@ -258,8 +257,6 @@ void click4move(GtkButton *button, gpointer user_data)
     return;
   }
   //Other chess piece movements
-  printf("from x=%c y=%i to x=%c and y=%i\n", (char)(x +65), y + 1, (char)(des_x + 65), des_y+1 );
-  printf("for valid move %i %i %i %i\n", x-1, y-1,des_x-1, des_y-1);
   int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->constr.board); //movement is possible
 
   switch(possible)

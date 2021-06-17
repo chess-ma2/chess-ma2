@@ -24,6 +24,7 @@
 
 // Game _________________________________________________________
 
+
 // When move is chosen
 void click4move_3(GtkButton *button, gpointer user_data);
 

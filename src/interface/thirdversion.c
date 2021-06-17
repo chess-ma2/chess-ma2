@@ -16,7 +16,7 @@
 
 /*
  * @author Anna
- * @date 29/04/2021
+ * @date 14/06/2021
  * @details Clicked for move
 */
 
@@ -64,8 +64,6 @@ void click4move_3(GtkButton *button, gpointer user_data)
     return;
   }
   //Other chess piece movements
-  //printf("from x=%c y=%i to x=%c and y=%i\n", (char)(x +65), y + 1, (char)(des_x + 65), des_y+1 );
-  //printf("for valid move %i %i %i %i\n", x-1, y-1,des_x-1, des_y-1);
   int possible = isValidMove(x-1, y-1, des_x-1, des_y-1, needed->constr.board); //movement is possible
 
   switch(possible)
@@ -144,7 +142,6 @@ void click4move_3(GtkButton *button, gpointer user_data)
           {
             gtk_entry_set_text(needed->Ori_Coord, "");
             gtk_entry_set_text(needed->New_Coord, "");
-            //gtk_window_unfullscreen(GTK_WINDOW(needed->Window));
             gtk_widget_show(needed->EndWindow);
             gtk_widget_hide(needed->Window);
             return;
@@ -156,79 +153,10 @@ void click4move_3(GtkButton *button, gpointer user_data)
     gtk_entry_set_text(needed->Ori_Coord, "");
     gtk_entry_set_text(needed->New_Coord, "");
 
-    sleep(2);
-
-    // AI turn
-    struct finalmove * move = get_right_move_ia(needed->constr.board,needed->currentW,needed->currentB, WHITETURN, 2, needed->nbWhite, needed->nbBlack);
-    x = move->x;
-    y = move->y;
-    des_y = move->ydes;
-    des_x = move->xdes;
-
-    //Rock
-    struct res_rock res2 = rock_sub(* needed->player_turn, needed->constr.board, needed->white_kingstatus,
-      needed->black_kingstatus, needed->white_rock, needed->black_rock,needed->x_kingb,
-      needed->y_kingb, needed->x_kingw, needed->y_kingw, x, y, des_x, des_y);
-
-    * needed->player_turn = res2.player_turn;
-    needed->x_kingb = res2.x_kingb;
-    needed->y_kingb = res2.y_kingb;
-    needed->x_kingw = res2.x_kingw;
-    needed->y_kingw = res2.y_kingw;
-
-    if (res2.continuee == 1) {
-      // TURN FINISHED
-      gtk_entry_set_text(needed->Ori_Coord, "");
-      gtk_entry_set_text(needed->New_Coord, "");
-      gtk_label_set_text(needed->Info, "New Turn");
-      char *infoo = malloc(700 * sizeof(char));
-      strcpy(infoo, needed->player1->name);
-      strcat(infoo, " ,it's your turn to play (Black)");
-      gtk_label_set_text( needed->turn, infoo);
-      free(infoo);
-      return;
-    }
-
-    needed->nbBlack = removedpiece(x , y, des_x, des_y, needed->constr.board, needed->currentW, needed->currentB, needed->nbWhite, needed->nbBlack);
-    needed->constr.board = pieceMove(x, y, des_x, des_y, needed->constr.board); // Move piece
-
-    if(needed->constr.board[(y-1)*8+(x-1)].color == WHITE && needed->constr.board[(y-1)*8+(x-1)].type == KING) //change position of the king to help check/pat/checkmat
-      {
-        needed->x_kingw = des_x - 1;
-        needed->y_kingw = des_y - 1;
-        needed->white_rock = CANT_ROCK;
-      }
-
-
-            // Check for checkmates _________________________________________
-            struct checking res3 = check4checkmates_2(needed->player_turn, needed->constr.board, needed->white_kingstatus,
-               needed->black_kingstatus, needed->x_kingb, needed->y_kingb, needed->x_kingw, needed->y_kingw,
-               des_x, des_y,  needed->player1, needed->player2, needed->Info, needed->Window, needed->EndWindow);
-
-            needed->white_kingstatus = res3.white_kingstatus;
-            needed->black_kingstatus = res3.black_kingstatus;
-
-
-            if (res3.returned == 1)
-            {
-              gtk_entry_set_text(needed->Ori_Coord, "");
-              gtk_entry_set_text(needed->New_Coord, "");
-              //gtk_window_unfullscreen(GTK_WINDOW(needed->Window));
-              gtk_widget_show(needed->EndWindow);
-              gtk_widget_hide(needed->Window);
-              return;
-            }
-
-      // Update board
-      update_board(needed->constr);
-
-      gtk_entry_set_text(needed->Ori_Coord, "");
-      gtk_entry_set_text(needed->New_Coord, "");
-      char *infoo = malloc(700 * sizeof(char));
-      strcpy(infoo, needed->player1->name);
-      strcat(infoo, " ,it's your turn to play (Black)");
-      gtk_label_set_text( needed->turn, infoo);
-      free(infoo);
+    // IA move
+    IA_move(needed);
+    *needed->player_turn = BLACKTURN;
+    update_board(needed->constr);
 }
 
 

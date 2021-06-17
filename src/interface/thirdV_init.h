@@ -24,6 +24,8 @@
 // Main Game Init function
 void init_gtk3(struct Player *player1, struct Player *player2, struct construction constr, GtkLabel *Rules, GtkLabel *Info, GtkLabel *turn, struct for_clicked *needed, GtkWidget *EndWindow);
 
+// IA move for Minimax
+void IA_move(struct for_clicked *needed);
 
 
 #endif

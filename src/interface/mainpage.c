@@ -27,23 +27,6 @@ GtkWidget* LoginAccount;
 //Login player 2
 GtkWidget* LoginAccount2;
 
-//____ GAME ____________
-// Main Page for GAME
-GtkWidget* game_v1;
-// Entry for original coordinates
-GtkEntry * Ori_Coord;
-// Entry for new coordinates
-GtkEntry * New_Coord;
-struct for_clicked *move_str;
-// Button for Withdraw
-GtkButton* WithdrawB;
-// Button for Stalemate
-GtkButton* StalemateB;
-struct added_F *added_struct;
-// End of game window
-GtkWidget* Game_Over;
-
-
 //____Global_Initialization___
 // The player structure
 struct Player *pl1;
@@ -358,7 +341,6 @@ void connect2(GtkButton *button, gpointer user_data)
         struct to_play *playing = user_data;
         move_str->Window = game_v1;
         init_gtk(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
-        printf("pl1 %s pl2 %s \n", move_str->player1->name,move_str->player2->name);
         init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
     }
     else
@@ -463,13 +445,14 @@ void save_pl3(GtkButton *button, gpointer user_data)
     gtk_window_fullscreen(GTK_WINDOW(game_v3));
     // _________ Play Game _______________
     struct to_play *playing = user_data;
-    move_str->Window = game_v3;
-    init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
-    init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
+    move_str3->Window = game_v3;
+    init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str3, Game_Over);
+    init_added_structures(move_str3->player1, move_str3->player2, added_struct, Game_Over);
     gtk_widget_hide(NewPL_3);
     gtk_widget_show(game_v3);
   }
 }
+
 /*
   * @author Anna
   * @date 16/06/2021
