@@ -3,7 +3,7 @@ void change_clicked(GtkButton *button, gpointer user_data);
 
 void game_process_robot();
 
-void sendto_network(struct to_play * playing,GtkEntry * Ori, GtkEntry * New);
+void sendto_network(GtkButton *button, gpointer user_data);
 
 void wait_game_output();
 

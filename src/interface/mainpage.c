@@ -195,8 +195,10 @@ GtkButton* withdraw_3;
  * @details Show first version's window
 */
 void first_v_start(GtkButton *button, gpointer user_data)
-{ gtk_widget_show(window1st_v_1);
-  gtk_widget_hide(window1);         }
+{
+    gtk_widget_show(window1st_v_1);
+    gtk_widget_hide(window1);
+}
 
 
 /*
@@ -499,8 +501,8 @@ void connectNN(GtkButton *button, gpointer user_data)
         gtk_window_fullscreen(GTK_WINDOW(gamenetwork));
         gtk_widget_hide(LoginAccountN);
 
-        struct to_play *playing = user_data;
-        sendto_network(playing, move_str2->Ori_Coord,move_str2->New_Coord);
+        //struct to_play *playing = user_data;
+        sendto_network(button, user_data);
     }
 }
 
@@ -521,8 +523,8 @@ void connectLN(GtkButton *button, gpointer user_data)
     if (pl1!=NULL)
     {
         gtk_widget_show(gamenetwork);
-        struct to_play *playing = user_data;
-        sendto_network(playing, move_str2->Ori_Coord,move_str2->New_Coord);
+        //struct to_play *playing = user_data;
+        sendto_network(button, user_data);
         //transition_page(LoginAccountN, window2nd_v_1);
     }
     else

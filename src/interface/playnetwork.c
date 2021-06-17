@@ -44,19 +44,24 @@ void change_clicked(GtkButton *button, gpointer user_data)
 }
 void game_process_robot();
 
-void sendto_network(struct to_play * playing,GtkEntry * Ori, GtkEntry * New)
+void sendto_network(GtkButton *button, gpointer user_data)
 {
-    //initialize data
-    //constr = playing->constr;
-    /*Ori_Coord = Ori;
-    New_Coord= New;*/
-    //o = (char *) gtk_entry_get_text(Ori_Coord);
-    //n = (char *) gtk_entry_get_text(New_Coord);
-    //rules = playing->Rules;
-    //info = playing->Info;
-    //update_board(constr);
+  /*struct for_clicked *needed = user_data;
+  // Get Coordinates
+  char * ori = (char *) gtk_entry_get_text(needed->Ori_Coord);
+  char * new = (char *) gtk_entry_get_text(needed->New_Coord);
+  //initialize data
+ //constr = playing->constr;
+    o = (char *) gtk_entry_get_text(Ori_Coord);
+    n = (char *) gtk_entry_get_text(New_Coord);
+    printf("test\n");
+    //rules = constr.Rules;
+    info = needed->Info;
+    printf("test\n");
+    update_board(needed->constr);
+    printf("test\n");*/
     
-    //(info,"waiting for connexion...");
+    gtk_label_set_text(info,"waiting for connexion...");
     start_network();
     game_process_robot();
 }
