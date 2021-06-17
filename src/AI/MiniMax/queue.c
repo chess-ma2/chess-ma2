@@ -16,7 +16,6 @@ int nb_queue = 0; // nb of elements in queue
 struct queue * enqueue(struct node *to_insert, struct queue *Q) {
   if (Q->Node == NULL) {
     Q->Node = to_insert;
-    //printf("Node value is %i%i\n",   Q->Node->x,  Q->Node->y);
     Q->next = NULL;
     Q->last = 1;
     nb_queue++;
@@ -26,7 +25,6 @@ struct queue * enqueue(struct node *to_insert, struct queue *Q) {
   struct queue *new = malloc(sizeof(struct queue));
   new->Node = to_insert;
   new->last = 0;
-  //printf("Node value is %i%i and one before was %i%i \n", new->Node->x,new->Node->y, Q->Node->x,  Q->Node->y);
   new->next = Q;
   nb_queue++;
   return new;
@@ -49,7 +47,6 @@ struct node * dequeue(struct queue *Q) {
     }
 
   struct queue *index = Q;
-  //printf("index node is %i\n", index->Node->score);
 
 
   struct queue *before = NULL;
@@ -57,7 +54,6 @@ struct node * dequeue(struct queue *Q) {
   {
     before = index;
     index = index->next;
-    //printf("index next node is %i\n", index->Node->score);
   }
 
   if (before != NULL) {
@@ -72,7 +68,6 @@ struct node * dequeue(struct queue *Q) {
   }
 
   nb_queue--;
-  //printf("is %i%i\n", data->x,data->y);
   return data;
 }
 
@@ -88,7 +83,6 @@ void free_queue(struct queue *Q)
     nb_queue = 0;
     Q = NULL;
   }
-  printf("queue freed [ok]\n");
 }
 
 struct Piece *pieceMove_2(int x, int y, int des_x, int des_y, struct Piece *board)
