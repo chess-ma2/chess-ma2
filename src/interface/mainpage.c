@@ -4,6 +4,7 @@
 #include "Local1.c"
 #include "Local1_init.c"
 #include "added_functions4local.c"
+#include "playnetwork.c"
 #include "thirdV_init.c"
 #include "thirdversion.c"
 #ifndef MAINPAGE_C
@@ -76,6 +77,37 @@ GtkEntry * Password_Log2;
 //____________________ Second Window
 // second version window
 GtkWidget* window2nd_v_1;
+
+GtkWidget* window_login_N;
+GtkWidget* window_newplayer_N;
+
+//______ Network Player ________
+// Entry for name
+GtkEntry * Name_EntryN;
+// Entry for Email
+GtkEntry * Email_EntryN;
+// Entry for password
+GtkEntry * Password_EntryN;
+// Entry for Email
+GtkEntry * Email_EntryN2;
+// Entry for password
+GtkEntry * Password_EntryN2;
+// Label to say if accound has been created with success
+GtkLabel * Create_accountN_yes;
+//Entry for Email
+GtkEntry * Email_LogN;
+//Entry for Password
+GtkEntry * Password_LogN;
+
+GtkWidget* LoginAccountN;
+
+GtkWidget* gamenetwork;
+
+GtkButton* WithdrawN;
+struct added_F *added_structN;
+GtkButton* StalemateN;
+
+//
 
 // ____________________ Third Window _______
 // ________ Player vs AI ___________________
@@ -398,6 +430,103 @@ void back_from_second(GtkButton *button, gpointer user_data)
     gtk_widget_hide(window2nd_v_1);
 }
 
+/*
+ * @author Marine
+ * @date 13/06/2021
+ * @details login with network
+*/
+void login_N(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window_login_N);
+    gtk_widget_hide(window2nd_v_1);
+}
+
+/*
+  * @author Marine
+  * @date 13/06/2021
+  * @details new player with network
+*/
+void window_playerN(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window_newplayer_N);
+    gtk_widget_hide(window2nd_v_1);
+}
+
+/*
+  * @author Marine
+  * @date 13/06/2021
+  * @details back from new player in network
+*/
+void backNN(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window2nd_v_1);
+    gtk_widget_hide(window_newplayer_N);
+}
+
+/*
+ * @author Marine
+ * @date 13/06/2021
+ * @details back from login in n
+*/
+void backLN(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window2nd_v_1);
+    gtk_widget_hide(window_login_N);
+}
+
+/*
+ * @author Marine
+ * @date 13/06/2021
+ * @details connecting from NET in new player
+*/
+void connectNN(GtkButton *button, gpointer user_data)
+{
+    struct Player *res = New_player_v1(Name_EntryN, Email_EntryN, Password_EntryN, Create_accountN_yes, window_newplayer_N, LoginAccountN);
+    // creating a random player 2 information
+    /*pl2->name = "Other";
+    pl2->email = "networkother";
+    strcpy((char *)&(pl2->password),"dnjsoivjno7896vgxui");*/
+    
+    if (res != NULL)
+    {
+        pl1 = res;
+        gtk_widget_show(gamenetwork);
+        gtk_window_fullscreen(GTK_WINDOW(gamenetwork));
+        gtk_widget_hide(LoginAccountN);
+        
+        struct to_play *playing = user_data;
+        sendto_network(playing, move_str->Ori_Coord,move_str->New_Coord);
+    }
+}
+  
+/*
+* @author Marine
+* @date 13/06/2021
+* @details connecting from NET in login*/
+    
+void connectLN(GtkButton *button, gpointer user_data)
+{
+    pl1 = findplayer(Email_EntryN,Password_EntryN);
+    
+    // creating a player 2 with predifined informations
+    /*pl2->name = "Other";
+    pl2->email = "networkother";
+    strcpy((char *)&(pl2->password),"dnjsoivjno7896vgxui");*/
+    
+    if (pl1!=NULL)
+    {
+        gtk_widget_show(gamenetwork);
+        struct to_play *playing = user_data;
+        sendto_network(playing, move_str->Ori_Coord,move_str->New_Coord);
+        //transition_page(LoginAccountN, window2nd_v_1);
+    }
+    else
+    {
+        gtk_widget_show(window2nd_v_1);
+    }
+        gtk_widget_hide(LoginAccountN);
+}
+
 
 //____________________________________________________________________________
 /*
@@ -705,6 +834,103 @@ int main (int argc, char *argv[])
     // Button to get to second version
     GtkButton* second_version = GTK_BUTTON(gtk_builder_get_object(builder, "2ndVersion"));
 
+    //create
+    GtkButton* newplayerN = GTK_BUTTON(gtk_builder_get_object(builder, "newplayerN"));
+    //login
+    GtkButton* loginN = GTK_BUTTON(gtk_builder_get_object(builder,"loginN"));
+    GtkButton* backN = GTK_BUTTON(gtk_builder_get_object(builder,"backN"));
+    
+    gtk_button_set_image(backN, gtk_image_new_from_file ("Images/back.png"));
+    GtkButton* backN2 = GTK_BUTTON(gtk_builder_get_object(builder,"backNlog"));
+    
+    // ButtonImage to go back to mainpage
+    gtk_button_set_image(backN2, gtk_image_new_from_file ("Images/back.png"));
+
+    // First player is a new player Window
+    window_newplayer_N = GTK_WIDGET(gtk_builder_get_object(builder, "window_newplayer_N"));
+    window_login_N =GTK_WIDGET(gtk_builder_get_object(builder, "window_login_N"));
+
+    // First player exists
+    LoginAccountN = GTK_WIDGET(gtk_builder_get_object(builder, "LoginAccountN"));
+
+    // Back to 2nd version
+    GtkButton* back_wN = GTK_BUTTON(gtk_builder_get_object(builder, "back_wN"));
+    GtkButton* back_wN2 = GTK_BUTTON(gtk_builder_get_object(builder,"back_wN2"));
+
+    // ButtonImage to go back to first version window
+    gtk_button_set_image(back_wN, gtk_image_new_from_file ("Images/back.png"));
+    gtk_button_set_image(back_wN2, gtk_image_new_from_file ("Images/back.png"));
+
+    // Save new info about player 1
+    GtkButton* lock_newN = GTK_BUTTON(gtk_builder_get_object(builder, "lock_newN"));
+    
+    GtkButton* lock_newN2 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_newN2"));
+
+    gtk_button_set_image(lock_newN, gtk_image_new_from_file ("Images/save.png"));
+    gtk_button_set_image(lock_newN2, gtk_image_new_from_file ("Images/save.png"));
+
+    // Label when info is saved
+    Create_account1_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account1_yes"));
+
+    // Entry for name
+    Name_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "nameN"));
+    // Entry for email
+    Email_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "emailN"));
+    // Entry for password
+    Password_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "passwordN"));
+
+    //LOGIN ACCOUNT
+    //entry for mail
+    Email_LogN = GTK_ENTRY(gtk_builder_get_object(builder,"emailN"));
+    //entry for password
+    Password_LogN= GTK_ENTRY(gtk_builder_get_object(builder,"passwordN"));
+    
+    //__________G_A_M_E_____N_E_T_W_O_R_K____________________________
+    gamenetwork = GTK_WIDGET(gtk_builder_get_object(builder, "gamenetwork"));
+    
+    GtkDrawingArea* areaN = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "areaN"));
+    GtkFixed *fixedN = GTK_FIXED(gtk_builder_get_object(builder, "panedN"));
+    GtkLabel *InfoN = GTK_LABEL(gtk_builder_get_object(builder, "InfoN"));
+    GtkLabel *rulesN = GTK_LABEL(gtk_builder_get_object(builder, "rulesN"));
+    printRulesLabel(rulesN);
+    GtkLabel *turnN = GTK_LABEL(gtk_builder_get_object(builder, "turnN"));
+    Ori_Coord = GTK_ENTRY(gtk_builder_get_object(builder,"oriCOORDN"));
+    New_Coord = GTK_ENTRY(gtk_builder_get_object(builder,"newCOORDN"));
+    GtkButton * click_coordinatesN = GTK_BUTTON(gtk_builder_get_object(builder, "click_coordinatesN"));
+    gtk_button_set_image(click_coordinatesN,gtk_image_new_from_file ("Images/save.png"));
+
+    
+    // withdraw
+    WithdrawN = GTK_BUTTON(gtk_builder_get_object(builder, "withdrawN"));
+    gtk_button_set_image(WithdrawN, gtk_image_new_from_file ("Images/Withdraw.png"));
+    StalemateN = GTK_BUTTON(gtk_builder_get_object(builder, "StalemateN"));
+    gtk_button_set_image(StalemateN, gtk_image_new_from_file ("Images/Stalemate.png"));
+
+    // Create widgets -> button board
+    struct construction constrN;
+    constrN.board = init_board();
+    // Create board and put into fixed
+    constrN.ImageBoard = malloc(64 * sizeof(GtkWidget));
+    constrN.fixed = fixed;
+    int x_coN = 56; //original coordinates
+    int y_coN = 90; //original coordinates
+
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+      constrN.ImageBoard[i*8+j] = gtk_image_new();
+      gtk_widget_set_size_request (constrN.ImageBoard[i*8+j],60,60);
+      gtk_fixed_put (constrN.fixed, constrN.ImageBoard[i*8+j], x_coN + 15, y_coN + 15);
+      x_coN += 60;
+      }
+      x_coN = 56;
+      y_coN += 60;
+    }
+
+    // End of game
+    Game_Over = GTK_WIDGET(gtk_builder_get_object(builder, "Game_OverN"));
+    GtkButton * play_againN = GTK_BUTTON(gtk_builder_get_object(builder, "play_againN"));
+    GtkButton * exit_gameN = GTK_BUTTON(gtk_builder_get_object(builder, "exit_gameN"));
+
 
     // __________________________________________________________________________________
     //________ Version 3 _______
@@ -910,7 +1136,63 @@ int main (int argc, char *argv[])
 
     //___________ Version 2 _________________________________________________________
     // Got to second version
+    struct to_play playingN;
+    playingN.constr = constrN;
+    playingN.Rules = rulesN;
+    playingN.Info = InfoN;
+    playingN.turn = turnN;
+    
     g_signal_connect(second_version, "clicked", G_CALLBACK(second_v_start), NULL);
+    g_signal_connect(backN, "clicked", G_CALLBACK(back_from_second), NULL);
+    g_signal_connect(newplayerN, "clicked", G_CALLBACK(window_playerN), NULL);
+    g_signal_connect(loginN, "clicked", G_CALLBACK(login_N), NULL);
+    g_signal_connect(back_wN , "clicked", G_CALLBACK(backLN), NULL);
+    g_signal_connect(back_wN2, "clicked", G_CALLBACK(backNN), NULL);
+    
+    // Entry for name
+    Name_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "nameN"));
+    // Entry for email
+    Email_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "emailN"));
+    // Entry for password
+    Password_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "passwordN"));
+    // Entry for email
+    Email_EntryN2 = GTK_ENTRY(gtk_builder_get_object(builder, "emailN2"));
+    // Entry for password
+    Password_EntryN2 = GTK_ENTRY(gtk_builder_get_object(builder, "passwordN2"));
+    
+    g_signal_connect(lock_newN , "clicked", G_CALLBACK(connectLN), NULL);
+    
+    g_signal_connect(lock_newN2, "clicked", G_CALLBACK(connectNN), NULL);
+    
+    // Game _network__________________________________________________________
+    // Destroys .exe when game first version window is closed
+    g_signal_connect(gamenetwork, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Draw Chessboard
+    g_signal_connect(areaN, "draw", G_CALLBACK(on_draw), &constr);
+
+    // Structure for Movements
+    move_str = malloc(sizeof(struct for_clicked));
+    move_str->Ori_Coord = Ori_Coord;
+    move_str->New_Coord = New_Coord;
+    move_str->constr = constr;
+    move_str->player_turn = player_turn;
+
+    // Structure for Stalemate and Withdraw
+    added_structN = malloc(sizeof(struct added_F));
+    added_structN->player_turn = player_turn;
+    added_structN->Window = gamenetwork;
+
+    g_signal_connect(click_coordinatesN, "clicked", G_CALLBACK(change_clicked), move_str);
+    // Goes to withdraw function
+    g_signal_connect(WithdrawN, "clicked", G_CALLBACK(withdraw_2), added_struct);
+    // Goes to Stalemate function
+    g_signal_connect(StalemateN, "clicked", G_CALLBACK(stalemate_2), added_struct);
+
+    // End of Game
+    // Destroys .exe when window is closed
+    g_signal_connect(Game_Over, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(play_againN, "clicked", G_CALLBACK(playagain), NULL);
+    g_signal_connect(exit_gameN, "clicked", G_CALLBACK(exitgame), NULL);
     // Destroys .exe when second version window is closed
     g_signal_connect(window2nd_v_1, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
