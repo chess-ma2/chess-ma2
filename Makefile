@@ -33,3 +33,10 @@ xor:
 	@gcc -pthread -lsqlite3 -lm -Wall -O3 src/AI/montecarlo/network/xor/xor_demo.c \
     -o "target/MonteCarloXOR.out"
 	@echo "[Chess(ma)² - MonteCarlo - XOR] End build sources!"
+
+mctsn:
+	@echo "[Chess(ma)² - MonteCarlo - Network] Start build MonteCarlo network sources..."
+	@mkdir -p target/
+	@gcc -pthread -lsqlite3 -lm -Wall -O3 src/AI/montecarlo/network/tree/main.c \
+    -o "target/MonteCarloNetwork.out"
+	@echo "[Chess(ma)² - MonteCarlo - Network] End build sources!"

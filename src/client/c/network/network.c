@@ -12,7 +12,7 @@
 
 int start_network(void)
 {
-    printf("Network starting...");
+    printf("Network starting...\n");
     int e =  check_compatibility();
 
     if (e != 0)

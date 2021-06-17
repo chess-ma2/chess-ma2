@@ -61,7 +61,8 @@ int checkmat_secondcondition(int x_king, int y_king, int color,  struct Piece *b
 
 			  if (piece_to_place( x_king, y_king,board2)== 0)
 			    {
-			      return 1; 
+                    free(board2);
+                    return 1;
 			    }			
 	 
 			}

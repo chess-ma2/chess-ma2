@@ -82,7 +82,54 @@ void network_save_export_neurons(char * str, int *s, int * i, Neuron * neuron, i
 
 void network_save_import(char * str, Network * network)
 {
+    int i = 1;
+    int layer = -2;
+    //Network find end
+    while (*(str+i) != ')' && *(str+i) != 0)
+    {
+        //Layer Find start
+        while (*(str+i) != '(' && *(str+i) != 0)
+        {
+            layer++:
+            Layer *l = network->input;
+            if (layer >= 0 && layer < network->hidden_count)
+                l = network->hidden + layer;
+            else if (layer >= network->hidden_count)
+                l = network->output;
 
+            int neuron = -1;
+            //Layer find end
+            while (*(str+i) != ')' && *(str+i) != 0)
+            {
+                //Neurons find start
+                while (*(str+i) != '(' && *(str+i) != 0)
+                {
+                    neuron ++;
+                    Neuron *n = l->neurons + neuron;
+                    int v = -2;
+                    //Neurons find end
+                    while (*(str+i) != ')' && *(str+i) != 0)
+                    {
+                        if (*(str+i) == ' ')
+                        {
+                            v++;
+                            double f = atof(str+i);
+                            if (v == -1)
+                                n->bias = f;
+                            else
+                                *(n->weight + v) = f;
+                        }
+
+                        i++;
+                    }
+                    i++;
+                }
+                i++;
+            }
+            i++;
+        }
+        i++;
+    }
 }
 
 #endif //AI_MONTECARLO_NETWORK_SAVE_C

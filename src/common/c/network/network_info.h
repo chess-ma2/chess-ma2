@@ -29,7 +29,7 @@
  * @date 18/03/2021
  * @details This constant define address of server.
  */
-#define CHESS_MA2_NETWORK_ADDRESS "185.171.202.231"
+#define CHESS_MA2_NETWORK_ADDRESS "localhost"
 
 /**
  * @author Antoine
@@ -39,6 +39,13 @@
  */
 #define CHESS_MA2_NETWORK_PORT_GAME "13131"
 
+/**
+ * @author Antoine
+ * @date 19/03/2021
+ * @details This constant define port use by each part
+ * to communicate and play game.
+ */
+#define CHESS_MA2_NETWORK_PORT_GAME_MONTECARLO "13132"
 
 //End safety loop guard
 #endif

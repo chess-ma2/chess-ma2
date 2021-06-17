@@ -13,6 +13,6 @@ clean:
 build:
 	@echo "[Chess(ma)² - Server] Start build server sources..."
 	@mkdir -p ../../../target/
-	@gcc -pthread -Wall -O3 main.c \
+	@gcc -pthread -lm -Wall -O3 main.c \
     -o "../../../target/server.out"
 	@echo "[Chess(ma)² - Server] End build sources!"

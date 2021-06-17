@@ -37,7 +37,6 @@ Network * network_train_turn(Network * network,
         #endif
     }
 
-    //Todo add rotate in position of network for upgrade training performance
     int sum = pe.cross + pe.mutate + pe.new;
     //Generate Kids
     for (int i = 0; i+1 < pop_input; i+=2)
@@ -60,7 +59,7 @@ Network * network_train_turn(Network * network,
             network_mutate_network(network+(i+3)%pop_input);
         }
 
-        //(network+i+2) = network_train_mutate(network+i); Todo crossover here
+        //(network+i+2) = network_train_mutate(network+i);
         //(network+i+3) = network_train_random(network+i);
         /*
         network_network_init((network+i+1), 1, 2, 2, 1);
