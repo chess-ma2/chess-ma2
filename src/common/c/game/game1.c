@@ -43,7 +43,7 @@ int main()
     struct Piece *board = init_board();
     display_board_special(board);
     //int res = play(board, player1, player2);
-    playwrobot(board,player1, 1);
+    playwrobot(board,player1, 0);
 
     //___________________   Free memory_   ________________________________
 

@@ -1,3 +1,7 @@
+
+#ifndef SEARCH_AND_PLAY_C
+#define SEARCH_AND_PLAY_C
+
 /**
  * @author Marie
  * @date Start 15/04/2021
@@ -9,7 +13,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
-#include "../tree/mcts.h"
+#include "../tree/mcts.c"
 #include "search_and_play.h"
 
 /**
@@ -361,3 +365,6 @@ int iskings(struct MCTS_Node *node)
 
    return i == 2;
 }
+
+
+#endif

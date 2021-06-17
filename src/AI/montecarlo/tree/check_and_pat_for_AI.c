@@ -1,12 +1,14 @@
 
+#ifndef CHECK_AND_PAT_FOR_AI_C
+#define CHECK_AND_PAT_FOR_AI_C
 
-#include "../../../common/c/rules/plate.h"
-#include "../../../common/c/rules/pieces.h"
+#include "../../../common/c/rules/plate.c"
+#include "../../../common/c/rules/pieces.c"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include "check_and_pat_for_AI.h"
-#include "mcts.h"
+#include "mcts.c"
 
 /**
  * @author Marie Maturana 
@@ -15,8 +17,6 @@
 
  */
 
-#ifndef CHECK_AND_PAT_FOR_AI_C
-#define CHECK_AND_PAT_FOR_AI_C
 
 /**
  * @author Marie Maturana 

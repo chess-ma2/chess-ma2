@@ -13,6 +13,9 @@
 #include "../../../database/create_db.c"
 #include "../../../database/functions_db.c"
 #include "../../../AI/MiniMax/minimax.c"
+#include "../../../AI/montecarlo/tree/create_childs.c"
+#include "../../../AI/montecarlo/search_and_play/monte_carlo_method.c"
+#include "../../../AI/montecarlo/tree/mcts.c"
 
 #ifndef PLAYWITHROBOT_C
 #define PLAYWITHROBOT_C
@@ -66,6 +69,9 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
 
   player1->team_color = 1; // Player is black
   robot->team_color = 0; // robot is white
+
+  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
+    
   //_______________________________________________________________________________________________________________________________
 
 
@@ -192,9 +198,33 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
     {
       //throwing the functions of the different IA
       if (type==0)
-      {
-        //throw IA marie and antoine
-      }
+	{
+	  //clean_mtcs(tree); 
+	  
+	  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
+	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves)); 
+      
+	  tree = create_treem(board, 0, tree);
+
+	  tree = chosen_best(tree);
+	  coordonates = coordonates_by_mc(coordonates, tree);
+	  
+	  x = coordonates->x ;
+	  y = coordonates->y ;
+	  des_x = coordonates->x_des;
+	  des_y = coordonates->y_des;
+
+	  if( x == -1 && y == -1 && des_x == -1 && des_y == -1) //if the 4 coordinates a -1 == ask abandonment
+	{
+	      printf("\nL'IA déclare l'abandon.\n");
+	      printf("\nVous avez gagné.\n");
+	      return 0;
+	}
+
+
+	  
+	}
+      
       if (type==1)
       {
 
