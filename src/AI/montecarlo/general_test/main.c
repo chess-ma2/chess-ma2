@@ -83,7 +83,7 @@ int main()
 
 	  printf("L'Intelligence artificielle est entrain de jouer :  \n");
 
-	  clean_mtcs(tree); 
+	  free(tree); 
 	  
 	  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
 	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves)); 

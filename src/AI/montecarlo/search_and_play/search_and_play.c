@@ -137,6 +137,17 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 	}
     }
 
+  if(final->AKing_status == CHECKMATE)
+    {
+      final->value = 1.0;
+     
+    }
+  else
+    {
+      final->value = 0.0;
+      
+    }
+    
   
   final = update_value(final, final->value); 
   return final;
