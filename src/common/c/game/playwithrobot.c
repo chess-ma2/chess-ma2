@@ -70,8 +70,7 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
   player1->team_color = 1; // Player is black
   robot->team_color = 0; // robot is white
 
-  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
-    
+
   //_______________________________________________________________________________________________________________________________
 
 
@@ -199,16 +198,16 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
       //throwing the functions of the different IA
       if (type==0)
 	{
-	  free(tree); 
-	  
+
+
 	  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
-	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves)); 
-      
+	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves));
+
 	  tree = create_treem(board, 0, tree);
 
 	  tree = chosen_best(tree);
 	  coordonates = coordonates_by_mc(coordonates, tree);
-	  
+
 	  x = coordonates->x ;
 	  y = coordonates->y ;
 	  des_x = coordonates->x_des;
@@ -216,15 +215,16 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
 
 	  if( x == -1 && y == -1 && des_x == -1 && des_y == -1) //if the 4 coordinates a -1 == ask abandonment
 	{
-	      printf("\nL'IA déclare l'abandon.\n");
-	      printf("\nVous avez gagné.\n");
+	      printf("\n The AI withdraws\n");
+	      printf("\n You won. \n");
 	      return 0;
 	}
+    free(tree);
 
 
-	  
+
 	}
-      
+
       if (type==1)
       {
 

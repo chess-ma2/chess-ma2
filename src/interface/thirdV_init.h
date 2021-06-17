@@ -27,5 +27,9 @@ void init_gtk3(struct Player *player1, struct Player *player2, struct constructi
 // IA move for Minimax
 void IA_move(struct for_clicked *needed);
 
+// If AI withdraws -> Gtk Dialog
+void ai_withdraw (GtkDialog *dialog,
+             gint       response_id,
+             gpointer   user_data);
 
 #endif
