@@ -14,7 +14,7 @@ clean:
 	make -s -C src/common/c/ -f Makefile clean
 	make -s -C src/server/c/ -f Makefile clean
 	make -s -C src/client/c/ -f Makefile clean
-	make -s -C src/AI/montecarlo/ -f Makefile clean
+#	make -s -C src/AI/montecarlo/ -f Makefile clean
 	@rm -rf "target/"
 	@echo "[Chess(ma)² - Global] Make clean of sources DONE!"
 

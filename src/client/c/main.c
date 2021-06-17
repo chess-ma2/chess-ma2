@@ -10,10 +10,10 @@
 
 //#include "launch/launch.c"
 #include "network/network.c"
-//#include "game/game_process2.c"
-#include "game/game_process_montecarlo.c"
+#include "game/game_process2.c"
+//#include "game/game_process_montecarlo.c"
 
-//#include "../../common/c/data/file_io.c"
+#include "../../common/c/data/file_io.c"
 /**
  * @author Marine
  * @date 01/03/2021
@@ -26,8 +26,8 @@ int main(int argc, char ** argv)
     printf("Found with code: %s\n", str);
     free(str);*/
     start_network();
-    game_montecarlo();
-    //game_process();
+    //game_montecarlo();
+    game_process();
     return 0;
    // return launch_client(argc, argv);
 

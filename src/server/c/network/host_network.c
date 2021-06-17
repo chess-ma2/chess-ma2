@@ -16,7 +16,7 @@ int start_host_network()
     start_compatibility_network();
 
     start_game_network();
-    start_game_montecarlo_network();
+    //start_game_montecarlo_network();
     return 0;
 }
 

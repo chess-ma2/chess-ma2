@@ -12,7 +12,7 @@
 #include "../../../common/c/network/network_info.h"
 
 #include "compatibility.c"
-#include "game_montecarlo.c"
+//#include "game_montecarlo.c"
 
 #include <stdio.h>
 
