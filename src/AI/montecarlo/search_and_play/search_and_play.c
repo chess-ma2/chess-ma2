@@ -28,7 +28,7 @@ struct MCTS_Node *select_action(struct MCTS_Node *node, int color)
     }
   
   node = roll_out(node, color);
-  
+
   return node; 
 }
 
@@ -67,8 +67,6 @@ struct MCTS_Node *selected(struct MCTS_Node *node)
 	  bestValue = node->child[i].value; 
 	}
     }
-
-  select_Node->father = node;
   return select_Node; 
 }
 
@@ -79,7 +77,7 @@ struct MCTS_Node *selected(struct MCTS_Node *node)
  */
 
 struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
-{  
+{
   struct MCTS_Node *final = malloc(sizeof(struct MCTS_Node));
   node = expand_childs(node, node->board);
 
@@ -128,7 +126,7 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 	  break; 
 	}
 
-      if( i == 400)
+      if( i == 100)
 	{
 	  final = chose_for2kings(final);
 	  break; 
@@ -137,7 +135,7 @@ struct MCTS_Node *roll_out(struct MCTS_Node *node, int color_team)
 
   
   final = update_value(final, final->value); 
-  return final; 
+  return final;
 
 }
 
@@ -153,6 +151,7 @@ struct MCTS_Node *update_value(struct MCTS_Node *node, float value)
     {
       node->nb_visit += 1;
       node->value = node->value + value;
+      value = value*0.9;
       node = node->father; 
     }
 
@@ -189,10 +188,11 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
 
   if (nb_child == 1)
     {
-      return 0; 
+
+        return &node->child[0];
     }
 
-  int random = (rand() % nb_child);; 
+  int random = (rand() % nb_child);;
 
   return &node->child[random];
 }
@@ -207,7 +207,7 @@ struct MCTS_Node *random_choose(struct MCTS_Node *node)
 struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 {
 
-  printf("%d\n" , node->nb_child); 
+  //printf("%d\n" , node->nb_child); 
 
   struct MCTS_Node *best = malloc(sizeof(struct MCTS_Node));
    
@@ -220,7 +220,7 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
       
       float best_value = 0.00;
 
-      printf("%f\n" , best_value);
+      //printf("%f\n" , best_value);
 
       float inter = 0.0;
 
@@ -231,14 +231,14 @@ struct MCTS_Node *chosen_best(struct MCTS_Node *node)
 	    { 
 	      inter = (node->child[i].value)/(float)(node->child[i].nb_visit);
 
-	      printf("%d\n", i);
-	      printf("%f\n" , node->child[i].value);
-	      printf("%f\n" , (float)node->child[i].nb_visit);
-	      printf("%f\n" , inter);
+	      //printf("%d\n", i);
+	      //printf("%f\n" , node->child[i].value);
+	      //printf("%f\n" , (float)node->child[i].nb_visit);
+	      //printf("%f\n" , inter);
 	      
 	      if(inter > best_value)
 		{
-		  printf("%d\n" , i); 
+		  //printf("%d\n" , i); 
 		  best = &node->child[i];
 		  best_value = inter; 
 		}
