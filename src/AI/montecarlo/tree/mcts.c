@@ -203,15 +203,25 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
 
 void clean_mtcs(struct MCTS_Node *node)
 {
-  int nchild = node->nb_child;
 
-  for( int i = 0; i < nchild ; i++)
+  if( node != NULL)
     {
-      node = &node->child[i];
-      clean_mtcs(node);
-    }
+      int nchild = node->nb_child;
+     
+      
+      for( int i = 0; i < nchild ; i++)
+	{
+	 
+	  clean_mtcs( &node->child[i]);
+	  free(&node->child[i]);
+	 
+	}
 
-   free(node); 
+      
+
+      free(node->board);
+ 
+    }
 }
 
 /**
