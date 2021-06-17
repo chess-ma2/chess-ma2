@@ -1,3 +1,9 @@
+/*
+ * @author Marine
+ * @date 20/05/2021
+ * @details the play with network gtk program
+*/
+
 #ifndef PLAYNETWORK_C
 #define PLAYNETWORK_C
 
@@ -11,11 +17,10 @@
 #include <sqlite3.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include "Local1_init.h"
+#include "playnetwork.h"
 
 #include "../client/c/network/game.c"
 #include "../common/c/data/process_board.c"
-//#include "../common/c/rules/rules.c"
 #include "../common/c/rules/pieces.c"
 #include "../common/c/game/version1.c"
 #include "../common/c/rules/check_and_pat.c"
@@ -42,16 +47,16 @@ void game_process_robot();
 void sendto_network(struct to_play * playing,GtkEntry * Ori, GtkEntry * New)
 {
     //initialize data
-    constr = playing->constr;
-    Ori_Coord = Ori;
-    New_Coord= New;
-    o = (char *) gtk_entry_get_text(Ori_Coord);
-    n = (char *) gtk_entry_get_text(New_Coord);
+    //constr = playing->constr;
+    /*Ori_Coord = Ori;
+    New_Coord= New;*/
+    //o = (char *) gtk_entry_get_text(Ori_Coord);
+    //n = (char *) gtk_entry_get_text(New_Coord);
     //rules = playing->Rules;
-    info = playing->Info;
-    update_board(constr);
+    //info = playing->Info;
+    //update_board(constr);
     
-    gtk_label_set_text(info,"waiting for connexion...");
+    //(info,"waiting for connexion...");
     start_network();
     game_process_robot();
 }
