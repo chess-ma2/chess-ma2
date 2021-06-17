@@ -127,7 +127,7 @@ void blackT_Wins(struct Player *pl1, struct Player *pl2, GtkLabel *Info, GtkWidg
         GTK_DIALOG_DESTROY_WITH_PARENT,
         GTK_MESSAGE_INFO,
         GTK_BUTTONS_OK,
-        "End of game, the winnner is the black team");
+        "End of game, the winner is the black team");
   gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",name);
   gtk_window_set_title(GTK_WINDOW(dialog), "End of game");
   gtk_dialog_run(GTK_DIALOG(dialog));
@@ -166,7 +166,7 @@ void whiteT_Wins(struct Player *pl1, struct Player *pl2, GtkLabel *Info, GtkWidg
         GTK_DIALOG_DESTROY_WITH_PARENT,
         GTK_MESSAGE_INFO,
         GTK_BUTTONS_OK,
-        "End of game, the winnner is the white team");
+        "End of game, the winner is the white team");
   gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",name);
   gtk_window_set_title(GTK_WINDOW(dialog), "End of game");
   gtk_dialog_run(GTK_DIALOG(dialog));
