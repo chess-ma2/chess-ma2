@@ -199,7 +199,7 @@ int playwrobot(struct Piece *board, struct Player *player1, int type)
       //throwing the functions of the different IA
       if (type==0)
 	{
-	  //clean_mtcs(tree); 
+	  free(tree); 
 	  
 	  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
 	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves)); 

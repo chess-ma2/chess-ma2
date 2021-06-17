@@ -73,7 +73,7 @@ struct MCTS_Node *first_node(struct Piece *board, struct MCTS_Node *first, int c
   first->nb_child = 0;
   first->child = NULL;
   first->nb_visit = 0;
-  first->value = 0;
+  first->value = 0.0;
   first->father = NULL;
   first->board = board;
   first->AKing_status = NOTHING;
@@ -176,7 +176,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
       child->nb_child = 0;
       child->child = NULL;
       child->nb_visit = 0;
-      child->value = 0;
+      child->value = 0.0;
       child->father = node;
       child->board = list_of_moves[i].board;
       child->AKing_status = NOTHING;
