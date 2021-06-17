@@ -57,7 +57,7 @@ int main()
   struct Piece *board = init_board(); //positionate de pieces one the piece cf funtion on plate.c
 
   struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
-  tree = create_tree(board, 0, tree);
+  
   //---------------------------------------------------------------------------------------------------------
 
   display(board); //display the first board with any movements
@@ -81,7 +81,7 @@ int main()
 
 	  printf("L'Intelligence artificielle est entrain de jouer :  \n");
 
-	  //clean_mtcs(tree); 
+	  clean_mtcs(tree); 
 	  
 	  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
 	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves)); 
