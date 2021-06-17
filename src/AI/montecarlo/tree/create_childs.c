@@ -5,13 +5,16 @@
  */
 
 
+#ifndef CREATE_CHILDS_C
+#define CREATE_CHILDS_C
+
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "create_childs.h"
-#include "check_and_pat_for_AI.h"
-#include "mcts.h"
+#include "check_and_pat_for_AI.c"
+#include "mcts.c"
 
 
 
@@ -21,7 +24,7 @@
  * @details find the king's position
  */
 
-struct coordonates_king *king_position(Piece *board, int color_team, struct coordonates_king *kingplace)
+struct coordonates_king *king_positionm(Piece *board, int color_team, struct coordonates_king *kingplace)
 {
   kingplace->x_king = 0;
   kingplace->y_king = 0;
@@ -59,7 +62,7 @@ int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
   board2 = pieceMove_AI(x, y, x_des, y_des, board2);
 
   struct coordonates_king *kingplace = malloc(sizeof(struct coordonates_king));
-  kingplace = king_position( board2, color_team, kingplace);
+  kingplace = king_positionm( board2, color_team, kingplace);
 
   int res = piece_to_place_AI(kingplace->x_king, kingplace->y_king, board2);
 
@@ -75,12 +78,12 @@ int isInCheck(Piece *board, int color_team, int x, int y, int x_des, int y_des)
  */
 
 
-struct tab *possible_moves(Piece *board, int color_team)
+struct tabm *possible_moves(Piece *board, int color_team)
 {
   struct coordonates_moves list_of_moves[1000];
   int index = 0;
 
-  struct tab *struct_list_of_moves = malloc(sizeof(struct tab));
+  struct tabm *struct_list_of_moves = malloc(sizeof(struct tabm));
   struct_list_of_moves->index = index ;
   struct_list_of_moves->list_of_moves = list_of_moves ; 
     
@@ -136,7 +139,7 @@ struct Piece *new_board(Piece *board, int x, int y, int x_des, int y_des)
  * @details find all the possible moves for a pawn
  */
 
-struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, struct tab *tab_struct)
+struct tabm *possible_moves_pawn(Piece *board, int color_team, int x, int y, struct tabm *tab_struct)
 {
   int index  = tab_struct->index;
   struct coordonates_moves *list_of_moves = tab_struct->list_of_moves;
@@ -698,12 +701,12 @@ struct tab *possible_moves_pawn(Piece *board, int color_team, int x, int y, stru
  * @details find all the possible moves for a queen
  */
 
-struct tab *possible_moves_queen(Piece *board, int color_team,int x, int y, struct tab *tab_struct)
+struct tabm *possible_moves_queen(Piece *board, int color_team,int x, int y, struct tabm *tab_struct)
 {
-  struct tab *tab_inter = malloc(sizeof(struct tab));
+  struct tabm *tab_inter = malloc(sizeof(struct tabm));
   tab_inter = possible_moves_bishop(board, color_team, x, y, tab_struct);
 
-  struct tab *tab_inter1 = malloc(sizeof(struct tab));
+  struct tabm *tab_inter1 = malloc(sizeof(struct tabm));
   tab_inter1 = possible_moves_rook(board, color_team, x, y, tab_inter);
 
   return tab_inter1; 
@@ -716,7 +719,7 @@ struct tab *possible_moves_queen(Piece *board, int color_team,int x, int y, stru
  * @details find all the possible moves for a king
  */
 
-struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struct tab *tab_struct)
+struct tabm *possible_moves_king(Piece *board, int color_team,int x, int y, struct tabm *tab_struct)
 {
   int index  = tab_struct->index;
   struct coordonates_moves *list_of_moves = tab_struct->list_of_moves;
@@ -884,7 +887,7 @@ struct tab *possible_moves_king(Piece *board, int color_team,int x, int y, struc
  * @details find all the possible moves for a knight
  */
 
-struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, struct tab *tab_struct)
+struct tabm *possible_moves_knight(Piece *board, int color_team,int x, int y, struct tabm *tab_struct)
 {
   int index  = tab_struct->index;
   struct coordonates_moves *list_of_moves = tab_struct->list_of_moves;
@@ -1053,7 +1056,7 @@ struct tab *possible_moves_knight(Piece *board, int color_team,int x, int y, str
  * @details find all the possible moves for a rook
  */
 
-struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struct tab *tab_struct)
+struct tabm *possible_moves_rook(Piece *board, int color_team,int x, int y, struct tabm *tab_struct)
 {
   int index  = tab_struct->index;
   struct coordonates_moves *list_of_moves = tab_struct->list_of_moves;
@@ -1251,7 +1254,7 @@ struct tab *possible_moves_rook(Piece *board, int color_team,int x, int y, struc
  * @details find all the possible moves for a bishop
  */
 
-struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, struct tab *tab_struct)
+struct tabm *possible_moves_bishop(Piece *board, int color_team,int x, int y, struct tabm *tab_struct)
 {
   int index  = tab_struct->index;
   struct coordonates_moves *list_of_moves = tab_struct->list_of_moves;
@@ -1446,3 +1449,6 @@ struct tab *possible_moves_bishop(Piece *board, int color_team,int x, int y, str
 
   return tab_struct; 
 }
+
+
+#endif

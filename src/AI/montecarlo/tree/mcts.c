@@ -11,9 +11,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "mcts.h"
-#include "create_childs.h"
-#include "../../../common/c/rules/pieces.h"
-#include "check_and_pat_for_AI.h"
+#include "create_childs.c"
+#include "../../../common/c/rules/pieces.c"
+#include "check_and_pat_for_AI.c"
 
 
 /**
@@ -104,10 +104,10 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
     }
   
   struct coordonates_king *a_place_king = malloc(sizeof(struct coordonates_king));
-  a_place_king = king_position(board, advers_color_team, a_place_king);
+  a_place_king = king_positionm(board, advers_color_team, a_place_king);
 
   struct coordonates_king *my_place_king = malloc(sizeof(struct coordonates_king));
-  my_place_king = king_position(board, node->color_player, my_place_king);
+  my_place_king = king_positionm(board, node->color_player, my_place_king);
   
 
   if(pat_AI( a_place_king->x_king , a_place_king->y_king , board))
@@ -137,7 +137,7 @@ struct MCTS_Node *expand_childs(struct MCTS_Node *node, struct Piece *board)
       node->terminus = 1 ;
     }
 
-  struct tab *list_for_child = malloc(sizeof(struct tab));
+  struct tabm *list_for_child = malloc(sizeof(struct tabm));
   list_for_child = possible_moves(board, advers_color_team);
   int index = list_for_child->index;
 

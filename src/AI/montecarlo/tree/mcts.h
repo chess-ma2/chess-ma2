@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../../common/c/rules/plate.h"
-#include "../../../common/c/rules/pieces.h"
+#include "../../../common/c/rules/plate.c"
+#include "../../../common/c/rules/pieces.c"
 
 
 /**

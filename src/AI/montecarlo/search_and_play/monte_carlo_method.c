@@ -1,3 +1,8 @@
+
+
+#ifndef MONTE_CARLO_METHOD_C
+#define MONTE_CARLO_METHOD_C
+
 /**
  * @author Marie
  * @date Start 15/04/2021
@@ -8,8 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include "../tree/mcts.h"
-#include "../tree/create_childs.h"
+#include "../tree/mcts.c"
+#include "../tree/create_childs.c"
 #include "monte_carlo_method.h"
 
 
@@ -64,7 +69,7 @@ struct special_tuple *the_monte_carlo(struct special_tuple *tree_and_coordonates
  * @details fonction which create the tree, training, and find the "best" child
  */
 
-struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_Node *node)
+struct MCTS_Node *create_treem(struct Piece *board, int color_team, struct MCTS_Node *node)
 {
   
   node = first_node(board, node, color_team);
@@ -160,3 +165,6 @@ struct MCTS_Node *select_good_node(struct Piece *board, struct MCTS_Node *node)
 
   return node;
 }
+
+
+#endif

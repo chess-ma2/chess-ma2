@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include "../tree/mcts.h"
+#include "../tree/mcts.c"
 
 /**
  * @author Marie

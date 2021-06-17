@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include "../tree/mcts.h"
-#include "search_and_play.h"
+#include "../tree/mcts.c"
+#include "search_and_play.c"
 
 
 struct special_tuple
@@ -38,7 +38,7 @@ struct special_tuple *the_monte_carlo(struct special_tuple *tree_and_coordonates
  * @details fonction which create the tree, training, and find the "best" child
  */
 
-struct MCTS_Node *create_tree(struct Piece *board, int color_team, struct MCTS_Node *node);
+struct MCTS_Node *create_treem(struct Piece *board, int color_team, struct MCTS_Node *node);
 
 /**
  * @author Marie

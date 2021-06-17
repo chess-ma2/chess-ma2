@@ -1,3 +1,5 @@
+
+
 /**
  * @author Marie
  * @date Start 29/04/2021
@@ -9,11 +11,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "../../../common/c/rules/plate.h"
-#include "../../../common/c/rules/check_and_pat.h"
-#include "../tree/create_childs.h"
-#include "../search_and_play/monte_carlo_method.h"
-#include "../tree/mcts.h"
+#include "../../../common/c/rules/plate.c"
+#include "../../../common/c/rules/check_and_pat.c"
+#include "../tree/create_childs.c"
+#include "../search_and_play/monte_carlo_method.c"
+#include "../tree/mcts.c"
 
 
 
@@ -86,7 +88,7 @@ int main()
 	  struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
 	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves)); 
       
-	  tree = create_tree(board, 0, tree);
+	  tree = create_treem(board, 0, tree);
 
 	  tree = chosen_best(tree);
 	  coordonates = coordonates_by_mc(coordonates, tree);
