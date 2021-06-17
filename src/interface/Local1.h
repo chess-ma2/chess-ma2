@@ -22,6 +22,11 @@
 
 // Game _________________________________________________________
 
+void changepita(GtkButton *button, gpointer user_data);
+
+void changenormal(GtkButton *button, gpointer user_data);
+
+
 // When move is chosen
 void click4move(GtkButton *button, gpointer user_data);
 

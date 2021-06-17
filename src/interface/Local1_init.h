@@ -20,19 +20,26 @@
 #include "added_functions4local.c"
 
 
-// @struct Needed to create chessboard
-struct construction{
-  struct Piece *board;
-  GtkFixed *fixed;
-  GtkWidget **ImageBoard;
-};
-
 // @enum Game Type (normal by default)
 enum GAME_TYPE
 {
     NORMAL,
     EPITA,
-    INVERSE,
+};
+
+// @enum AI (minimax by default)
+enum AI_TYPE
+{
+    MINIMAX,
+    MONTECARLO,
+};
+
+// @struct Needed to create chessboard
+struct construction{
+  struct Piece *board;
+  GtkFixed *fixed;
+  GtkWidget **ImageBoard;
+  enum GAME_TYPE type;
 };
 
 // @struct windows Needed
@@ -92,6 +99,7 @@ struct for_clicked{
   struct construction constr;
   GtkWidget *EndWindow;
   GtkWidget *Window;
+  enum AI_TYPE AI;
 };
 
 // Players___________________________________________________________________

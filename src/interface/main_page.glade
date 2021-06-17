@@ -634,6 +634,37 @@
             <property name="y">20</property>
           </packing>
         </child>
+
+        <child>
+          <object class="GtkButton" id="NormalMode">
+            <property name="width-request">80</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Normal mode </property>
+            <property name="can-focus">True</property>
+            <property name="relief">half</property>
+            <property name="receives-default">False</property>
+          </object>
+          <packing>
+            <property name="x">572</property>
+            <property name="y">800</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="EPITAMode">
+            <property name="width-request">90</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Epita mode</property>
+            <property name="can-focus">True</property>
+            <property name="relief">half</property>
+            <property name="receives-default">False</property>
+          </object>
+          <packing>
+            <property name="x">480</property>
+            <property name="y">800</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkLabel">
             <property name="width-request">200</property>
@@ -1077,6 +1108,79 @@
     </child>
   </object>
 </child>
+  </object>
+  <object class="GtkWindow" id="window_chose_AI">
+    <property name="width-request">400</property>
+    <property name="height-request">700</property>
+    <property name="can-focus">False</property>
+    <property name="window-position">center</property>
+    <property name="resizable">True</property>
+    <property name="title" translatable="yes">Chose your AI</property>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">144</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Please chose the AI
+you will compete against</property>
+            <attributes>
+              <attribute name="size" value="25708"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">70</property>
+            <property name="y">71</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="chose_minimax">
+            <property name="label" translatable="yes">Mini Max</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">92</property>
+            <property name="y">254</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="back_3_AI">
+            <property name="width-request">50</property>
+            <property name="height-request">50</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+          </object>
+          <packing>
+            <property name="x">17</property>
+            <property name="y">17</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="chose_mt">
+            <property name="label" translatable="yes">Monte Carlo</property>
+            <property name="width-request">200</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">91</property>
+            <property name="y">348</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="GtkWindow" id="Game_Over">
     <property name="width-request">400</property>
@@ -1628,21 +1732,6 @@
           <packing>
             <property name="x">600</property>
             <property name="y">500</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="StalemateB_3">
-            <property name="width-request">200</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <!--property name="label" translatable="yes">Stalemate</property-->
-            <property name="can-focus">True</property>
-            <property name="relief">none</property>
-            <property name="receives-default">False</property>
-          </object>
-          <packing>
-            <property name="x">600</property>
-            <property name="y">30</property>
           </packing>
         </child>
         <child>

@@ -98,6 +98,11 @@ GtkLabel * Create_accountN_yes;
 GtkEntry * Email_LogN;
 //Entry for Password
 GtkEntry * Password_LogN;
+struct for_clicked *move_str2;
+// Entry for original coordinates
+GtkEntry * Ori_CoordN;
+// Entry for new coordinates
+GtkEntry * New_CoordN;
 
 GtkWidget* LoginAccountN;
 
@@ -106,6 +111,7 @@ GtkWidget* gamenetwork;
 GtkButton* WithdrawN;
 struct added_F *added_structN;
 GtkButton* StalemateN;
+GtkWidget* Game_OverN;
 
 //
 
@@ -147,7 +153,8 @@ GtkEntry* password3_2;
 GtkButton* lock_new_3_2;
 // Back n°3
 GtkWidget* back_3_3;
-
+// Chose AI
+GtkWidget * window_chose_AI;
 
 //____ GAME (Local) ____________
 // Main Page for GAME
@@ -176,8 +183,6 @@ GtkEntry * oriCOORD_3;
 GtkEntry * newCOORD_3;
 // Button for Withdraw
 GtkButton* withdraw_3;
-// Button for Stalemate
-GtkButton* StalemateB_3;
 
 
 //__________________________________________________________________
@@ -486,38 +491,38 @@ void connectNN(GtkButton *button, gpointer user_data)
     /*pl2->name = "Other";
     pl2->email = "networkother";
     strcpy((char *)&(pl2->password),"dnjsoivjno7896vgxui");*/
-    
+
     if (res != NULL)
     {
         pl1 = res;
         gtk_widget_show(gamenetwork);
         gtk_window_fullscreen(GTK_WINDOW(gamenetwork));
         gtk_widget_hide(LoginAccountN);
-        
+
         struct to_play *playing = user_data;
-        sendto_network(playing, move_str->Ori_Coord,move_str->New_Coord);
+        sendto_network(playing, move_str2->Ori_Coord,move_str2->New_Coord);
     }
 }
-  
+
 /*
 * @author Marine
 * @date 13/06/2021
 * @details connecting from NET in login*/
-    
+
 void connectLN(GtkButton *button, gpointer user_data)
 {
     pl1 = findplayer(Email_EntryN,Password_EntryN);
-    
+
     // creating a player 2 with predifined informations
     /*pl2->name = "Other";
     pl2->email = "networkother";
     strcpy((char *)&(pl2->password),"dnjsoivjno7896vgxui");*/
-    
+
     if (pl1!=NULL)
     {
         gtk_widget_show(gamenetwork);
         struct to_play *playing = user_data;
-        sendto_network(playing, move_str->Ori_Coord,move_str->New_Coord);
+        sendto_network(playing, move_str2->Ori_Coord,move_str2->New_Coord);
         //transition_page(LoginAccountN, window2nd_v_1);
     }
     else
@@ -552,6 +557,54 @@ void back_from_third(GtkButton *button, gpointer user_data)
 }
 
 /*
+ * @author Anna
+ * @date 16/06/2021
+ * @details Show MiniMax window
+ */
+void show_minimax(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(game_v3); // Show GAME
+    gtk_window_fullscreen(GTK_WINDOW(game_v3));
+    // _________ Play Game _______________
+    struct to_play *playing = user_data;
+    move_str3->Window = game_v3;
+    move_str3->AI = MINIMAX;
+    init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str3, Game_Over);
+    init_added_structures(move_str3->player1, move_str3->player2, added_struct, Game_Over);
+    gtk_widget_hide(window_chose_AI);
+}
+
+/*
+ * @author Anna
+ * @date 16/06/2021
+ * @details Show MiniMax window
+ */
+void show_monte(GtkButton *button, gpointer user_data)
+{
+  gtk_widget_show(game_v3); // Show GAME
+  gtk_window_fullscreen(GTK_WINDOW(game_v3));
+  // _________ Play Game _______________
+  struct to_play *playing = user_data;
+  move_str3->Window = game_v3;
+  move_str3->AI = MONTECARLO;
+  init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str3, Game_Over);
+  init_added_structures(move_str3->player1, move_str3->player2, added_struct, Game_Over);
+  gtk_widget_hide(window_chose_AI);
+}
+
+/*
+ * @author Anna
+ * @date 16/06/2021
+ * @details Back from AI list
+ */
+void back_AI_list(GtkButton *button, gpointer user_data)
+{
+    gtk_widget_show(window3rd_v_1);
+    gtk_widget_hide(window_chose_AI);
+}
+
+
+/*
   * @author Anna
   * @date 16/06/2021
   * @details Show new players window
@@ -571,14 +624,8 @@ void save_pl3(GtkButton *button, gpointer user_data)
   struct Player *res = New_player_v1(name3_1, email3_1, password3_1, create_account3_1_yes, NewPL_3, LoginAccount3_1);
   if (res != NULL) {
     pl1 = res;
-    gtk_window_fullscreen(GTK_WINDOW(game_v3));
-    // _________ Play Game _______________
-    struct to_play *playing = user_data;
-    move_str3->Window = game_v3;
-    init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str3, Game_Over);
-    init_added_structures(move_str3->player1, move_str3->player2, added_struct, Game_Over);
     gtk_widget_hide(NewPL_3);
-    gtk_widget_show(game_v3);
+    gtk_widget_show(window_chose_AI);
   }
 }
 
@@ -601,15 +648,9 @@ void connect3_1(GtkButton *button, gpointer user_data)
 {
 
     pl1 = findplayer(email3_2,password3_2);
-    if (pl2!=NULL)
+    if (pl1!=NULL)
     {
-        gtk_widget_show(game_v3); // Show GAME
-        gtk_window_fullscreen(GTK_WINDOW(game_v3));
-        // _________ Play Game _______________
-        struct to_play *playing = user_data;
-        move_str->Window = game_v3;
-        init_gtk3(pl1, pl2, playing->constr, playing->Rules, playing->Info, playing->turn, move_str, Game_Over);
-        init_added_structures(move_str->player1, move_str->player2, added_struct, Game_Over);
+        gtk_widget_show(window_chose_AI);
     }
     else
     {
@@ -802,6 +843,11 @@ int main (int argc, char *argv[])
     StalemateB = GTK_BUTTON(gtk_builder_get_object(builder, "StalemateB"));
     gtk_button_set_image(StalemateB, gtk_image_new_from_file ("Images/Stalemate.png"));
 
+    // 2 modes
+    GtkButton * normal_mode = GTK_BUTTON(gtk_builder_get_object(builder, "NormalMode"));
+    GtkButton * epita_mode = GTK_BUTTON(gtk_builder_get_object(builder, "EPITAMode"));
+
+
     // Create widgets -> button board
     struct construction constr;
     constr.board = init_board();
@@ -839,10 +885,10 @@ int main (int argc, char *argv[])
     //login
     GtkButton* loginN = GTK_BUTTON(gtk_builder_get_object(builder,"loginN"));
     GtkButton* backN = GTK_BUTTON(gtk_builder_get_object(builder,"backN"));
-    
+
     gtk_button_set_image(backN, gtk_image_new_from_file ("Images/back.png"));
     GtkButton* backN2 = GTK_BUTTON(gtk_builder_get_object(builder,"backNlog"));
-    
+
     // ButtonImage to go back to mainpage
     gtk_button_set_image(backN2, gtk_image_new_from_file ("Images/back.png"));
 
@@ -863,7 +909,7 @@ int main (int argc, char *argv[])
 
     // Save new info about player 1
     GtkButton* lock_newN = GTK_BUTTON(gtk_builder_get_object(builder, "lock_newN"));
-    
+
     GtkButton* lock_newN2 = GTK_BUTTON(gtk_builder_get_object(builder, "lock_newN2"));
 
     gtk_button_set_image(lock_newN, gtk_image_new_from_file ("Images/save.png"));
@@ -884,22 +930,22 @@ int main (int argc, char *argv[])
     Email_LogN = GTK_ENTRY(gtk_builder_get_object(builder,"emailN"));
     //entry for password
     Password_LogN= GTK_ENTRY(gtk_builder_get_object(builder,"passwordN"));
-    
+
     //__________G_A_M_E_____N_E_T_W_O_R_K____________________________
     gamenetwork = GTK_WIDGET(gtk_builder_get_object(builder, "gamenetwork"));
-    
+
     GtkDrawingArea* areaN = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "areaN"));
     GtkFixed *fixedN = GTK_FIXED(gtk_builder_get_object(builder, "panedN"));
     GtkLabel *InfoN = GTK_LABEL(gtk_builder_get_object(builder, "InfoN"));
     GtkLabel *rulesN = GTK_LABEL(gtk_builder_get_object(builder, "rulesN"));
     printRulesLabel(rulesN);
     GtkLabel *turnN = GTK_LABEL(gtk_builder_get_object(builder, "turnN"));
-    Ori_Coord = GTK_ENTRY(gtk_builder_get_object(builder,"oriCOORDN"));
-    New_Coord = GTK_ENTRY(gtk_builder_get_object(builder,"newCOORDN"));
+    Ori_CoordN = GTK_ENTRY(gtk_builder_get_object(builder,"oriCOORDN"));
+    New_CoordN = GTK_ENTRY(gtk_builder_get_object(builder,"newCOORDN"));
     GtkButton * click_coordinatesN = GTK_BUTTON(gtk_builder_get_object(builder, "click_coordinatesN"));
     gtk_button_set_image(click_coordinatesN,gtk_image_new_from_file ("Images/save.png"));
 
-    
+
     // withdraw
     WithdrawN = GTK_BUTTON(gtk_builder_get_object(builder, "withdrawN"));
     gtk_button_set_image(WithdrawN, gtk_image_new_from_file ("Images/Withdraw.png"));
@@ -927,7 +973,7 @@ int main (int argc, char *argv[])
     }
 
     // End of game
-    Game_Over = GTK_WIDGET(gtk_builder_get_object(builder, "Game_OverN"));
+    Game_OverN = GTK_WIDGET(gtk_builder_get_object(builder, "Game_OverN"));
     GtkButton * play_againN = GTK_BUTTON(gtk_builder_get_object(builder, "play_againN"));
     GtkButton * exit_gameN = GTK_BUTTON(gtk_builder_get_object(builder, "exit_gameN"));
 
@@ -971,6 +1017,18 @@ int main (int argc, char *argv[])
     // Label when info is saved
     create_account3_1_yes = GTK_LABEL(gtk_builder_get_object(builder, "create_account3_1_yes"));
 
+    // Chose AI
+    // new AI list Window
+    window_chose_AI = GTK_WIDGET(gtk_builder_get_object(builder, "window_chose_AI"));
+    // minimax
+    GtkButton* chose_minimax = GTK_BUTTON(gtk_builder_get_object(builder,"chose_minimax"));
+    // back
+    GtkButton* back_3_AI = GTK_BUTTON(gtk_builder_get_object(builder,"back_3_AI"));
+    gtk_button_set_image(back_3_AI, gtk_image_new_from_file ("Images/back.png"));
+    // montecarlo
+    GtkButton* chose_mt = GTK_BUTTON(gtk_builder_get_object(builder,"chose_mt"));
+
+
     // Entry for name
     name3_1 = GTK_ENTRY(gtk_builder_get_object(builder, "name3_1"));
     // Entry for email
@@ -1000,8 +1058,6 @@ int main (int argc, char *argv[])
     // withdraw
     withdraw_3 = GTK_BUTTON(gtk_builder_get_object(builder, "withdraw_3"));
     gtk_button_set_image(withdraw_3, gtk_image_new_from_file ("Images/Withdraw.png"));
-    StalemateB_3 = GTK_BUTTON(gtk_builder_get_object(builder, "StalemateB_3"));
-    gtk_button_set_image(StalemateB_3, gtk_image_new_from_file ("Images/Stalemate.png"));
 
     // Create widgets -> button board
     struct construction constr3;
@@ -1115,6 +1171,7 @@ int main (int argc, char *argv[])
     move_str->New_Coord = New_Coord;
     move_str->constr = constr;
     move_str->player_turn = player_turn;
+    move_str->constr.type = NORMAL;
 
     // Structure for Stalemate and Withdraw
     added_struct = malloc(sizeof(struct added_F));
@@ -1126,6 +1183,11 @@ int main (int argc, char *argv[])
     g_signal_connect(WithdrawB, "clicked", G_CALLBACK(withdraw_2), added_struct);
     // Goes to Stalemate function
     g_signal_connect(StalemateB, "clicked", G_CALLBACK(stalemate_2), added_struct);
+    // Normal Mode
+    g_signal_connect(epita_mode, "clicked", G_CALLBACK(changepita), move_str);
+    // Epita Mode
+    g_signal_connect(normal_mode, "clicked", G_CALLBACK(changenormal), move_str);
+
 
     // End of Game
     // Destroys .exe when window is closed
@@ -1141,14 +1203,14 @@ int main (int argc, char *argv[])
     playingN.Rules = rulesN;
     playingN.Info = InfoN;
     playingN.turn = turnN;
-    
+
     g_signal_connect(second_version, "clicked", G_CALLBACK(second_v_start), NULL);
     g_signal_connect(backN, "clicked", G_CALLBACK(back_from_second), NULL);
     g_signal_connect(newplayerN, "clicked", G_CALLBACK(window_playerN), NULL);
     g_signal_connect(loginN, "clicked", G_CALLBACK(login_N), NULL);
     g_signal_connect(back_wN , "clicked", G_CALLBACK(backLN), NULL);
     g_signal_connect(back_wN2, "clicked", G_CALLBACK(backNN), NULL);
-    
+
     // Entry for name
     Name_EntryN = GTK_ENTRY(gtk_builder_get_object(builder, "nameN"));
     // Entry for email
@@ -1159,11 +1221,11 @@ int main (int argc, char *argv[])
     Email_EntryN2 = GTK_ENTRY(gtk_builder_get_object(builder, "emailN2"));
     // Entry for password
     Password_EntryN2 = GTK_ENTRY(gtk_builder_get_object(builder, "passwordN2"));
-    
+
     g_signal_connect(lock_newN , "clicked", G_CALLBACK(connectLN), NULL);
-    
+
     g_signal_connect(lock_newN2, "clicked", G_CALLBACK(connectNN), NULL);
-    
+
     // Game _network__________________________________________________________
     // Destroys .exe when game first version window is closed
     g_signal_connect(gamenetwork, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -1171,18 +1233,18 @@ int main (int argc, char *argv[])
     g_signal_connect(areaN, "draw", G_CALLBACK(on_draw), &constr);
 
     // Structure for Movements
-    move_str = malloc(sizeof(struct for_clicked));
-    move_str->Ori_Coord = Ori_Coord;
-    move_str->New_Coord = New_Coord;
-    move_str->constr = constr;
-    move_str->player_turn = player_turn;
+    move_str2 = malloc(sizeof(struct for_clicked));
+    move_str2->Ori_Coord = Ori_CoordN;
+    move_str2->New_Coord = New_CoordN;
+    move_str2->constr = constrN;
+    move_str2->player_turn = player_turn;
 
     // Structure for Stalemate and Withdraw
     added_structN = malloc(sizeof(struct added_F));
     added_structN->player_turn = player_turn;
     added_structN->Window = gamenetwork;
 
-    g_signal_connect(click_coordinatesN, "clicked", G_CALLBACK(change_clicked), move_str);
+    g_signal_connect(click_coordinatesN, "clicked", G_CALLBACK(change_clicked), move_str2);
     // Goes to withdraw function
     g_signal_connect(WithdrawN, "clicked", G_CALLBACK(withdraw_2), added_struct);
     // Goes to Stalemate function
@@ -1190,7 +1252,7 @@ int main (int argc, char *argv[])
 
     // End of Game
     // Destroys .exe when window is closed
-    g_signal_connect(Game_Over, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(Game_OverN, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(play_againN, "clicked", G_CALLBACK(playagain), NULL);
     g_signal_connect(exit_gameN, "clicked", G_CALLBACK(exitgame), NULL);
     // Destroys .exe when second version window is closed
@@ -1229,6 +1291,16 @@ int main (int argc, char *argv[])
 
     g_signal_connect(lock_new_3_2, "clicked", G_CALLBACK(connect3_1),  &playing3);
 
+    // Chose AI
+    // Destroys .exe when AI list window is closed
+    g_signal_connect(window_chose_AI, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // Back to first window (new or login)
+    g_signal_connect(back_3_AI, "clicked", G_CALLBACK(back_AI_list), NULL);
+    // MiniMax is chosen
+    g_signal_connect(chose_minimax, "clicked", G_CALLBACK(show_minimax), &playing3);
+    // Monte Carlo is chosen
+    g_signal_connect(chose_mt, "clicked", G_CALLBACK(show_monte), &playing3);
+
     // Game ___________________________________________________________
     // Destroys .exe when game first version window is closed
     g_signal_connect(game_v3, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -1243,6 +1315,7 @@ int main (int argc, char *argv[])
     move_str3->New_Coord = newCOORD_3;
     move_str3->constr = constr3;
     move_str3->player_turn = player_turn;
+    move_str3->constr.type = NORMAL;
 
     // Structure for Stalemate and Withdraw
     added_struct3 = malloc(sizeof(struct added_F));
@@ -1252,8 +1325,6 @@ int main (int argc, char *argv[])
     g_signal_connect(click_coordinates_3, "clicked", G_CALLBACK(click4move_3), move_str3);
     // Goes to withdraw function
     g_signal_connect(withdraw_3, "clicked", G_CALLBACK(withdraw_2), added_struct3);
-    // Goes to Stalemate function
-    g_signal_connect(StalemateB_3, "clicked", G_CALLBACK(stalemate_2), added_struct3);
 
 
 

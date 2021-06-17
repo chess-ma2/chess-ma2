@@ -331,6 +331,8 @@ void init_gtk(struct Player *player1, struct Player *player2, struct constructio
 void update_board(struct construction constr){
   // All Images
   char normal_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/whitePAWN_N.png", "Images/whiteROOK_N.png", "Images/whiteBISHOP_N.png", "Images/whiteKNIGHT_N.png", "Images/whiteQUEEN_N.png","Images/whiteKING_N.png", "Images/blackPAWN_N.png", "Images/blackROOK_N.png", "Images/blackBISHOP_N.png", "Images/blackKNIGHT_N.png", "Images/blackQUEEN_N.png","Images/blackKING_N.png"};
+  char epita_images_cha[][sizeof("Images/blackBISHOP_N.png")] = {"Images/epita_white.png", "Images/marie_white.png", "Images/anna_white.png", "Images/antoine_white.png", "Images/marine_white.png","Images/king_white.png", "Images/epita_black.png", "Images/marie_black.png", "Images/anna_black.png", "Images/antoine_black.png", "Images/marine_black.png","Images/king_black.png"};
+
 
   int x = 56; //original coordinates
   int y = 90; //original coordinates
@@ -368,7 +370,13 @@ void update_board(struct construction constr){
 
       // Sets info on Image
       if (in != -1) {
-        gtk_image_set_from_file(GTK_IMAGE(constr.ImageBoard[i*8+j]), normal_images_cha[in]);
+        if (constr.type == EPITA) {
+          gtk_image_set_from_file(GTK_IMAGE(constr.ImageBoard[i*8+j]), epita_images_cha[in]);
+        }
+        else
+        {
+          gtk_image_set_from_file(GTK_IMAGE(constr.ImageBoard[i*8+j]), normal_images_cha[in]);
+        }
         gtk_widget_show(constr.ImageBoard[i*8+j]);
       }
       else

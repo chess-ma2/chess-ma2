@@ -13,6 +13,31 @@
 #ifndef LOCAL1_C
 #define LOCAL1_C
 
+/*
+ * @author Anna
+ * @date 17/06/2021
+ * @details Épita mode on
+*/
+void changepita(GtkButton *button, gpointer user_data)
+{
+  struct for_clicked *needed = user_data;
+  needed->constr.type = EPITA;
+  update_board(needed->constr);
+
+}
+
+/*
+ * @author Anna
+ * @date 17/06/2021
+ * @details Normal mode on
+*/
+void changenormal(GtkButton *button, gpointer user_data)
+{
+  struct for_clicked *needed = user_data;
+  needed->constr.type = NORMAL;
+  update_board(needed->constr);
+
+}
 
 /*
  * @author Anna
