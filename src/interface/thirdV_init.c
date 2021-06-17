@@ -21,12 +21,52 @@
 
 void IA_move(struct for_clicked *needed)
 {
+  int x = 0;
+  int y = 0;
+  int des_y = 0;
+  int des_x = 0;
+
   // Get move from IA
-  struct finalmove * move = get_right_move_ia(needed->constr.board,needed->currentW,needed->currentB, WHITETURN, 2, needed->nbWhite, needed->nbBlack);
-  int x = move->x;
-  int y = move->y;
-  int des_y = move->ydes;
-  int des_x = move->xdes;
+  if (needed->AI == MINIMAX) {
+    struct finalmove * move = get_right_move_ia(needed->constr.board,needed->currentW,needed->currentB, WHITETURN, 2, needed->nbWhite, needed->nbBlack);
+    x = move->x;
+    y = move->y;
+    des_y = move->ydes;
+    des_x = move->xdes;
+  }
+  else
+  {
+    struct MCTS_Node *tree = malloc(sizeof(struct MCTS_Node));
+	  struct coordonates_moves *coordonates = malloc(sizeof(struct coordonates_moves));
+
+	  tree = create_treem(needed->constr.board, 0, tree);
+
+	  tree = chosen_best(tree);
+	  coordonates = coordonates_by_mc(coordonates, tree);
+
+	  x = coordonates->x ;
+	  y = coordonates->y ;
+	  des_x = coordonates->x_des;
+	  des_y = coordonates->y_des;
+
+	  if( x == -1 && y == -1 && des_x == -1 && des_y == -1) //if the 4 coordinates a -1 == ask abandonment
+	{
+    GtkWidget *dialog;
+    dialog = gtk_message_dialog_new(GTK_WINDOW(needed->Window),
+              GTK_DIALOG_DESTROY_WITH_PARENT,
+              GTK_MESSAGE_INFO,
+              GTK_BUTTONS_OK,
+              "The AI Withdraws");
+    gtk_window_set_title(GTK_WINDOW(dialog), "You won");
+
+    // Link to subfunction
+    g_signal_connect(GTK_DIALOG (dialog), "response", G_CALLBACK (ai_withdraw), needed);
+    gtk_dialog_run (GTK_DIALOG (dialog));
+    //gtk_widget_destroy(dialog);
+	}
+    free(tree);
+  }
+
 
   // Move Piece and update lists
   needed->nbBlack = removedpiece(x , y, des_x, des_y, needed->constr.board, needed->currentW, needed->currentB, needed->nbWhite, needed->nbBlack);
@@ -109,6 +149,29 @@ void init_gtk3(struct Player *player1, struct Player *player2, struct constructi
   IA_move(needed);
 
   return;
+}
+
+/*
+ * @author Anna
+ * @date 17/06/2021
+ * @details When AI Withdraws
+*/
+
+void ai_withdraw (GtkDialog *dialog,
+             gint       response_id,
+             gpointer   user_data)
+{
+  // Get parent window and login window
+  struct for_clicked *res = user_data;
+
+  // If the button clicked gives response "Login" == OK (response_id being -5)
+  if (response_id == GTK_RESPONSE_OK)
+  { // Go to login page
+    gtk_widget_show(res->EndWindow);
+    gtk_widget_hide(res->Window);
+  }
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+
 }
 
 #endif
