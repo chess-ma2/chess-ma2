@@ -20,6 +20,7 @@
 #include <time.h>
 
 #include "mctsn_explore.c"
+#include "../chess/evaluate.c"
 
 void gen_clear()
 {

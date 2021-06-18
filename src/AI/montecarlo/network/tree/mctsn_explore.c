@@ -19,7 +19,7 @@ void network_mctsn_generate_child(MCTSN_Node *node, Network * network)
     if (node == NULL || node->child_nb != 0)
         return;
 
-    struct tab *moves = possible_moves(node->board, node->team);
+    struct tabm *moves = possible_moves(node->board, node->team);
   //  printf("MGen child\n");
 
     node->child_nb = moves->index;

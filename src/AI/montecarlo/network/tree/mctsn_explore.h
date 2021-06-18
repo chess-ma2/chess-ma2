@@ -16,7 +16,8 @@
 #include <time.h>
 
 #include "mctsn.c"
-#include "../chess/evaluate.c"
+#include "../structure/network.c"
+#include "../chess/evaluate.h"
 #include "../../tree/create_childs.c"
 #include "../../tree/mcts.c"
 #include "../../tree/check_and_pat_for_AI.c"

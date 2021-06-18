@@ -12,7 +12,6 @@
 #include "../structure/activation.c"
 #include "../tree/mctsn.c"
 #include "../tree/mctsn_explore.h"
-#include "../tree/mctsn_explore.c"
 
 
 /**

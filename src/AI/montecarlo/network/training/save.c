@@ -90,7 +90,7 @@ void network_save_import(char * str, Network * network)
         //Layer Find start
         while (*(str+i) != '(' && *(str+i) != 0)
         {
-            layer++:
+            layer++;
             Layer *l = network->input;
             if (layer >= 0 && layer < network->hidden_count)
                 l = network->hidden + layer;

@@ -52,8 +52,8 @@ NEvaluate *network_chess_dual(Network* network1, Network* network2)
         father2->child = NULL;
 
         unsigned long paths = 500;
-        PATH_EXPLORE *pa = network_mctsn_generate_path(father, network1, paths, 0);
-        PATH_EXPLORE *pa2 = network_mctsn_generate_path(father2, network2, paths, 0);
+        struct PATH_EXPLORE *pa = network_mctsn_generate_path(father, network1, paths, 0);
+        struct PATH_EXPLORE *pa2 = network_mctsn_generate_path(father2, network2, paths, 0);
         if (pa->win > pa2->win)
             nEvaluate->accuracy1 += 1;
         else
@@ -128,9 +128,18 @@ void network_chess_load_input(MCTSN_Node *node, Network * network)
     for(int i = 0; i < 64; i++)
     {
         Piece p = node->board[i];
-        for (int j = 0; j < 8; j++)
-            (network->input->neurons + (j*64 + i))->output = (p.type == j);
+        for (int j = 0; j < 7; j++)
+        {
+            for (int k = 0; k < 2; k++)
+                (network->input->neurons + (k*64*7 + j*64 + i))->output = (p.type == j && p.color == k);
+        }
     }
+    //Rock
+    (network->input->neurons + 896)->output = 0;
+    (network->input->neurons + 897)->output = 0;
+    (network->input->neurons + 898)->output = 0;
+    (network->input->neurons + 899)->output = 0;
+    //Color
     (network->input->neurons + 900)->output = (node->team);
 }
 #endif //AI_MONTECARLO_NETWORK_CHESS_EVALUATE_C
